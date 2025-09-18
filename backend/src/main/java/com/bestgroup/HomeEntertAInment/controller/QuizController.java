@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bestgroup.HomeEntertAInment.dto.QuizConfigurationDto;
+import com.bestgroup.HomeEntertAInment.model.Quiz;
+import com.bestgroup.HomeEntertAInment.service.QuizService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,22 +26,30 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class QuizController {
 
+    private final QuizService quizService;
+
     /**
      * Create a new quiz based on configuration
      * @param config The quiz configuration data from frontend
-     * @return ResponseEntity indicating quiz creation status
+     * @return ResponseEntity containing the generated quiz
      */
     @PostMapping("/create")
-    public ResponseEntity<String> createQuiz(@RequestBody QuizConfigurationDto config) {
-        // TODO: Implement quiz creation logic
-        // For now, just log the received configuration
-        System.out.println("Received quiz configuration:");
-        System.out.println("Age Group: " + config.getAgeGroup());
-        System.out.println("Topics: " + config.getTopics());
-        System.out.println("Difficulty: " + config.getDifficulty());
-        System.out.println("Question Count: " + config.getQuestionCount());
-        
-        return ResponseEntity.ok("Quiz creation endpoint - configuration received successfully");
+    public ResponseEntity<Quiz> createQuiz(@RequestBody QuizConfigurationDto config) {
+        try {
+            // Generate quiz using the service
+            Quiz generatedQuiz = quizService.generateQuiz(config);
+            
+            // Log the quiz creation
+            System.out.println("Generated quiz: " + generatedQuiz.getTitle());
+            System.out.println("Quiz ID: " + generatedQuiz.getId());
+            System.out.println("Number of questions: " + generatedQuiz.getQuestions().size());
+            
+            return ResponseEntity.ok(generatedQuiz);
+        } catch (Exception e) {
+            System.err.println("Error generating quiz: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     /**

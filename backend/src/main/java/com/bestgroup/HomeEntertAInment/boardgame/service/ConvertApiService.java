@@ -4,6 +4,7 @@ import com.bestgroup.HomeEntertAInment.boardgame.dto.ConvertApiResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -27,7 +28,7 @@ public class ConvertApiService {
 
     // ConvertAPI endpoint for PDF to text conversion
     private static final String CONVERT_API_URL = "https://v2.convertapi.com/convert/pdf/to/txt";
-    
+
     private final RestTemplate restTemplate = new RestTemplate();
 
     /**
@@ -35,7 +36,7 @@ public class ConvertApiService {
      *
      * @param pdfFile The PDF file to convert (MultipartFile)
      * @return ConvertApiResponseDto containing the conversion result
-     * @throws IOException if there's an error reading the file
+     * @throws IOException      if there's an error reading the file
      * @throws RuntimeException if the API call fails
      */
     public ConvertApiResponseDto convertPdfToText(MultipartFile pdfFile) throws IOException {
@@ -52,12 +53,18 @@ public class ConvertApiService {
         try {
             // Prepare multipart form data
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            
+
             // Add the PDF file
-            body.add("File", new MultipartFileResource(pdfFile));
-            
+            body.add("File", new ByteArrayResource(pdfFile.getBytes()) {
+                @Override
+                public String getFilename() {
+                    return pdfFile.getOriginalFilename();
+                }
+            });
+
+
             // Set StoreFile to true as requested
-            body.add("StoreFile", "true");
+//            body.add("StoreFile", "true");
 
             // Set up HTTP headers
             HttpHeaders headers = new HttpHeaders();
@@ -75,7 +82,7 @@ public class ConvertApiService {
             );
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                log.info("Successfully converted PDF to text. Conversion cost: {}", 
+                log.info("Successfully converted PDF to text. Conversion cost: {}",
                         response.getBody().getConversionCost());
                 return response.getBody();
             } else {

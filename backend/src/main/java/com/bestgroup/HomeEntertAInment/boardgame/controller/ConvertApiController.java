@@ -31,7 +31,7 @@ public class ConvertApiController {
     public ResponseEntity<ConvertApiResponseDto> convertPdfToText(@RequestParam("file") MultipartFile file) {
         try {
             log.info("Received request to convert PDF rule book: {}", file.getOriginalFilename());
-            
+
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest().build();
             }

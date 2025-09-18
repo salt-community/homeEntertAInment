@@ -1,5 +1,6 @@
 package com.bestgroup.HomeEntertAInment.boardgame.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,17 +14,19 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConvertApiResponseDto {
-    
+
     /**
      * The cost of the conversion operation
      */
+    @JsonProperty("ConversionCost")
     private int conversionCost;
-    
+
     /**
      * List of converted files
      */
+    @JsonProperty("Files")
     private List<ConvertedFile> files;
-    
+
     /**
      * DTO representing a converted file
      */
@@ -31,25 +34,29 @@ public class ConvertApiResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ConvertedFile {
-        
+
         /**
          * Name of the converted file
          */
+        @JsonProperty("FileName")
         private String fileName;
-        
+
         /**
          * File extension
          */
+        @JsonProperty("FileExt")
         private String fileExt;
-        
+
         /**
          * Size of the file in bytes
          */
+        @JsonProperty("FileSize")
         private int fileSize;
-        
+
         /**
          * Base64 encoded file data
          */
+        @JsonProperty("FileData")
         private String fileData;
     }
 }

@@ -357,7 +357,6 @@ public class QuizService {
                 .ageGroup(quiz.getAgeGroup())
                 .topics(quiz.getTopics())
                 .difficulty(quiz.getDifficulty())
-                .questionCount(quiz.getQuestionCount())
                 .description(quiz.getDescription())
                 .build();
     }
@@ -374,7 +373,6 @@ public class QuizService {
                 .options(question.getOptions())
                 .correctAnswerIndex(question.getCorrectAnswerIndex())
                 .explanation(question.getExplanation())
-                .topic(question.getTopic())
                 .difficulty(question.getDifficulty())
                 .ageGroup(question.getAgeGroup())
                 .build();

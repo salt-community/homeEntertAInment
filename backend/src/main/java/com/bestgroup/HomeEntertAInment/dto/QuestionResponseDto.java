@@ -43,11 +43,6 @@ public class QuestionResponseDto {
     private String explanation;
     
     /**
-     * Topic/category of the question
-     */
-    private String topic;
-    
-    /**
      * Difficulty level of the question
      */
     private String difficulty;

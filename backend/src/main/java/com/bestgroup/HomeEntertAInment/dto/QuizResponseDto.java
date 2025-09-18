@@ -47,10 +47,6 @@ public class QuizResponseDto {
      */
     private String difficulty;
     
-    /**
-     * Number of questions in the quiz
-     */
-    private Integer questionCount;
     
     /**
      * Description of the quiz

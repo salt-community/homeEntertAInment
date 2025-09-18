@@ -1,6 +1,8 @@
 package com.bestgroup.HomeEntertAInment.service;
 
 import com.bestgroup.HomeEntertAInment.dto.QuizConfigurationDto;
+import com.bestgroup.HomeEntertAInment.dto.QuizResponseDto;
+import com.bestgroup.HomeEntertAInment.dto.QuestionResponseDto;
 import com.bestgroup.HomeEntertAInment.model.Question;
 import com.bestgroup.HomeEntertAInment.model.Quiz;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +23,19 @@ public class QuizService {
     /**
      * Generate a quiz based on the provided configuration
      * @param config The quiz configuration from the frontend
-     * @return Generated quiz with questions
+     * @return Generated quiz response DTO (without correct answers)
      */
-    public Quiz generateQuiz(QuizConfigurationDto config) {
+    public QuizResponseDto generateQuiz(QuizConfigurationDto config) {
+        Quiz quiz = generateQuizInternal(config);
+        return convertToResponseDto(quiz);
+    }
+
+    /**
+     * Internal method to generate the full quiz model
+     * @param config The quiz configuration from the frontend
+     * @return Generated quiz with questions (including correct answers)
+     */
+    private Quiz generateQuizInternal(QuizConfigurationDto config) {
         // Generate quiz ID
         String quizId = "quiz_" + System.currentTimeMillis();
         
@@ -326,6 +338,45 @@ public class QuizService {
                 .build());
         
         return questions;
+    }
+
+    /**
+     * Convert Quiz model to QuizResponseDto (without correct answers)
+     * @param quiz The quiz model to convert
+     * @return QuizResponseDto without sensitive information
+     */
+    private QuizResponseDto convertToResponseDto(Quiz quiz) {
+        List<QuestionResponseDto> questionDtos = quiz.getQuestions().stream()
+                .map(this::convertQuestionToResponseDto)
+                .collect(Collectors.toList());
+
+        return QuizResponseDto.builder()
+                .id(quiz.getId())
+                .title(quiz.getTitle())
+                .questions(questionDtos)
+                .ageGroup(quiz.getAgeGroup())
+                .topics(quiz.getTopics())
+                .difficulty(quiz.getDifficulty())
+                .questionCount(quiz.getQuestionCount())
+                .createdAt(quiz.getCreatedAt())
+                .description(quiz.getDescription())
+                .build();
+    }
+
+    /**
+     * Convert Question model to QuestionResponseDto (without correct answer)
+     * @param question The question model to convert
+     * @return QuestionResponseDto without correct answer or explanation
+     */
+    private QuestionResponseDto convertQuestionToResponseDto(Question question) {
+        return QuestionResponseDto.builder()
+                .id(question.getId())
+                .questionText(question.getQuestionText())
+                .options(question.getOptions())
+                .topic(question.getTopic())
+                .difficulty(question.getDifficulty())
+                .ageGroup(question.getAgeGroup())
+                .build();
     }
 
     /**

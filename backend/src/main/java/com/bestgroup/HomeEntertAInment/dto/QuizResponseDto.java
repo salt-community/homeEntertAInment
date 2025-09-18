@@ -1,0 +1,65 @@
+package com.bestgroup.HomeEntertAInment.dto;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+/**
+ * Data Transfer Object for Quiz Response
+ * Contains quiz data without sensitive information like correct answers or explanations
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class QuizResponseDto {
+    
+    /**
+     * Unique identifier for the quiz
+     */
+    private String id;
+    
+    /**
+     * Title of the quiz
+     */
+    private String title;
+    
+    /**
+     * List of questions in the quiz (without correct answers)
+     */
+    private List<QuestionResponseDto> questions;
+    
+    /**
+     * Age group this quiz is designed for
+     */
+    private String ageGroup;
+    
+    /**
+     * Topics covered in this quiz
+     */
+    private List<String> topics;
+    
+    /**
+     * Difficulty level of the quiz
+     */
+    private String difficulty;
+    
+    /**
+     * Number of questions in the quiz
+     */
+    private Integer questionCount;
+    
+    /**
+     * Timestamp when the quiz was created
+     */
+    private LocalDateTime createdAt;
+    
+    /**
+     * Description of the quiz
+     */
+    private String description;
+}

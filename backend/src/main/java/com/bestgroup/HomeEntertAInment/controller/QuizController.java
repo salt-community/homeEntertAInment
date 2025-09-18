@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bestgroup.HomeEntertAInment.dto.QuizConfigurationDto;
-import com.bestgroup.HomeEntertAInment.model.Quiz;
+import com.bestgroup.HomeEntertAInment.dto.QuizResponseDto;
 import com.bestgroup.HomeEntertAInment.service.QuizService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,13 +31,13 @@ public class QuizController {
     /**
      * Create a new quiz based on configuration
      * @param config The quiz configuration data from frontend
-     * @return ResponseEntity containing the generated quiz
+     * @return ResponseEntity containing the generated quiz (without correct answers)
      */
     @PostMapping("/create")
-    public ResponseEntity<Quiz> createQuiz(@RequestBody QuizConfigurationDto config) {
+    public ResponseEntity<QuizResponseDto> createQuiz(@RequestBody QuizConfigurationDto config) {
         try {
             // Generate quiz using the service
-            Quiz generatedQuiz = quizService.generateQuiz(config);
+            QuizResponseDto generatedQuiz = quizService.generateQuiz(config);
             
             // Log the quiz creation
             System.out.println("Generated quiz: " + generatedQuiz.getTitle());

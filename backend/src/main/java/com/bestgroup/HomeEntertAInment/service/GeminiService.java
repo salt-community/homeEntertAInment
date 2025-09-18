@@ -22,7 +22,6 @@ public class GeminiService {
 
     @Value("${GEMINI_API_KEY}")
     private String apiKey;
-    private final ObjectMapper mapper;
 
     // Gemini API endpoint for content generation
     private static final String URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";

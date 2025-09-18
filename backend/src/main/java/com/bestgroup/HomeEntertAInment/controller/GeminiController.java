@@ -1,7 +1,6 @@
 package com.bestgroup.HomeEntertAInment.controller;
 
 import com.bestgroup.HomeEntertAInment.service.GeminiService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

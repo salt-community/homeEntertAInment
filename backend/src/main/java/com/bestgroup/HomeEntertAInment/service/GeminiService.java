@@ -1,6 +1,7 @@
 package com.bestgroup.HomeEntertAInment.service;
 
 import com.bestgroup.HomeEntertAInment.dto.GeminiResponseDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -21,6 +22,7 @@ public class GeminiService {
 
     @Value("${GEMINI_API_KEY}")
     private String apiKey;
+    private final ObjectMapper mapper;
 
     // Gemini API endpoint for content generation
     private static final String URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
@@ -28,6 +30,7 @@ public class GeminiService {
 
     /**
      * Sends a test prompt to Gemini API to check connectivity and functionality
+     *
      * @param prompt The test prompt to send
      * @return The response text from Gemini API
      */
@@ -47,7 +50,7 @@ public class GeminiService {
         try {
             // Construct the full URL with API key
             String fullUrl = URL + "?key=" + apiKey;
-            
+
             // Make the API call
             ResponseEntity<GeminiResponseDto> response = restTemplate.exchange(
                     fullUrl, HttpMethod.POST, entity, GeminiResponseDto.class
@@ -58,7 +61,6 @@ public class GeminiService {
                     .candidates().get(0)
                     .content().parts().get(0)
                     .text();
-            
             return resultText;
 
         } catch (Exception e) {

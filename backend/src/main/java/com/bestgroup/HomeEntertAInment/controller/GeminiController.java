@@ -1,6 +1,7 @@
 package com.bestgroup.HomeEntertAInment.controller;
 
 import com.bestgroup.HomeEntertAInment.service.GeminiService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class GeminiController {
     @GetMapping("/status")
     public ResponseEntity<String> status() {
         // Test prompt as specified in requirements
-        String testPrompt = "This is just a status check. If you are receiving this, answer with a json format like this {\"message\": 'Online: Gemini Controller is up'}.";
+        String testPrompt = "This is just a status check. If you are receiving this, answer with a flat string being 'Online: Gemini Controller is up'.";
         
         // Send the test prompt to Gemini API
         String response = geminiService.sendTestPrompt(testPrompt);

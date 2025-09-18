@@ -15,19 +15,21 @@ export interface QuizCreationResponse {
 
 // Quiz service for API calls
 export class QuizService {
-  private static readonly BASE_URL = 'http://localhost:8080/api/quiz';
+  private static readonly BASE_URL = "http://localhost:8080/api/quiz";
 
   /**
    * Create a new quiz with the given configuration
    * @param config Quiz configuration data
    * @returns Promise with quiz creation response
    */
-  static async createQuiz(config: QuizConfiguration): Promise<QuizCreationResponse> {
+  static async createQuiz(
+    config: QuizConfiguration
+  ): Promise<QuizCreationResponse> {
     try {
       const response = await fetch(`${this.BASE_URL}/create`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(config),
       });
@@ -42,10 +44,11 @@ export class QuizService {
         message: data,
       };
     } catch (error) {
-      console.error('Error creating quiz:', error);
+      console.error("Error creating quiz:", error);
       return {
         success: false,
-        message: error instanceof Error ? error.message : 'Unknown error occurred',
+        message:
+          error instanceof Error ? error.message : "Unknown error occurred",
       };
     }
   }
@@ -58,14 +61,14 @@ export class QuizService {
   static async getQuiz(quizId: string): Promise<any> {
     try {
       const response = await fetch(`${this.BASE_URL}/${quizId}`);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       return await response.text();
     } catch (error) {
-      console.error('Error fetching quiz:', error);
+      console.error("Error fetching quiz:", error);
       throw error;
     }
   }
@@ -77,14 +80,14 @@ export class QuizService {
   static async getAllQuizzes(): Promise<any> {
     try {
       const response = await fetch(`${this.BASE_URL}/all`);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       return await response.text();
     } catch (error) {
-      console.error('Error fetching all quizzes:', error);
+      console.error("Error fetching all quizzes:", error);
       throw error;
     }
   }
@@ -98,9 +101,9 @@ export class QuizService {
   static async submitQuiz(quizId: string, answers: any): Promise<any> {
     try {
       const response = await fetch(`${this.BASE_URL}/${quizId}/submit`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(answers),
       });
@@ -111,7 +114,7 @@ export class QuizService {
 
       return await response.text();
     } catch (error) {
-      console.error('Error submitting quiz:', error);
+      console.error("Error submitting quiz:", error);
       throw error;
     }
   }

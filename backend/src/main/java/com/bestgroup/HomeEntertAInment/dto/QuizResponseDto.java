@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * Data Transfer Object for Quiz Response
- * Contains quiz data without sensitive information like correct answers or explanations
+ * Contains complete quiz data including questions with correct answers and explanations
  */
 @Data
 @NoArgsConstructor
@@ -29,7 +29,7 @@ public class QuizResponseDto {
     private String title;
     
     /**
-     * List of questions in the quiz (without correct answers)
+     * List of questions in the quiz (with correct answers and explanations)
      */
     private List<QuestionResponseDto> questions;
     

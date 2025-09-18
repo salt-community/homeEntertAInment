@@ -31,7 +31,7 @@ public class QuizController {
     /**
      * Create a new quiz based on configuration
      * @param config The quiz configuration data from frontend
-     * @return ResponseEntity containing the generated quiz (without correct answers)
+     * @return ResponseEntity containing the generated quiz (with complete question data)
      */
     @PostMapping("/create")
     public ResponseEntity<QuizResponseDto> createQuiz(@RequestBody QuizConfigurationDto config) {

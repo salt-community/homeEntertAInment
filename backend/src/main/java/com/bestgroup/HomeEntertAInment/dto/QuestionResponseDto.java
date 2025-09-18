@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Data Transfer Object for Question Response
- * Contains question data without sensitive information like correct answers or explanations
+ * Contains complete question data including correct answers and explanations
  */
 @Data
 @NoArgsConstructor
@@ -31,6 +31,16 @@ public class QuestionResponseDto {
      * List of possible answer options
      */
     private List<String> options;
+    
+    /**
+     * The correct answer (index in the options list)
+     */
+    private Integer correctAnswerIndex;
+    
+    /**
+     * Explanation for why the correct answer is right
+     */
+    private String explanation;
     
     /**
      * Topic/category of the question

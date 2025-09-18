@@ -23,7 +23,7 @@ public class QuizService {
     /**
      * Generate a quiz based on the provided configuration
      * @param config The quiz configuration from the frontend
-     * @return Generated quiz response DTO (without correct answers)
+     * @return Generated quiz response DTO (with complete question data)
      */
     public QuizResponseDto generateQuiz(QuizConfigurationDto config) {
         Quiz quiz = generateQuizInternal(config);
@@ -341,9 +341,9 @@ public class QuizService {
     }
 
     /**
-     * Convert Quiz model to QuizResponseDto (without correct answers)
+     * Convert Quiz model to QuizResponseDto (with complete question data)
      * @param quiz The quiz model to convert
-     * @return QuizResponseDto without sensitive information
+     * @return QuizResponseDto with all question information
      */
     private QuizResponseDto convertToResponseDto(Quiz quiz) {
         List<QuestionResponseDto> questionDtos = quiz.getQuestions().stream()
@@ -364,15 +364,17 @@ public class QuizService {
     }
 
     /**
-     * Convert Question model to QuestionResponseDto (without correct answer)
+     * Convert Question model to QuestionResponseDto (with correct answer and explanation)
      * @param question The question model to convert
-     * @return QuestionResponseDto without correct answer or explanation
+     * @return QuestionResponseDto with complete question data
      */
     private QuestionResponseDto convertQuestionToResponseDto(Question question) {
         return QuestionResponseDto.builder()
                 .id(question.getId())
                 .questionText(question.getQuestionText())
                 .options(question.getOptions())
+                .correctAnswerIndex(question.getCorrectAnswerIndex())
+                .explanation(question.getExplanation())
                 .topic(question.getTopic())
                 .difficulty(question.getDifficulty())
                 .ageGroup(question.getAgeGroup())

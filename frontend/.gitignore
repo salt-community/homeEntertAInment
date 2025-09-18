@@ -1,3 +1,7 @@
+.cursor
+
+# TanStack Router generated files
+routeTree.gen.*
 # Logs
 logs
 *.log

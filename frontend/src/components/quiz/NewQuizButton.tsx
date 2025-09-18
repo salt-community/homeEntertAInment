@@ -1,15 +1,15 @@
-import React from 'react'
+import React from "react";
 
 interface NewQuizButtonProps {
-  onClick?: () => void
-  disabled?: boolean
-  className?: string
+  onClick?: () => void;
+  disabled?: boolean;
+  className?: string;
 }
 
-export default function NewQuizButton({ 
-  onClick, 
+export default function NewQuizButton({
+  onClick,
   disabled = false,
-  className = ''
+  className = "",
 }: NewQuizButtonProps) {
   return (
     <button
@@ -30,5 +30,5 @@ export default function NewQuizButton({
     >
       🎯 Create New Quiz
     </button>
-  )
+  );
 }

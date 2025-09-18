@@ -1,10 +1,10 @@
-import NewQuizButton from '../components/quiz/NewQuizButton'
+import NewQuizButton from "../components/quiz/NewQuizButton";
 
 export default function QuizGenerator() {
   const handleNewQuiz = () => {
     // TODO: Implement new quiz functionality
-    console.log('Create new quiz button clicked')
-  }
+    console.log("Create new quiz button clicked");
+  };
 
   return (
     <div>
@@ -14,7 +14,5 @@ export default function QuizGenerator() {
         <NewQuizButton onClick={handleNewQuiz} />
       </div>
     </div>
-  )
+  );
 }
-
-

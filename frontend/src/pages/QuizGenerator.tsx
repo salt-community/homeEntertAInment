@@ -33,7 +33,7 @@ export default function QuizGenerator() {
       <div className="mt-4">
         <NewQuizButton onClick={handleNewQuiz} />
       </div>
-      
+
       {showForm && (
         <QuizConfigurationForm
           onSubmit={handleFormSubmit}

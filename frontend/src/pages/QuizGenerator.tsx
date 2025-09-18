@@ -1,13 +1,7 @@
 import { useState } from "react";
 import NewQuizButton from "../components/quiz/NewQuizButton";
 import QuizConfigurationForm from "../components/quiz/QuizConfigurationForm";
-
-interface QuizConfiguration {
-  ageGroup: string;
-  topics: string[];
-  difficulty: string;
-  questionCount: number;
-}
+import type { QuizConfiguration } from "../services/quizService";
 
 export default function QuizGenerator() {
   const [showForm, setShowForm] = useState(false);

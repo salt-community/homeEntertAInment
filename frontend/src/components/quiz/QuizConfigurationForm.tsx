@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { QuizService } from "../../services/quizService";
+import type { QuizConfiguration as QuizConfigType } from "../../services/quizService";
 
 // Custom slider styles
 const sliderStyles = `
@@ -24,15 +26,8 @@ const sliderStyles = `
   }
 `;
 
-interface QuizConfiguration {
-  ageGroup: string;
-  topics: string[];
-  difficulty: string;
-  questionCount: number;
-}
-
 interface QuizConfigurationFormProps {
-  onSubmit: (config: QuizConfiguration) => void;
+  onSubmit: (config: QuizConfigType) => void;
   onCancel: () => void;
 }
 
@@ -67,12 +62,14 @@ export default function QuizConfigurationForm({
   onSubmit,
   onCancel,
 }: QuizConfigurationFormProps) {
-  const [config, setConfig] = useState<QuizConfiguration>({
+  const [config, setConfig] = useState<QuizConfigType>({
     ageGroup: "",
     topics: [],
     difficulty: "",
     questionCount: 10,
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleTopicToggle = (topic: string) => {
     setConfig((prev) => ({
@@ -83,10 +80,25 @@ export default function QuizConfigurationForm({
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (config.ageGroup && config.difficulty && config.topics.length > 0) {
-      onSubmit(config);
+      setIsSubmitting(true);
+      try {
+        const response = await QuizService.createQuiz(config);
+        if (response.success) {
+          console.log("Quiz created successfully:", response.message);
+          onSubmit(config);
+        } else {
+          console.error("Failed to create quiz:", response.message);
+          // TODO: Show error message to user
+        }
+      } catch (error) {
+        console.error("Error creating quiz:", error);
+        // TODO: Show error message to user
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -258,13 +270,13 @@ export default function QuizConfigurationForm({
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  disabled={!isFormValid}
-                  className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95"
-                >
-                  🎯 Create Quiz
-                </button>
+              <button
+                type="submit"
+                disabled={!isFormValid || isSubmitting}
+                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95"
+              >
+                {isSubmitting ? "🔄 Creating Quiz..." : "🎯 Create Quiz"}
+              </button>
               </div>
             </form>
           </div>

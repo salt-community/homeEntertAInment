@@ -1,11 +1,13 @@
 package com.bestgroup.HomeEntertAInment.controller;
 
+import com.bestgroup.HomeEntertAInment.dto.QuizConfigurationDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,12 +25,20 @@ public class QuizController {
 
     /**
      * Create a new quiz based on configuration
+     * @param config The quiz configuration data from frontend
      * @return ResponseEntity indicating quiz creation status
      */
     @PostMapping("/create")
-    public ResponseEntity<String> createQuiz() {
+    public ResponseEntity<String> createQuiz(@RequestBody QuizConfigurationDto config) {
         // TODO: Implement quiz creation logic
-        return ResponseEntity.ok("Quiz creation endpoint - not implemented yet");
+        // For now, just log the received configuration
+        System.out.println("Received quiz configuration:");
+        System.out.println("Age Group: " + config.getAgeGroup());
+        System.out.println("Topics: " + config.getTopics());
+        System.out.println("Difficulty: " + config.getDifficulty());
+        System.out.println("Question Count: " + config.getQuestionCount());
+        
+        return ResponseEntity.ok("Quiz creation endpoint - configuration received successfully");
     }
 
     /**

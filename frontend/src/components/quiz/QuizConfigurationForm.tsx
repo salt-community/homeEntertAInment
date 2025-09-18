@@ -117,17 +117,27 @@ export default function QuizConfigurationForm({
                   onChange={(e) =>
                     setConfig((prev) => ({ ...prev, ageGroup: e.target.value }))
                   }
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 text-base"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-base"
+                  style={{
+                    color: "#111827",
+                    backgroundColor: "#ffffff",
+                  }}
                   required
                 >
-                  <option value="" className="text-gray-500">
+                  <option
+                    value=""
+                    style={{ color: "#6b7280", backgroundColor: "#ffffff" }}
+                  >
                     Select age group
                   </option>
                   {AGE_GROUPS.map((group) => (
                     <option
                       key={group.value}
                       value={group.value}
-                      className="text-gray-900"
+                      style={{
+                        color: "#111827",
+                        backgroundColor: "#ffffff",
+                      }}
                     >
                       {group.label}
                     </option>
@@ -236,10 +246,6 @@ export default function QuizConfigurationForm({
                       }%, #e5e7eb 100%)`,
                     }}
                   />
-                  <div className="flex justify-between text-xs text-gray-500 mt-2">
-                    <span className="font-medium">5</span>
-                    <span className="font-medium">15</span>
-                  </div>
                 </div>
               </div>
 

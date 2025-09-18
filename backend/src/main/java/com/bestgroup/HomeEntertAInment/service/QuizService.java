@@ -358,7 +358,6 @@ public class QuizService {
                 .topics(quiz.getTopics())
                 .difficulty(quiz.getDifficulty())
                 .questionCount(quiz.getQuestionCount())
-                .createdAt(quiz.getCreatedAt())
                 .description(quiz.getDescription())
                 .build();
     }

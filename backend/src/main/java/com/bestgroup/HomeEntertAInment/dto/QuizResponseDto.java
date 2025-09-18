@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -52,11 +51,6 @@ public class QuizResponseDto {
      * Number of questions in the quiz
      */
     private Integer questionCount;
-    
-    /**
-     * Timestamp when the quiz was created
-     */
-    private LocalDateTime createdAt;
     
     /**
      * Description of the quiz

@@ -75,10 +75,29 @@ export const CreateSessionCard = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-4">
-        Create New Game Session
-      </h2>
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+      <div className="flex items-center space-x-3 mb-6">
+        <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center">
+          <svg
+            className="w-5 h-5 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            width={32}
+            height={32}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
+          </svg>
+        </div>
+        <h2 className="text-xl font-semibold text-gray-900">
+          Create New Game Session
+        </h2>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Game Name */}
@@ -95,7 +114,7 @@ export const CreateSessionCard = () => {
             value={gameName}
             onChange={(e) => setGameName(e.target.value)}
             placeholder="e.g., Monopoly, Chess, Catan"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
             required
           />
         </div>
@@ -114,7 +133,7 @@ export const CreateSessionCard = () => {
             value={playerNames}
             onChange={(e) => setPlayerNames(e.target.value)}
             placeholder="e.g., Alice, Bob, Charlie (comma-separated)"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
           />
           <p className="text-xs text-gray-500 mt-1">
             Enter player names separated by commas
@@ -134,7 +153,7 @@ export const CreateSessionCard = () => {
             id="ruleFile"
             accept=".pdf"
             onChange={handleFileChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
             required
           />
           <p className="text-xs text-gray-500 mt-1">
@@ -144,14 +163,40 @@ export const CreateSessionCard = () => {
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-md p-3">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center space-x-2">
+            <svg
+              className="w-5 h-5 text-red-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
             <p className="text-sm text-red-600">{error}</p>
           </div>
         )}
 
         {/* Success Message */}
         {success && (
-          <div className="bg-green-50 border border-green-200 rounded-md p-3">
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center space-x-2">
+            <svg
+              className="w-5 h-5 text-green-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
             <p className="text-sm text-green-600">{success}</p>
           </div>
         )}
@@ -160,7 +205,7 @@ export const CreateSessionCard = () => {
         <button
           type="submit"
           disabled={isCreating}
-          className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-medium shadow-sm hover:shadow-md"
         >
           {isCreating ? "Creating Session..." : "Create Session"}
         </button>

@@ -1,12 +1,22 @@
 package com.bestgroup.HomeEntertAInment.boardgame.controller;
 
+import com.bestgroup.HomeEntertAInment.boardgame.dto.ConvertApiResponseDto;
+import com.bestgroup.HomeEntertAInment.boardgame.dto.DecodedConvertApiResponse;
+import com.bestgroup.HomeEntertAInment.boardgame.entity.Player;
+import com.bestgroup.HomeEntertAInment.boardgame.entity.RuleSet;
 import com.bestgroup.HomeEntertAInment.boardgame.entity.Session;
+import com.bestgroup.HomeEntertAInment.boardgame.service.ConvertApiService;
+import com.bestgroup.HomeEntertAInment.boardgame.service.RuleSetService;
 import com.bestgroup.HomeEntertAInment.boardgame.service.SessionService;
+import com.bestgroup.HomeEntertAInment.boardgame.utils.DecodeBase64ToString;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +32,8 @@ import java.util.Optional;
 public class SessionController {
 
     private final SessionService sessionService;
+    private final RuleSetService ruleSetService;
+    private final ConvertApiService convertApiService;
 
     /**
      * Get all sessions
@@ -105,6 +117,101 @@ public class SessionController {
             log.error("Error creating session for game {}: {}", gameName, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    /**
+     * Create a new session with PDF rule file and players
+     * 
+     * @param gameName The name of the board game
+     * @param playerNames Comma-separated list of player names
+     * @param ruleFile The PDF file containing game rules
+     * @return ResponseEntity containing the created session with rule set
+     */
+    @PostMapping("/create-with-rules")
+    public ResponseEntity<Session> createSessionWithRules(@RequestParam String gameName,
+                                                        @RequestParam String playerNames,
+                                                        @RequestParam("ruleFile") MultipartFile ruleFile) {
+        try {
+            log.info("Received request to create session with rules for game: {} with players: {}", gameName, playerNames);
+            
+            if (ruleFile.isEmpty()) {
+                log.warn("Rule file is empty");
+                return ResponseEntity.badRequest().build();
+            }
+
+            // Convert PDF to text using ConvertApiService
+            ConvertApiResponseDto convertResult = convertApiService.convertPdfToText(ruleFile);
+            DecodedConvertApiResponse decodedResponse = transformToDecodedResponse(convertResult);
+            
+            // Create RuleSet from the decoded response
+            RuleSet ruleSet = ruleSetService.createRuleSet(decodedResponse);
+            log.info("Created rule set: {}", ruleSet.getId());
+            
+            // Create Session
+            Session session = sessionService.createSession(gameName, null);
+            
+            // Set the rule set to the session
+            session.setRuleSet(ruleSet);
+            
+            // Parse player names and create Player entities
+            List<Player> players = new ArrayList<>();
+            if (playerNames != null && !playerNames.trim().isEmpty()) {
+                String[] names = playerNames.split(",");
+                for (String name : names) {
+                    if (!name.trim().isEmpty()) {
+                        Player player = Player.builder()
+                                .playerName(name.trim())
+                                .session(session)
+                                .build();
+                        players.add(player);
+                    }
+                }
+            }
+            session.setPlayers(players);
+            
+            // Save the updated session with players and rule set
+            Session savedSession = sessionService.saveSession(session);
+            
+            log.info("Created session with rules: {} with {} players", savedSession.getSessionId(), players.size());
+            return ResponseEntity.ok(savedSession);
+            
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            log.error("Invalid request: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (IOException e) {
+            log.error("Error processing rule file: {}", e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        } catch (Exception e) {
+            log.error("Unexpected error creating session with rules: {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    /**
+     * Transforms ConvertApiResponseDto to DecodedConvertApiResponse
+     * Extracts the first file from the response and decodes its content
+     *
+     * @param response The original ConvertAPI response
+     * @return DecodedConvertApiResponse with decoded text content
+     */
+    private DecodedConvertApiResponse transformToDecodedResponse(ConvertApiResponseDto response) {
+        if (response == null || response.getFiles() == null || response.getFiles().isEmpty()) {
+            throw new IllegalStateException("No files found in the conversion response");
+        }
+
+        // Get the first converted file (assuming single file conversion)
+        ConvertApiResponseDto.ConvertedFile file = response.getFiles().get(0);
+        
+        // Decode the Base64 file data to get the text content
+        String decodedData = DecodeBase64ToString.decode(file.getFileData());
+        
+        return new DecodedConvertApiResponse(
+            file.getFileName(),
+            file.getFileExt(),
+            file.getFileSize(),
+            file.getFileData(), // codedData (original Base64)
+            decodedData         // decodedData (decoded text)
+        );
     }
 
     /**

@@ -132,6 +132,17 @@ public class SessionService {
 
 
     /**
+     * Save a session (for updates)
+     *
+     * @param session The session to save
+     * @return The saved session
+     */
+    public Session saveSession(Session session) {
+        log.info("Saving session: {}", session.getSessionId());
+        return sessionRepository.save(session);
+    }
+
+    /**
      * Generate a unique session ID
      *
      * @return A unique session identifier

@@ -1,5 +1,6 @@
 package com.bestgroup.HomeEntertAInment.boardgame.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -71,5 +72,6 @@ public class Session {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rule_set_id")
+    @JsonIgnore
     private RuleSet ruleSet;
 }

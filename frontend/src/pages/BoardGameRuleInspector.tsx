@@ -1,5 +1,4 @@
-import React from "react";
-import { SessionSidebar } from "../components/SessionSidebar";
+import { SessionSidebar, CreateSessionCard } from "../components";
 
 export default function BoardGameRuleInspector() {
   return (
@@ -14,6 +13,10 @@ export default function BoardGameRuleInspector() {
         <p className="text-gray-600 mt-2">
           Sessions are displayed in the sidebar.
         </p>
+
+        <div className="mt-8">
+          <CreateSessionCard />
+        </div>
       </div>
     </div>
   );

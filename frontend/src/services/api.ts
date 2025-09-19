@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
   SESSION_BY_ID: (id: string) => `${API_BASE_URL}/api/boardgame/sessions/${id}`,
   SESSIONS_BY_USER: (userId: string) =>
     `${API_BASE_URL}/api/boardgame/sessions/user/${userId}`,
+  SESSIONS_CREATE_WITH_RULES: `${API_BASE_URL}/api/boardgame/sessions/create-with-rules`,
   RULESETS: `${API_BASE_URL}/api/boardgame/rulesets`,
   RULESET_BY_ID: (id: number) => `${API_BASE_URL}/api/boardgame/rulesets/${id}`,
   RULESET_BY_FILENAME: (fileName: string) =>

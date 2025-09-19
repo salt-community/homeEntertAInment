@@ -85,24 +85,6 @@ public class SessionController {
     }
 
 
-    /**
-     * Get sessions by user ID
-     * 
-     * @param userId The user identifier
-     * @return ResponseEntity containing list of sessions for the specified user
-     */
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Session>> getSessionsByUser(@PathVariable String userId) {
-        try {
-            log.info("Received request to get sessions for user: {}", userId);
-            List<Session> sessions = sessionService.getSessionsByUser(userId);
-            log.info("Retrieved {} sessions for user: {}", sessions.size(), userId);
-            return ResponseEntity.ok(sessions);
-        } catch (Exception e) {
-            log.error("Error retrieving sessions for user {}: {}", userId, e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
-    }
 
     /**
      * Create a new session

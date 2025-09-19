@@ -9,7 +9,7 @@ export default function QuizIndex() {
   };
 
   const handleTakeSampleQuiz = () => {
-    navigate({ to: "/quiz/card" });
+    navigate({ to: "/quiz/quiz" });
   };
 
   return (

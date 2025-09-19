@@ -1,55 +1,21 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
 import type { QuizResponse, QuestionResponse } from "../../services/quizService";
 
-// Mock quiz data for testing
-const mockQuiz: QuizResponse = {
-  id: "mock-quiz-1",
-  title: "Sample Science Quiz",
-  description: "A fun quiz about basic science concepts",
-  ageGroup: "teen",
-  topics: ["Science", "General Knowledge"],
-  difficulty: "medium",
-  questions: [
-    {
-      id: "q1",
-      questionText: "What is the chemical symbol for water?",
-      options: ["H2O", "CO2", "NaCl", "O2"],
-      correctAnswerIndex: 0,
-      explanation: "Water is composed of two hydrogen atoms and one oxygen atom, hence H2O.",
-      difficulty: "easy",
-      ageGroup: "teen"
-    },
-    {
-      id: "q2", 
-      questionText: "Which planet is known as the Red Planet?",
-      options: ["Venus", "Mars", "Jupiter", "Saturn"],
-      correctAnswerIndex: 1,
-      explanation: "Mars is called the Red Planet due to iron oxide (rust) on its surface.",
-      difficulty: "easy",
-      ageGroup: "teen"
-    },
-    {
-      id: "q3",
-      questionText: "What is the speed of light in a vacuum?",
-      options: ["300,000 km/s", "150,000 km/s", "450,000 km/s", "600,000 km/s"],
-      correctAnswerIndex: 0,
-      explanation: "The speed of light in a vacuum is approximately 299,792,458 meters per second, which is about 300,000 km/s.",
-      difficulty: "medium",
-      ageGroup: "teen"
-    }
-  ]
-};
+interface QuizCardProps {
+  quiz: QuizResponse;
+  onRestart?: () => void;
+  onBackToQuiz?: () => void;
+}
 
-export default function QuizCard() {
-  const navigate = useNavigate();
+export default function QuizCard({ quiz, onRestart, onBackToQuiz }: QuizCardProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
 
-  const currentQuestion = mockQuiz.questions[currentQuestionIndex];
-  const isLastQuestion = currentQuestionIndex === mockQuiz.questions.length - 1;
+  const currentQuestion = quiz.questions[currentQuestionIndex];
+  const isLastQuestion = currentQuestionIndex === quiz.questions.length - 1;
+  const isFirstQuestion = currentQuestionIndex === 0;
 
   const handleAnswerSelect = (answerIndex: number) => {
     const newAnswers = [...selectedAnswers];
@@ -77,15 +43,16 @@ export default function QuizCard() {
     setSelectedAnswers([]);
     setShowResults(false);
     setQuizCompleted(false);
+    onRestart?.();
   };
 
   const handleBackToQuiz = () => {
-    navigate({ to: "/quiz" });
+    onBackToQuiz?.();
   };
 
   const calculateScore = () => {
     let correct = 0;
-    mockQuiz.questions.forEach((question, index) => {
+    quiz.questions.forEach((question, index) => {
       if (selectedAnswers[index] === question.correctAnswerIndex) {
         correct++;
       }
@@ -104,25 +71,25 @@ export default function QuizCard() {
 
   if (showResults) {
     const score = calculateScore();
-    const percentage = Math.round((score / mockQuiz.questions.length) * 100);
+    const percentage = Math.round((score / quiz.questions.length) * 100);
 
     return (
       <div className="max-w-4xl mx-auto p-6">
         <div className="bg-white rounded-xl shadow-lg p-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">🎉 Quiz Complete!</h1>
-            <h2 className="text-xl text-gray-700 mb-4">{mockQuiz.title}</h2>
+            <h2 className="text-xl text-gray-700 mb-4">{quiz.title}</h2>
           </div>
 
           <div className="text-center mb-8">
             <div className="text-6xl font-bold text-blue-600 mb-2">{percentage}%</div>
             <div className="text-lg text-gray-600">
-              {score} out of {mockQuiz.questions.length} questions correct
+              {score} out of {quiz.questions.length} questions correct
             </div>
           </div>
 
           <div className="space-y-4 mb-8">
-            {mockQuiz.questions.map((question, index) => {
+            {quiz.questions.map((question, index) => {
               const userAnswer = selectedAnswers[index];
               const isCorrect = userAnswer === question.correctAnswerIndex;
               
@@ -148,13 +115,13 @@ export default function QuizCard() {
           <div className="flex justify-center space-x-4">
             <button
               onClick={handleRestart}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               🔄 Retake Quiz
             </button>
             <button
               onClick={handleBackToQuiz}
-              className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 font-medium"
+              className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               ← Back to Quiz Menu
             </button>
@@ -170,15 +137,15 @@ export default function QuizCard() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{mockQuiz.title}</h1>
-            <p className="text-gray-600">{mockQuiz.description}</p>
+            <h1 className="text-2xl font-bold text-gray-900">{quiz.title}</h1>
+            <p className="text-gray-600">{quiz.description}</p>
           </div>
           <div className="text-right">
-            <div className="text-sm text-gray-500">Question {currentQuestionIndex + 1} of {mockQuiz.questions.length}</div>
+            <div className="text-sm text-gray-500">Question {currentQuestionIndex + 1} of {quiz.questions.length}</div>
             <div className="w-32 bg-gray-200 rounded-full h-2 mt-1">
               <div 
                 className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${((currentQuestionIndex + 1) / mockQuiz.questions.length) * 100}%` }}
+                style={{ width: `${((currentQuestionIndex + 1) / quiz.questions.length) * 100}%` }}
               ></div>
             </div>
           </div>
@@ -222,8 +189,8 @@ export default function QuizCard() {
         <div className="flex justify-between items-center">
           <button
             onClick={handlePrevious}
-            disabled={currentQuestionIndex === 0}
-            className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            disabled={isFirstQuestion}
+            className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
           >
             ← Previous
           </button>
@@ -231,7 +198,7 @@ export default function QuizCard() {
           <button
             onClick={handleNext}
             disabled={selectedAnswers[currentQuestionIndex] === undefined}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
           >
             {isLastQuestion ? 'Finish Quiz' : 'Next →'}
           </button>

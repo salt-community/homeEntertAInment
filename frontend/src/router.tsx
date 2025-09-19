@@ -9,7 +9,7 @@ import BoardGameRuleInspector from "./pages/BoardGameRuleInspector.tsx";
 import MovieMood from "./pages/MovieMood.tsx";
 import QuizIndex from "./pages/Quiz/index.tsx";
 import QuizCreate from "./pages/Quiz/create.tsx";
-import QuizCard from "./pages/Quiz/card.tsx";
+import Quiz from "./pages/Quiz/quiz.tsx";
 import Home from "./pages/Home.tsx";
 
 const rootRoute = createRootRoute({
@@ -52,10 +52,10 @@ const quizCreateRoute = createRoute({
   component: QuizCreate,
 });
 
-const quizCardRoute = createRoute({
+const quizRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/quiz/card",
-  component: QuizCard,
+  path: "/quiz/quiz",
+  component: Quiz,
 });
 
 const routeTree = rootRoute.addChildren([
@@ -65,7 +65,7 @@ const routeTree = rootRoute.addChildren([
   movieMoodRoute,
   quizIndexRoute,
   quizCreateRoute,
-  quizCardRoute,
+  quizRoute,
 ]);
 
 export const router = createRouter({

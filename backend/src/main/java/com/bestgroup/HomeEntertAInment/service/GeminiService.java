@@ -29,10 +29,13 @@ public class GeminiService {
     /**
      * Sends a test prompt to Gemini API to check connectivity and functionality
      *
-     * @param prompt The test prompt to send
      * @return The response text from Gemini API
      */
-    public String sendTestPrompt(String prompt) {
+    public String sendTestPrompt() {
+
+        // Test prompt as specified in requirements
+        String prompt = "This is just a status check. If you are receiving this, answer with a flat string being 'Online: Gemini Controller is up'.";
+
         // Prepare the request body according to Gemini API specification
         Map<String, Object> body = Map.of(
                 "contents", List.of(

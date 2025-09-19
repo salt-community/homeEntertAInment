@@ -4,9 +4,9 @@ services:
     container_name: postgres-db
     restart: always
     environment:
-      POSTGRES_USER: entertainment-db
-      POSTGRES_PASSWORD: entertainment-db
-      POSTGRES_DB: entertainment-db
+      POSTGRES_USER: entertainmentdb
+      POSTGRES_PASSWORD: entertainmentdb
+      POSTGRES_DB: entertainmentdb
     ports:
       - "5432:5432"
     volumes:

@@ -1,5 +1,6 @@
 package com.bestgroup.HomeEntertAInment.boardgame.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,5 +43,6 @@ public class Player {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "session_id")
+    @JsonIgnore
     private Session session;
 }

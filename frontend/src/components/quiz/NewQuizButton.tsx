@@ -1,4 +1,3 @@
-
 interface NewQuizButtonProps {
   onClick?: () => void;
   disabled?: boolean;

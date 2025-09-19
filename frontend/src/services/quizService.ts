@@ -152,7 +152,10 @@ export class QuizService {
    * @param answers The answers to submit (array of answer indices)
    * @returns Promise with quiz results
    */
-  static async submitQuiz(quizId: string, answers: number[]): Promise<QuizSubmissionResponse> {
+  static async submitQuiz(
+    quizId: string,
+    answers: number[]
+  ): Promise<QuizSubmissionResponse> {
     try {
       const response = await fetch(`${this.BASE_URL}/${quizId}/submit`, {
         method: "POST",

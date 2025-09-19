@@ -62,12 +62,7 @@ export interface QuizListItem {
   topics: string[];
   difficulty: string;
   questionCount: number;
-  createdAt: string;
-}
-
-// Quiz answers type for submission
-export interface QuizAnswers {
-  [questionId: string]: number; // questionId -> selected answer index
+  description: string;
 }
 
 // Quiz service for API calls
@@ -95,12 +90,12 @@ export class QuizService {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const quizData: QuizResponse = await response.json();
+      const quiz: QuizResponse = await response.json();
       return {
         success: true,
         message: "Quiz created successfully",
-        quizId: quizData.id,
-        quiz: quizData,
+        quizId: quiz.id,
+        quiz: quiz,
       };
     } catch (error) {
       console.error("Error creating quiz:", error);
@@ -154,13 +149,10 @@ export class QuizService {
   /**
    * Submit quiz answers
    * @param quizId The ID of the quiz
-   * @param answers The answers to submit
+   * @param answers The answers to submit (array of answer indices)
    * @returns Promise with quiz results
    */
-  static async submitQuiz(
-    quizId: string,
-    answers: QuizAnswers
-  ): Promise<QuizSubmissionResponse> {
+  static async submitQuiz(quizId: string, answers: number[]): Promise<QuizSubmissionResponse> {
     try {
       const response = await fetch(`${this.BASE_URL}/${quizId}/submit`, {
         method: "POST",

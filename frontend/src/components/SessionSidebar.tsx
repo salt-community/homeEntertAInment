@@ -1,6 +1,5 @@
 import React from "react";
 import { useSessions } from "../hooks/useSessions";
-import type { Session } from "../types/gameSession";
 
 interface SessionSidebarProps {
   className?: string;
@@ -14,11 +13,11 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
   if (isLoading) {
     return (
       <div
-        className={`bg-white border-r border-gray-200 flex flex-col h-full ${className}`}
+        className={`bg-white border-r border-indigo-100 flex flex-col h-full shadow-lg ${className}`}
       >
-        <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
+        <div className="p-6 border-b border-indigo-100 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-lg flex items-center justify-center shadow-md">
               <svg
                 className="w-4 h-4 text-white"
                 fill="currentColor"
@@ -29,7 +28,7 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 <circle cx="12" cy="12" r="8" />
               </svg>
             </div>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold bg-gradient-to-r from-indigo-800 to-purple-700 bg-clip-text text-transparent">
               Game Sessions
             </h2>
           </div>
@@ -48,11 +47,11 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
   if (error) {
     return (
       <div
-        className={`bg-white border-r border-gray-200 flex flex-col h-full ${className}`}
+        className={`bg-white border-r border-indigo-100 flex flex-col h-full shadow-lg ${className}`}
       >
-        <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
+        <div className="p-6 border-b border-indigo-100 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-lg flex items-center justify-center shadow-md">
               <svg
                 className="w-4 h-4 text-white"
                 fill="currentColor"
@@ -63,7 +62,7 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 <circle cx="12" cy="12" r="8" />
               </svg>
             </div>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold bg-gradient-to-r from-indigo-800 to-purple-700 bg-clip-text text-transparent">
               Game Sessions
             </h2>
           </div>
@@ -118,15 +117,17 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
           </div>
           <h2 className="text-lg font-semibold text-gray-900">Game Sessions</h2>
         </div>
-        <p className="text-sm text-gray-600 mt-1">Manage your active games</p>
+        <p className="text-sm text-indigo-600 mt-1 font-medium">
+          Manage your active games
+        </p>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4">
         {sessions.length === 0 ? (
           <div className="text-center py-8">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
               <svg
-                className="w-8 h-8 text-gray-400"
+                className="w-8 h-8 text-indigo-500"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 width={32}
@@ -135,8 +136,10 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 <circle cx="12" cy="12" r="10" />
               </svg>
             </div>
-            <p className="text-gray-500 text-sm mb-1">No sessions found</p>
-            <p className="text-gray-400 text-xs">
+            <p className="text-indigo-600 text-sm mb-1 font-medium">
+              No sessions found
+            </p>
+            <p className="text-indigo-500 text-xs">
               Create your first session to get started
             </p>
           </div>
@@ -145,27 +148,27 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
             {sessions.map((session) => (
               <div
                 key={session.id}
-                className="p-4 rounded-xl transition-all duration-200 bg-white border border-gray-200 hover:bg-gray-50 hover:shadow-md hover:border-gray-300 cursor-pointer"
+                className="p-4 rounded-xl transition-all duration-300 bg-white border border-indigo-100 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 hover:shadow-lg hover:border-indigo-200 cursor-pointer"
               >
                 <div className="flex items-start justify-between mb-2">
-                  <h4 className="font-semibold text-gray-800 text-sm">
+                  <h4 className="font-semibold text-indigo-800 text-sm">
                     {session.gameName}
                   </h4>
                   <div
                     className={`w-2 h-2 rounded-full ${
-                      session.isActive ? "bg-green-500" : "bg-gray-400"
+                      session.isActive ? "bg-emerald-500" : "bg-gray-400"
                     }`}
                   ></div>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-indigo-600">
                     ID: {session.sessionId.slice(0, 12)}...
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-indigo-600">
                     Created: {new Date(session.createdAt).toLocaleDateString()}
                   </p>
                   {session.players && session.players.length > 0 && (
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-purple-600 font-medium">
                       {session.players.length} player(s)
                     </p>
                   )}

@@ -54,7 +54,7 @@ const quizCreateRoute = createRoute({
 
 const quizRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/quiz/quiz",
+  path: "/quiz/play",
   component: Quiz,
 });
 

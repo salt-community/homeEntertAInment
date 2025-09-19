@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/entertainment-db}
-    username: ${JDBC_DATABASE_USERNAME:entertainment-db}
-    password: ${JDBC_DATABASE_PASSWORD:entertainment-db}
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/entertainmentdb}
+    username: ${JDBC_DATABASE_USERNAME:entertainmentdb}
+    password: ${JDBC_DATABASE_PASSWORD:entertainmentdb}
     hikari:
       maxLifetime: 300000
       validationTimeout: 3000

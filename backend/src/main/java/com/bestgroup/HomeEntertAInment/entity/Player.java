@@ -22,9 +22,6 @@ public class Player {
     @Column(nullable = false)
     private String name;
 
-    @Column
-    private String email;
-
     @Column(name = "created_at")
     private java.time.LocalDateTime createdAt;
 

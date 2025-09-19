@@ -53,7 +53,7 @@ export default function QuizIndex() {
 
   const handleTakeSampleQuiz = () => {
     // Store quiz data in sessionStorage for the quiz page to retrieve
-    sessionStorage.setItem('currentQuiz', JSON.stringify(mockQuiz));
+    sessionStorage.setItem("currentQuiz", JSON.stringify(mockQuiz));
     navigate({ to: "/quiz/quiz" });
   };
 

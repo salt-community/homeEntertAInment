@@ -9,13 +9,13 @@ export default function Quiz() {
 
   // Get quiz data from sessionStorage
   useEffect(() => {
-    const storedQuiz = sessionStorage.getItem('currentQuiz');
+    const storedQuiz = sessionStorage.getItem("currentQuiz");
     if (storedQuiz) {
       try {
         const parsedQuiz = JSON.parse(storedQuiz) as QuizResponse;
         setQuiz(parsedQuiz);
       } catch (error) {
-        console.error('Error parsing quiz data:', error);
+        console.error("Error parsing quiz data:", error);
         setQuiz(null);
       }
     }
@@ -27,7 +27,7 @@ export default function Quiz() {
 
   const handleBackToQuiz = () => {
     // Clear the stored quiz data when navigating back
-    sessionStorage.removeItem('currentQuiz');
+    sessionStorage.removeItem("currentQuiz");
     navigate({ to: "/quiz" });
   };
 

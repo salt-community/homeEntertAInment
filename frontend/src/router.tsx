@@ -7,7 +7,8 @@ import RootLayout from "./layouts/RootLayout.tsx";
 import StoryGenerator from "./pages/StoryGenerator.tsx";
 import BoardGameRuleInspector from "./pages/BoardGameRuleInspector.tsx";
 import MovieMood from "./pages/MovieMood.tsx";
-import QuizGenerator from "./pages/QuizGenerator.tsx";
+import QuizIndex from "./pages/Quiz/index.tsx";
+import QuizCreate from "./pages/Quiz/create.tsx";
 import Home from "./pages/Home.tsx";
 
 const rootRoute = createRootRoute({
@@ -38,10 +39,16 @@ const movieMoodRoute = createRoute({
   component: MovieMood,
 });
 
-const quizGeneratorRoute = createRoute({
+const quizIndexRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/quiz-generator",
-  component: QuizGenerator,
+  path: "/quiz",
+  component: QuizIndex,
+});
+
+const quizCreateRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/quiz/create",
+  component: QuizCreate,
 });
 
 const routeTree = rootRoute.addChildren([
@@ -49,7 +56,8 @@ const routeTree = rootRoute.addChildren([
   storyGeneratorRoute,
   boardGameRuleInspectorRoute,
   movieMoodRoute,
-  quizGeneratorRoute,
+  quizIndexRoute,
+  quizCreateRoute,
 ]);
 
 export const router = createRouter({

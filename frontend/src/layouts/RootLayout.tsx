@@ -8,7 +8,7 @@ export default function RootLayout() {
         <Link to="/story-generator">Story Generator</Link>
         <Link to="/board-game-rule-inspector">Board Game Rule Inspector</Link>
         <Link to="/movie-mood">Movie Mood</Link>
-        <Link to="/quiz-generator">Quiz Generator</Link>
+        <Link to="/quiz">Quiz Generator</Link>
       </nav>
       <Outlet />
     </div>

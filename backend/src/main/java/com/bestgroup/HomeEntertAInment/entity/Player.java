@@ -25,17 +25,8 @@ public class Player {
     @Column
     private String email;
 
-    @Column
-    private Integer score;
-
-    @Column(name = "is_active")
-    private Boolean isActive = true;
-
     @Column(name = "created_at")
     private java.time.LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private java.time.LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "session_id")
@@ -44,11 +35,5 @@ public class Player {
     @PrePersist
     protected void onCreate() {
         createdAt = java.time.LocalDateTime.now();
-        updatedAt = java.time.LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = java.time.LocalDateTime.now();
     }
 }

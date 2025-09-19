@@ -65,11 +65,6 @@ public class Session {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    /**
-     * Session metadata for additional context
-     */
-    @Column(name = "metadata", columnDefinition = "TEXT")
-    private String metadata;
 
     /**
      * Reference to the rule set used in this session

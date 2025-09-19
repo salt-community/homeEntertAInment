@@ -27,7 +27,6 @@ export interface Session {
   players: Player[];
   isActive: boolean;
   createdAt: string;
-  metadata?: string;
   ruleSet?: RuleSet;
 }
 

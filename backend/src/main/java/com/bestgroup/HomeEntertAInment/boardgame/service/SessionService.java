@@ -168,29 +168,6 @@ public class SessionService {
         return false;
     }
 
-    /**
-     * Get sessions by game name
-     *
-     * @param gameName The name of the board game
-     * @return List of sessions for the specified game
-     */
-    @Transactional(readOnly = true)
-    public List<Session> getSessionsByGame(String gameName) {
-        log.info("Retrieving sessions for game: {}", gameName);
-        return sessionRepository.findByGameName(gameName);
-    }
-
-    /**
-     * Get active sessions by game name
-     *
-     * @param gameName The name of the board game
-     * @return List of active sessions for the specified game
-     */
-    @Transactional(readOnly = true)
-    public List<Session> getActiveSessionsByGame(String gameName) {
-        log.info("Retrieving active sessions for game: {}", gameName);
-        return sessionRepository.findByGameNameAndIsActiveTrue(gameName);
-    }
 
     /**
      * Get sessions by user ID

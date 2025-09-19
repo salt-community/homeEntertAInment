@@ -84,43 +84,6 @@ public class SessionController {
         }
     }
 
-    /**
-     * Get sessions by game name
-     * 
-     * @param gameName The name of the board game
-     * @return ResponseEntity containing list of sessions for the specified game
-     */
-    @GetMapping("/game/{gameName}")
-    public ResponseEntity<List<Session>> getSessionsByGame(@PathVariable String gameName) {
-        try {
-            log.info("Received request to get sessions for game: {}", gameName);
-            List<Session> sessions = sessionService.getSessionsByGame(gameName);
-            log.info("Retrieved {} sessions for game: {}", sessions.size(), gameName);
-            return ResponseEntity.ok(sessions);
-        } catch (Exception e) {
-            log.error("Error retrieving sessions for game {}: {}", gameName, e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    /**
-     * Get active sessions by game name
-     * 
-     * @param gameName The name of the board game
-     * @return ResponseEntity containing list of active sessions for the specified game
-     */
-    @GetMapping("/game/{gameName}/active")
-    public ResponseEntity<List<Session>> getActiveSessionsByGame(@PathVariable String gameName) {
-        try {
-            log.info("Received request to get active sessions for game: {}", gameName);
-            List<Session> activeSessions = sessionService.getActiveSessionsByGame(gameName);
-            log.info("Retrieved {} active sessions for game: {}", activeSessions.size(), gameName);
-            return ResponseEntity.ok(activeSessions);
-        } catch (Exception e) {
-            log.error("Error retrieving active sessions for game {}: {}", gameName, e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
-    }
 
     /**
      * Get sessions by user ID

@@ -32,21 +32,6 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
      */
     List<Session> findByIsActiveTrue();
 
-    /**
-     * Find all sessions for a specific game
-     *
-     * @param gameName The name of the board game
-     * @return List of sessions for the specified game
-     */
-    List<Session> findByGameName(String gameName);
-
-    /**
-     * Find all active sessions for a specific game
-     *
-     * @param gameName The name of the board game
-     * @return List of active sessions for the specified game
-     */
-    List<Session> findByGameNameAndIsActiveTrue(String gameName);
 
     /**
      * Find sessions by user ID
@@ -81,13 +66,6 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     @Query("SELECT s FROM Session s WHERE s.lastAccessedAt < :cutoffDate OR s.lastAccessedAt IS NULL")
     List<Session> findInactiveSessions(@Param("cutoffDate") LocalDateTime cutoffDate);
 
-    /**
-     * Count active sessions for a specific game
-     *
-     * @param gameName The name of the board game
-     * @return Number of active sessions for the specified game
-     */
-    long countByGameNameAndIsActiveTrue(String gameName);
 
     /**
      * Find sessions by game state

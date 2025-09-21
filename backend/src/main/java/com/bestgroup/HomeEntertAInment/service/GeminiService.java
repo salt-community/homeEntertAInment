@@ -1,7 +1,6 @@
 package com.bestgroup.HomeEntertAInment.service;
 
 import com.bestgroup.HomeEntertAInment.dto.GeminiResponseDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -22,7 +21,6 @@ public class GeminiService {
 
     @Value("${GEMINI_API_KEY}")
     private String apiKey;
-    private final ObjectMapper mapper;
 
     // Gemini API endpoint for content generation
     private static final String URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
@@ -31,10 +29,13 @@ public class GeminiService {
     /**
      * Sends a test prompt to Gemini API to check connectivity and functionality
      *
-     * @param prompt The test prompt to send
      * @return The response text from Gemini API
      */
-    public String sendTestPrompt(String prompt) {
+    public String sendTestPrompt() {
+
+        // Test prompt as specified in requirements
+        String prompt = "This is just a status check. If you are receiving this, answer with a flat string being 'Online: Gemini Controller is up'.";
+
         // Prepare the request body according to Gemini API specification
         Map<String, Object> body = Map.of(
                 "contents", List.of(

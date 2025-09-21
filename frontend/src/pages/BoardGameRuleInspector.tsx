@@ -4,7 +4,5 @@ export default function BoardGameRuleInspector() {
       <h2>Board Game Rule Inspector</h2>
       <p>Coming soon.</p>
     </div>
-  )
+  );
 }
-
-

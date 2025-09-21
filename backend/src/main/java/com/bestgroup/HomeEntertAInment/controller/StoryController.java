@@ -3,10 +3,11 @@ package com.bestgroup.HomeEntertAInment.controller;
 import com.bestgroup.HomeEntertAInment.dto.story.StoryRequest;
 import com.bestgroup.HomeEntertAInment.dto.story.StoryResponse;
 import com.bestgroup.HomeEntertAInment.service.StoryService;
-import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,7 +25,15 @@ public class StoryController {
         @ApiResponse(responseCode = "400", description = "Invalid input"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public StoryResponse generateStory(@RequestBody StoryRequest storyRequest) {
-        return storyService.generateStory(storyRequest);
+    public ResponseEntity<StoryResponse> generateStory(@RequestBody StoryRequest storyRequest) {
+        try {
+            StoryResponse storyResponse = storyService.generateStory(storyRequest);
+            return ResponseEntity.ok(storyResponse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(null);
+        }
     }
+
 }

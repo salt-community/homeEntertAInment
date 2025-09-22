@@ -16,7 +16,7 @@ export const SessionInfo: React.FC<SessionInfoProps> = ({ sessionId }) => {
     try {
       setIsLoading(true);
       setError(null);
-        const response = await fetch(API_ENDPOINTS.SESSION_BY_ID(sessionId));
+      const response = await fetch(API_ENDPOINTS.SESSION_BY_ID(sessionId));
       if (!response.ok) {
         throw new Error(`Failed to fetch session: ${response.statusText}`);
       }
@@ -36,10 +36,13 @@ export const SessionInfo: React.FC<SessionInfoProps> = ({ sessionId }) => {
   const formatRules = (rules: string) => {
     // Convert markdown-style formatting to HTML-like display
     return rules
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
       .replace(/# (.*?)\n/g, '<h1 class="text-lg font-bold mb-2">$1</h1>')
-      .replace(/## (.*?)\n/g, '<h2 class="text-md font-semibold mb-2 mt-4">$1</h2>')
-      .replace(/\n/g, '<br>');
+      .replace(
+        /## (.*?)\n/g,
+        '<h2 class="text-md font-semibold mb-2 mt-4">$1</h2>'
+      )
+      .replace(/\n/g, "<br>");
   };
 
   if (isLoading) {
@@ -80,18 +83,19 @@ export const SessionInfo: React.FC<SessionInfoProps> = ({ sessionId }) => {
           </svg>
         </div>
         <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">{session.gameName}</h1>
-            <p className="text-sm text-white/60">
-              Session ID: {session.id}
-            </p>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
+            {session.gameName}
+          </h1>
         </div>
       </div>
 
       {/* Players */}
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-white mb-2">Players ({session.players.length})</h3>
+        <h3 className="text-lg font-semibold text-white mb-2">
+          Players ({session.players.length})
+        </h3>
         <div className="flex flex-wrap gap-2">
-            {session.players.map((player) => (
+          {session.players.map((player) => (
             <span
               key={player.id}
               className="px-3 py-1 bg-gradient-to-r from-[#F930C7]/20 to-[#3076F9]/20 text-white rounded-full text-sm font-medium border border-[#F930C7]/50"
@@ -99,30 +103,6 @@ export const SessionInfo: React.FC<SessionInfoProps> = ({ sessionId }) => {
               {player.playerName}
             </span>
           ))}
-        </div>
-      </div>
-
-      {/* Game State */}
-      <div className="mb-4">
-        <div className="flex items-center space-x-2">
-          <span className="text-sm font-medium text-white/80">Status:</span>
-          <span
-            className={`px-2 py-1 rounded-full text-xs font-medium ${
-              session.isActive
-                ? "bg-green-900/20 text-green-400 border border-green-800"
-                : "bg-gray-800 text-gray-400 border border-gray-700"
-            }`}
-          >
-            {session.isActive ? "Active" : "Inactive"}
-          </span>
-          {session.gameState && (
-            <>
-              <span className="text-sm font-medium text-white/80">State:</span>
-              <span className="px-2 py-1 bg-gradient-to-r from-[#F930C7]/20 to-[#3076F9]/20 text-white rounded-full text-xs font-medium border border-[#F930C7]/50">
-                {session.gameState}
-              </span>
-            </>
-          )}
         </div>
       </div>
 
@@ -150,13 +130,15 @@ export const SessionInfo: React.FC<SessionInfoProps> = ({ sessionId }) => {
               />
             </svg>
           </button>
-          
+
           {isRulesExpanded && (
             <div className="mt-3 p-4 bg-gray-900 rounded-lg border border-gray-700">
               <div
                 className="text-sm text-white/80 leading-relaxed prose prose-sm max-w-none"
                 dangerouslySetInnerHTML={{
-                  __html: formatRules(session.ruleSet.decodedData || "No rules available")
+                  __html: formatRules(
+                    session.ruleSet.decodedData || "No rules available"
+                  ),
                 }}
               />
             </div>

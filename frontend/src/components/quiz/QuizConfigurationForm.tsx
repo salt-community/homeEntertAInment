@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { QuizService } from "../../services/quizService";
 import type { QuizConfiguration as QuizConfigType } from "../../services/quizService";
+import QuizLoadingModal from "./QuizLoadingModal";
 
 // Custom slider styles
 const sliderStyles = `
@@ -69,7 +69,7 @@ export default function QuizConfigurationForm({
     questionCount: 10,
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleTopicToggle = (topic: string) => {
     setConfig((prev) => ({
@@ -83,22 +83,10 @@ export default function QuizConfigurationForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (config.ageGroup && config.difficulty && config.topics.length > 0) {
-      setIsSubmitting(true);
-      try {
-        const response = await QuizService.createQuiz(config);
-        if (response.success) {
-          console.log("Quiz created successfully:", response.message);
-          onSubmit(config);
-        } else {
-          console.error("Failed to create quiz:", response.message);
-          // TODO: Show error message to user
-        }
-      } catch (error) {
-        console.error("Error creating quiz:", error);
-        // TODO: Show error message to user
-      } finally {
-        setIsSubmitting(false);
-      }
+      setIsGenerating(true);
+      // The actual quiz creation will be handled by the parent component (create.tsx)
+      // This just triggers the loading state and passes the config
+      onSubmit(config);
     }
   };
 
@@ -108,6 +96,7 @@ export default function QuizConfigurationForm({
   return (
     <>
       <style>{sliderStyles}</style>
+      <QuizLoadingModal isOpen={isGenerating} />
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           <div className="p-8">
@@ -272,10 +261,10 @@ export default function QuizConfigurationForm({
                 </button>
                 <button
                   type="submit"
-                  disabled={!isFormValid || isSubmitting}
+                  disabled={!isFormValid || isGenerating}
                   className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95"
                 >
-                  {isSubmitting ? "🔄 Creating Quiz..." : "🎯 Create Quiz"}
+                  {isGenerating ? "🔄 Generating..." : "🎯 Generate Quiz"}
                 </button>
               </div>
             </form>

@@ -1,12 +1,16 @@
 import { useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import QuizConfigurationForm from "../../components/quiz/QuizConfigurationForm";
+import QuizLoadingModal from "../../components/quiz/QuizLoadingModal";
 import type { QuizConfiguration } from "../../services/quizService";
 
 export default function QuizCreate() {
   const navigate = useNavigate();
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleFormSubmit = async (config: QuizConfiguration) => {
     console.log("Quiz configuration submitted:", config);
+    setIsGenerating(true);
 
     try {
       // Import QuizService dynamically to avoid circular dependencies
@@ -24,11 +28,13 @@ export default function QuizCreate() {
       } else {
         console.error("Failed to create quiz:", response.message);
         // TODO: Show error message to user
+        setIsGenerating(false);
         navigate({ to: "/quiz" });
       }
     } catch (error) {
       console.error("Error creating quiz:", error);
       // TODO: Show error message to user
+      setIsGenerating(false);
       navigate({ to: "/quiz" });
     }
   };
@@ -39,6 +45,7 @@ export default function QuizCreate() {
 
   return (
     <div>
+      <QuizLoadingModal isOpen={isGenerating} />
       <QuizConfigurationForm
         onSubmit={handleFormSubmit}
         onCancel={handleFormCancel}

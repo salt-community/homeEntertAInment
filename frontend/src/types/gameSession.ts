@@ -39,3 +39,27 @@ export interface SessionResponse {
   sessions: Session[];
   total: number;
 }
+
+export interface ChatBot {
+  id: number;
+  name: string;
+  isActive: boolean;
+  sessionId: number;
+  chatEntries?: ChatEntry[];
+  createdAt: string;
+}
+
+export interface ChatEntry {
+  id: number;
+  chatbotId: number;
+  sessionId: number;
+  creator: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface CreateChatEntryRequest {
+  content: string;
+  creator: string;
+}
+}

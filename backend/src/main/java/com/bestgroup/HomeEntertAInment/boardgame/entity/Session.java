@@ -74,4 +74,11 @@ public class Session {
     @JoinColumn(name = "rule_set_id")
     @JsonIgnore
     private RuleSet ruleSet;
+
+    /**
+     * Reference to the chatbot for this session
+     */
+    @OneToOne(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private ChatBot chatBot;
 }

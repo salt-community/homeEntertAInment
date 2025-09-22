@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChatEntry, CreateChatEntryRequest } from '../types/gameSession';
+import type { ChatEntry, CreateChatEntryRequest } from '../types/gameSession';
 import { ChatService } from '../services/chatService';
 
 interface ChatInterfaceProps {

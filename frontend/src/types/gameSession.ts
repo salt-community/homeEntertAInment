@@ -62,3 +62,4 @@ export interface CreateChatEntryRequest {
   content: string;
   creator: string;
 }
+}

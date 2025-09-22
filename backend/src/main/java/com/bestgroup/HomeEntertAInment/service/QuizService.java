@@ -1,18 +1,23 @@
 package com.bestgroup.HomeEntertAInment.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.bestgroup.HomeEntertAInment.dto.QuestionResponseDto;
 import com.bestgroup.HomeEntertAInment.dto.QuizConfigurationDto;
 import com.bestgroup.HomeEntertAInment.dto.QuizResponseDto;
-import com.bestgroup.HomeEntertAInment.dto.QuestionResponseDto;
 import com.bestgroup.HomeEntertAInment.model.Question;
 import com.bestgroup.HomeEntertAInment.model.Quiz;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Service for quiz generation and management

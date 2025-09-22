@@ -8,6 +8,8 @@ import com.bestgroup.HomeEntertAInment.storybuilder.model.StoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class StoryService {
@@ -17,6 +19,11 @@ public class StoryService {
 
     public StoryResponse generateStory(StoryRequest request) {
         // TODO Make better prompt
+
+        String themes = request.theme().stream()
+            .map(Enum::name)
+            .collect(Collectors.joining(", "));
+
         StringBuilder promptBuilder = new StringBuilder("""
             Write a short children's story.
             Hero: %s
@@ -24,7 +31,7 @@ public class StoryService {
             Target age group: %s
             """.formatted(
             request.character(),
-            request.theme(),
+            themes,
             request.ageGroup()
         ));
 

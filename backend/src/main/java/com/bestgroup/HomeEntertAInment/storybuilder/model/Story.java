@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -23,8 +24,9 @@ public class Story {
 
     private String character;
 
+    @ElementCollection(targetClass = Theme.class)
     @Enumerated(EnumType.STRING)
-    private Theme theme;
+    private List<Theme> theme;
 
     @Enumerated(EnumType.STRING)
     private AgeGroup ageGroup;

@@ -6,13 +6,15 @@ import com.bestgroup.HomeEntertAInment.storybuilder.model.Twist;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 public record StoryRequest(
     @NotNull
     @Size(min = 1, max = 50)
     String character,
 
     @NotNull
-    Theme theme,
+    List<Theme> theme,
 
     AgeGroup ageGroup,
 

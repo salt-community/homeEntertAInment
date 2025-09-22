@@ -129,7 +129,7 @@ export default function StoryForm({ onSubmit, disabled }: StoryFormProps) {
           }`}
           value={character}
           onChange={(e) => setCharacter(e.target.value)}
-          placeholder="a brave rabbit"
+          placeholder="A brave rabbit named Barnaby"
           disabled={disabled}
           maxLength={50}
         />

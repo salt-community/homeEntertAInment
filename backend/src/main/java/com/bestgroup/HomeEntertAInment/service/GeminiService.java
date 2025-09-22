@@ -83,7 +83,7 @@ public class GeminiService {
      * @param config The quiz configuration containing age group, topics, difficulty, and question count
      * @return JSON string representation of the generated quiz that can be converted to Quiz model
      */
-    public String generateQuiz(QuizConfigurationDto config) {
+    public String sendQuizPrompt(QuizConfigurationDto config) {
         // Build the prompt using configuration parameters
         StringBuilder promptBuilder = new StringBuilder();
         promptBuilder.append("Generate a quiz in JSON format with the following specifications:\n\n");

@@ -1,4 +1,4 @@
-import { SessionSidebar, ChatInterface } from "../components";
+import { SessionSidebar, ChatInterface, SessionInfo } from "../components";
 import { useParams } from "@tanstack/react-router";
 
 export default function BoardGameSessionChat() {
@@ -12,10 +12,18 @@ export default function BoardGameSessionChat() {
           <SessionSidebar className="h-full" />
         </div>
 
-        {/* Chat Interface */}
-        <div className="flex-1 p-6">
-          <div className="h-full">
-            <ChatInterface sessionId={parseInt(sessionId)} />
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col">
+          {/* Session Info */}
+          <div className="p-6 pb-0">
+            <SessionInfo sessionId={parseInt(sessionId)} />
+          </div>
+
+          {/* Chat Interface */}
+          <div className="flex-1 p-6 pt-4">
+            <div className="h-full">
+              <ChatInterface sessionId={parseInt(sessionId)} />
+            </div>
           </div>
         </div>
       </div>

@@ -8,7 +8,25 @@ INSERT INTO public.rule_sets (file_size, created_at, id, coded_data, decoded_dat
         'txt',
         'UNO Ruleset.txt'
     );
-INSERT INTO public.game_sessions (is_active, created_at, id, rule_set_id, game_name, game_state, session_id) VALUES (true, '2025-09-19 18:07:29.340606', 1, 1, 'Uno', 'setup', 'session_70cd960c4a75425a9b8948908502b16b');
+INSERT INTO public.game_sessions (is_active, created_at, id, rule_set_id, game_name, game_state) VALUES (true, '2025-09-19 18:07:29.340606', 1, 1, 'Uno', 'setup');
 INSERT INTO public.game_players (created_at, id, session_id, player_name) VALUES ('2025-09-19 18:07:29.358845', 1, 1, 'Aki');
 INSERT INTO public.game_players (created_at, id, session_id, player_name) VALUES ('2025-09-19 18:07:29.363687', 2, 1, 'Juan');
+
+-- Name Chain Game
+INSERT INTO public.rule_sets (file_size, created_at, id, coded_data, decoded_data, file_ext, file_name) VALUES
+    (
+        0,
+        '2025-09-22 12:34:56.000000',
+        2,
+        'Example Only',
+        e'# 🔤 Name Chain\n\n**Players:** 3 or more\n**Materials:** None\n\n---\n\n## Setup\n- Sit in a circle.\n- Choose a starting player.\n\n---\n\n## Rules\n1. Play goes clockwise.\n2. On your turn, say a word that starts with the **last letter of the name of the person to your left**.\n   - Example: If the person on your left is **Marta**, the last letter is **a**, so you could say **apple**.\n3. You must answer within **5 seconds**, or you''re out.\n\n---\n\n## Ending the Game\n- Play continues until only one player remains — that player wins!',
+        'txt',
+        'Name Chain Rules.txt'
+    );
+
+INSERT INTO public.game_sessions (is_active, created_at, id, rule_set_id, game_name, game_state) VALUES (true, '2025-09-22 12:34:56.000000', 2, 2, 'Name Chain', 'playing');
+
+INSERT INTO public.game_players (created_at, id, session_id, player_name) VALUES ('2025-09-22 12:34:56.000000', 3, 2, 'Marta');
+INSERT INTO public.game_players (created_at, id, session_id, player_name) VALUES ('2025-09-22 12:34:56.000000', 4, 2, 'Carlos');
+INSERT INTO public.game_players (created_at, id, session_id, player_name) VALUES ('2025-09-22 12:34:56.000000', 5, 2, 'Sophie');
 

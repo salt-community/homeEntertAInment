@@ -114,7 +114,8 @@ export const CreateSessionCard = () => {
             value={gameName}
             onChange={(e) => setGameName(e.target.value)}
             placeholder="e.g., Monopoly, Chess, Catan"
-            className="w-full px-4 py-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 transition-all duration-200 bg-white hover:border-indigo-300"
+            className="w-full px-4 py-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 transition-all duration-200 bg-white hover:border-indigo-300 text-gray-900"
+            style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
             required
           />
         </div>
@@ -133,7 +134,8 @@ export const CreateSessionCard = () => {
             value={playerNames}
             onChange={(e) => setPlayerNames(e.target.value)}
             placeholder="e.g., Alice, Bob, Charlie (comma-separated)"
-            className="w-full px-4 py-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 transition-all duration-200 bg-white hover:border-indigo-300"
+            className="w-full px-4 py-3 border border-indigo-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-400 transition-all duration-200 bg-white hover:border-indigo-300 text-gray-900"
+            style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
           />
           <p className="text-xs text-indigo-500 mt-1">
             Enter player names separated by commas

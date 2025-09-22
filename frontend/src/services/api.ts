@@ -8,7 +8,7 @@ const API_BASE_URL =
 export const API_ENDPOINTS = {
   SESSIONS: `${API_BASE_URL}/api/boardgame/sessions`,
   SESSIONS_ACTIVE: `${API_BASE_URL}/api/boardgame/sessions/active`,
-  SESSION_BY_ID: (id: string) => `${API_BASE_URL}/api/boardgame/sessions/${id}`,
+  SESSION_BY_ID: (id: number) => `${API_BASE_URL}/api/boardgame/sessions/${id}`,
   SESSIONS_BY_USER: (userId: string) =>
     `${API_BASE_URL}/api/boardgame/sessions/user/${userId}`,
   SESSIONS_CREATE_WITH_RULES: `${API_BASE_URL}/api/boardgame/sessions/create-with-rules`,
@@ -18,6 +18,13 @@ export const API_ENDPOINTS = {
     `${API_BASE_URL}/api/boardgame/rulesets/filename/${fileName}`,
   RULESETS_BY_EXTENSION: (fileExt: string) =>
     `${API_BASE_URL}/api/boardgame/rulesets/extension/${fileExt}`,
+  // Chat endpoints
+  CHAT_ENTRIES: (sessionId: number) =>
+    `${API_BASE_URL}/api/sessions/${sessionId}/chatEntries`,
+  CREATE_CHAT_ENTRY: (sessionId: number) =>
+    `${API_BASE_URL}/api/sessions/${sessionId}/chatEntry`,
+  CREATE_CHATBOT: (sessionId: number) =>
+    `${API_BASE_URL}/api/sessions/${sessionId}/chatbot`,
 } as const;
 
 export default API_BASE_URL;

@@ -6,6 +6,7 @@ import {
 import RootLayout from "./layouts/RootLayout.tsx";
 import StoryGenerator from "./pages/StoryGenerator.tsx";
 import BoardGameRuleInspector from "./pages/BoardGameRuleInspector.tsx";
+import BoardGameSessionChat from "./pages/BoardGameSessionChat.tsx";
 import MovieMood from "./pages/MovieMood.tsx";
 import QuizIndex from "./pages/Quiz/index.tsx";
 import QuizCreate from "./pages/Quiz/create.tsx";
@@ -32,6 +33,12 @@ const boardGameRuleInspectorRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/board-game-rule-inspector",
   component: BoardGameRuleInspector,
+});
+
+const boardGameSessionRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/board-game-rule-inspector/session/$sessionId",
+  component: BoardGameSessionChat,
 });
 
 const movieMoodRoute = createRoute({
@@ -62,6 +69,7 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   storyGeneratorRoute,
   boardGameRuleInspectorRoute,
+  boardGameSessionRoute,
   movieMoodRoute,
   quizIndexRoute,
   quizCreateRoute,

@@ -15,11 +15,11 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
   if (isLoading) {
     return (
       <div
-        className={`bg-white border-r border-indigo-100 flex flex-col h-full shadow-lg ${className}`}
+        className={`bg-black border-r border-gray-800 flex flex-col h-full shadow-lg ${className}`}
       >
-        <div className="p-6 border-b border-indigo-100 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50">
+        <div className="p-6 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-lg flex items-center justify-center shadow-md">
+            <div className="w-8 h-8 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
               <svg
                 className="w-4 h-4 text-white"
                 fill="currentColor"
@@ -30,7 +30,7 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 <circle cx="12" cy="12" r="8" />
               </svg>
             </div>
-            <h2 className="text-lg font-semibold bg-gradient-to-r from-indigo-800 to-purple-700 bg-clip-text text-transparent">
+            <h2 className="text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
               Game Sessions
             </h2>
           </div>
@@ -38,7 +38,7 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
         <div className="flex-1 overflow-y-auto p-4">
           <div className="animate-pulse space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-20 bg-gray-200 rounded-xl"></div>
+              <div key={i} className="h-20 bg-gray-800 rounded-xl"></div>
             ))}
           </div>
         </div>
@@ -49,11 +49,11 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
   if (error) {
     return (
       <div
-        className={`bg-white border-r border-indigo-100 flex flex-col h-full shadow-lg ${className}`}
+        className={`bg-black border-r border-gray-800 flex flex-col h-full shadow-lg ${className}`}
       >
-        <div className="p-6 border-b border-indigo-100 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50">
+        <div className="p-6 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-lg flex items-center justify-center shadow-md">
+            <div className="w-8 h-8 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
               <svg
                 className="w-4 h-4 text-white"
                 fill="currentColor"
@@ -64,16 +64,16 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 <circle cx="12" cy="12" r="8" />
               </svg>
             </div>
-            <h2 className="text-lg font-semibold bg-gradient-to-r from-indigo-800 to-purple-700 bg-clip-text text-transparent">
+            <h2 className="text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
               Game Sessions
             </h2>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto p-4">
           <div className="text-center py-8">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
-                className="w-8 h-8 text-red-500"
+                className="w-8 h-8 text-red-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -86,7 +86,7 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 />
               </svg>
             </div>
-            <p className="text-red-600 text-sm mb-1">Error loading sessions</p>
+            <p className="text-red-400 text-sm mb-1">Error loading sessions</p>
             <p className="text-gray-400 text-xs">Please try again later</p>
           </div>
         </div>
@@ -96,11 +96,11 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
 
   return (
     <div
-      className={`bg-white border-r border-gray-200 flex flex-col h-full ${className}`}
+      className={`bg-black border-r border-gray-800 flex flex-col h-full ${className}`}
     >
-      <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
+      <div className="p-6 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+          <div className="w-8 h-8 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center">
             <svg
               className="w-4 h-4 text-white"
               fill="none"
@@ -117,9 +117,11 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
               />
             </svg>
           </div>
-          <h2 className="text-lg font-semibold text-gray-900">Game Sessions</h2>
+          <h2 className="text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
+            Game Sessions
+          </h2>
         </div>
-        <p className="text-sm text-indigo-600 mt-1 font-medium">
+        <p className="text-sm text-white/70 mt-1 font-medium">
           Manage your active games
         </p>
       </div>
@@ -127,9 +129,9 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
       <div className="flex-1 overflow-y-auto p-4">
         {sessions.length === 0 ? (
           <div className="text-center py-8">
-            <div className="w-16 h-16 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+            <div className="w-16 h-16 bg-gradient-to-r from-[#F930C7]/20 to-[#3076F9]/20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
               <svg
-                className="w-8 h-8 text-indigo-500"
+                className="w-8 h-8 text-[#3076F9]"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 width={32}
@@ -138,10 +140,10 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 <circle cx="12" cy="12" r="10" />
               </svg>
             </div>
-            <p className="text-indigo-600 text-sm mb-1 font-medium">
+            <p className="text-white/70 text-sm mb-1 font-medium">
               No sessions found
             </p>
-            <p className="text-indigo-500 text-xs">
+            <p className="text-white/50 text-xs">
               Create your first session to get started
             </p>
           </div>
@@ -155,25 +157,25 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                     to: `/board-game-rule-inspector/session/${session.id}`,
                   })
                 }
-                className="p-4 rounded-xl transition-all duration-300 bg-white border border-indigo-100 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 hover:shadow-lg hover:border-indigo-200 cursor-pointer"
+                className="p-4 rounded-xl transition-all duration-300 bg-black border border-gray-800 hover:bg-gradient-to-r hover:from-[#F930C7]/10 hover:to-[#3076F9]/10 hover:shadow-lg hover:border-[#F930C7]/50 cursor-pointer"
               >
                 <div className="flex items-start justify-between mb-2">
-                  <h4 className="font-semibold text-indigo-800 text-sm">
+                  <h4 className="font-semibold text-white text-sm">
                     {session.gameName}
                   </h4>
                   <div
                     className={`w-2 h-2 rounded-full ${
-                      session.isActive ? "bg-emerald-500" : "bg-gray-400"
+                      session.isActive ? "bg-emerald-400" : "bg-gray-500"
                     }`}
                   ></div>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs text-indigo-600">ID: {session.id}</p>
-                  <p className="text-xs text-indigo-600">
+                  <p className="text-xs text-white/60">ID: {session.id}</p>
+                  <p className="text-xs text-white/60">
                     Created: {new Date(session.createdAt).toLocaleDateString()}
                   </p>
                   {session.players && session.players.length > 0 && (
-                    <p className="text-xs text-purple-600 font-medium">
+                    <p className="text-xs text-[#F930C7] font-medium">
                       {session.players.length} player(s)
                     </p>
                   )}

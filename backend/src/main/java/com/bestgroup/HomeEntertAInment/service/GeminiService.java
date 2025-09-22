@@ -3,14 +3,17 @@ package com.bestgroup.HomeEntertAInment.service;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.bestgroup.HomeEntertAInment.dto.GeminiResponseDto;
@@ -175,13 +178,25 @@ public class GeminiService {
     }
 
     /**
-     * Common method to send requests to Gemini API
+     * Common method to send requests to Gemini API with retry logic
      * 
      * @param prompt The prompt to send to Gemini
      * @param errorMessage The error message to return if the request fails
      * @return The response text from Gemini API or error message
      */
     private String sendGeminiRequest(String prompt, String errorMessage) {
+        return sendGeminiRequestWithRetry(prompt, errorMessage, 5);
+    }
+
+    /**
+     * Send request to Gemini API with retry logic and exponential backoff
+     * 
+     * @param prompt The prompt to send to Gemini
+     * @param errorMessage The error message to return if all retries fail
+     * @param maxRetries Maximum number of retry attempts
+     * @return The response text from Gemini API or error message
+     */
+    private String sendGeminiRequestWithRetry(String prompt, String errorMessage, int maxRetries) {
         // Prepare the request body according to Gemini API specification
         Map<String, Object> body = Map.of(
                 "contents", List.of(
@@ -194,25 +209,63 @@ public class GeminiService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
-        try {
-            // Construct the full URL with API key
-            String fullUrl = URL + "?key=" + apiKey;
+        // Construct the full URL with API key
+        String fullUrl = URL + "?key=" + apiKey;
 
-            // Make the API call
-            ResponseEntity<GeminiResponseDto> response = restTemplate.exchange(
-                    fullUrl, HttpMethod.POST, entity, GeminiResponseDto.class
-            );
+        Exception lastException = null;
+        
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                // Make the API call
+                ResponseEntity<GeminiResponseDto> response = restTemplate.exchange(
+                        fullUrl, HttpMethod.POST, entity, GeminiResponseDto.class
+                );
 
-            // Extract the response text from the nested structure
-            String resultText = Objects.requireNonNull(response.getBody())
-                    .candidates().get(0)
-                    .content().parts().get(0)
-                    .text();
-            return resultText;
+                // Extract the response text from the nested structure
+                String resultText = Objects.requireNonNull(response.getBody())
+                        .candidates().get(0)
+                        .content().parts().get(0)
+                        .text();
+                return resultText;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return errorMessage + e.getMessage();
+            } catch (HttpServerErrorException e) {
+                lastException = e;
+                
+                // Check if it's a 503 Service Unavailable error (model overloaded)
+                if (e.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE) {
+                    System.out.println("Gemini API overloaded (503), attempt " + attempt + "/" + maxRetries);
+                    
+                    if (attempt < maxRetries) {
+                        // Exponential backoff: wait 2^attempt seconds
+                        long waitTime = (long) Math.pow(2, attempt);
+                        System.out.println("Waiting " + waitTime + " seconds before retry...");
+                        
+                        try {
+                            TimeUnit.SECONDS.sleep(waitTime);
+                        } catch (InterruptedException ie) {
+                            Thread.currentThread().interrupt();
+                            return errorMessage + "Request interrupted during retry wait";
+                        }
+                        continue;
+                    }
+                }
+                
+                // For other HTTP errors or if we've exhausted retries, break
+                break;
+                
+            } catch (Exception e) {
+                lastException = e;
+                // For non-HTTP errors, don't retry
+                break;
+            }
         }
+        
+        // All retries failed
+        System.err.println("Gemini API request failed after " + maxRetries + " attempts");
+        if (lastException != null) {
+            lastException.printStackTrace();
+        }
+        
+        return errorMessage + (lastException != null ? lastException.getMessage() : "Unknown error");
     }
 }

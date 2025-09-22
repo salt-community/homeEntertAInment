@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import type { ChatEntry, CreateChatEntryRequest } from '../types/gameSession';
-import { ChatService } from '../services/chatService';
+import React, { useState, useEffect, useRef } from "react";
+import type { ChatEntry, CreateChatEntryRequest } from "../types/gameSession";
+import { ChatService } from "../services/chatService";
 
 interface ChatInterfaceProps {
   sessionId: number;
@@ -8,7 +8,7 @@ interface ChatInterfaceProps {
 
 export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
   const [chatEntries, setChatEntries] = useState<ChatEntry[]>([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -25,7 +25,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
   }, [chatEntries]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const loadChatEntries = async () => {
@@ -35,7 +35,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
       const entries = await ChatService.getChatEntries(sessionId);
       setChatEntries(entries);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load chat entries');
+      setError(
+        err instanceof Error ? err.message : "Failed to load chat entries"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -45,7 +47,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
     try {
       await ChatService.createChatBot(sessionId);
     } catch (err) {
-      console.warn('Failed to initialize chatbot:', err);
+      console.warn("Failed to initialize chatbot:", err);
     }
   };
 
@@ -54,36 +56,36 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
     if (!newMessage.trim()) return;
 
     const messageContent = newMessage.trim();
-    setNewMessage('');
+    setNewMessage("");
 
     // Optimistic UI update
     const tempEntry: ChatEntry = {
       id: Date.now(), // Temporary ID
       chatbotId: 0,
       sessionId,
-      creator: 'PLAYER',
+      creator: "PLAYER",
       content: messageContent,
       createdAt: new Date().toISOString(),
     };
-    setChatEntries(prev => [...prev, tempEntry]);
+    setChatEntries((prev) => [...prev, tempEntry]);
 
     try {
       const request: CreateChatEntryRequest = {
         content: messageContent,
-        creator: 'PLAYER',
+        creator: "PLAYER",
       };
       const newEntry = await ChatService.createChatEntry(sessionId, request);
-      
+
       // Replace temporary entry with real one
-      setChatEntries(prev => 
-        prev.map(entry => 
-          entry.id === tempEntry.id ? newEntry : entry
-        )
+      setChatEntries((prev) =>
+        prev.map((entry) => (entry.id === tempEntry.id ? newEntry : entry))
       );
     } catch (err) {
       // Remove temporary entry on error
-      setChatEntries(prev => prev.filter(entry => entry.id !== tempEntry.id));
-      setError(err instanceof Error ? err.message : 'Failed to send message');
+      setChatEntries((prev) =>
+        prev.filter((entry) => entry.id !== tempEntry.id)
+      );
+      setError(err instanceof Error ? err.message : "Failed to send message");
     }
   };
 
@@ -126,26 +128,32 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
           <div className="flex justify-center items-center h-32">
             <div className="text-gray-500 text-center">
               <p>No messages yet.</p>
-              <p className="text-sm mt-1">Start a conversation by asking a question!</p>
+              <p className="text-sm mt-1">
+                Start a conversation by asking a question!
+              </p>
             </div>
           </div>
         ) : (
           chatEntries.map((entry) => (
             <div
               key={entry.id}
-              className={`flex ${entry.creator === 'PLAYER' ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${
+                entry.creator === "PLAYER" ? "justify-end" : "justify-start"
+              }`}
             >
               <div
                 className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                  entry.creator === 'PLAYER'
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-gray-100 text-gray-800'
+                  entry.creator === "PLAYER"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-100 text-gray-800"
                 }`}
               >
                 <p className="text-sm">{entry.content}</p>
                 <p
                   className={`text-xs mt-1 ${
-                    entry.creator === 'PLAYER' ? 'text-blue-100' : 'text-gray-500'
+                    entry.creator === "PLAYER"
+                      ? "text-blue-100"
+                      : "text-gray-500"
                   }`}
                 >
                   {formatTimestamp(entry.createdAt)}
@@ -166,7 +174,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Ask a question about the game rules..."
             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-500"
-            style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
+            style={{ color: "#1f2937", backgroundColor: "#ffffff" }}
             disabled={isLoading}
           />
           <button

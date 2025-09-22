@@ -1,8 +1,8 @@
-package com.bestgroup.HomeEntertAInment.controller;
+package com.bestgroup.HomeEntertAInment.storybuilder.http;
 
-import com.bestgroup.HomeEntertAInment.dto.story.StoryRequest;
-import com.bestgroup.HomeEntertAInment.dto.story.StoryResponse;
-import com.bestgroup.HomeEntertAInment.service.StoryService;
+import com.bestgroup.HomeEntertAInment.storybuilder.StoryService;
+import com.bestgroup.HomeEntertAInment.storybuilder.http.dto.StoryRequest;
+import com.bestgroup.HomeEntertAInment.storybuilder.http.dto.StoryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

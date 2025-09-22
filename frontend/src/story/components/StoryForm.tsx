@@ -170,10 +170,10 @@ export default function StoryForm({ onSubmit, disabled }: StoryFormProps) {
 
       <button
         type="submit"
-        className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full px-6 py-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-lg hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
         disabled={disabled}
       >
-        Generate Story
+        Create you Story
       </button>
     </form>
   );

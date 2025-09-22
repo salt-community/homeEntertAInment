@@ -5,6 +5,7 @@ import {
 } from "@tanstack/react-router";
 import RootLayout from "./layouts/RootLayout.tsx";
 import StoryGenerator from "./pages/StoryGenerator.tsx";
+import StoryGeneratorResult from "./pages/StoryGeneratorResult.tsx";
 import BoardGameRuleInspector from "./pages/BoardGameRuleInspector.tsx";
 import BoardGameSessionChat from "./pages/BoardGameSessionChat.tsx";
 import MovieMood from "./pages/MovieMood.tsx";
@@ -27,6 +28,12 @@ const storyGeneratorRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/story-generator",
   component: StoryGenerator,
+});
+
+const storyGeneratorResultRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/story-generator/result",
+  component: StoryGeneratorResult,
 });
 
 const boardGameRuleInspectorRoute = createRoute({
@@ -68,6 +75,7 @@ const quizRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   storyGeneratorRoute,
+  storyGeneratorResultRoute,
   boardGameRuleInspectorRoute,
   boardGameSessionRoute,
   movieMoodRoute,

@@ -117,7 +117,7 @@ public class ChatEntryService {
             
             // Create fallback AI response
             ChatEntry fallbackEntry = ChatEntry.builder()
-                    .content("I apologize, but I'm having trouble processing your question right now. Please try asking again or check the rule book for more details.")
+                    .content("Sorry for the trouble, but the AI agent is not working right now. Please try again later or check the rule book for more details.")
                     .creator("AI")
                     .chatBot(chatBot)
                     .session(session)

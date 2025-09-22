@@ -70,9 +70,8 @@ public class Session {
     /**
      * Reference to the rule set used in this session
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rule_set_id")
-    @JsonIgnore
     private RuleSet ruleSet;
 
     /**

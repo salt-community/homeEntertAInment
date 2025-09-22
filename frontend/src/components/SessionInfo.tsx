@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import type { Session } from "../types/gameSession";
 import { API_ENDPOINTS } from "../services/api";
 
@@ -12,15 +12,11 @@ export const SessionInfo: React.FC<SessionInfoProps> = ({ sessionId }) => {
   const [error, setError] = useState<string | null>(null);
   const [isRulesExpanded, setIsRulesExpanded] = useState(false);
 
-  useEffect(() => {
-    loadSession();
-  }, [sessionId]);
-
-  const loadSession = async () => {
+  const loadSession = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await fetch(API_ENDPOINTS.SESSION_BY_NUMERIC_ID(sessionId));
+        const response = await fetch(API_ENDPOINTS.SESSION_BY_ID(sessionId));
       if (!response.ok) {
         throw new Error(`Failed to fetch session: ${response.statusText}`);
       }
@@ -31,7 +27,11 @@ export const SessionInfo: React.FC<SessionInfoProps> = ({ sessionId }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [sessionId]);
+
+  useEffect(() => {
+    loadSession();
+  }, [loadSession]);
 
   const formatRules = (rules: string) => {
     // Convert markdown-style formatting to HTML-like display
@@ -80,10 +80,10 @@ export const SessionInfo: React.FC<SessionInfoProps> = ({ sessionId }) => {
           </svg>
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">{session.gameName}</h1>
-          <p className="text-sm text-gray-600">
-            Session ID: {session.sessionId.slice(0, 12)}...
-          </p>
+            <h1 className="text-2xl font-bold text-gray-800">{session.gameName}</h1>
+            <p className="text-sm text-gray-600">
+              Session ID: {session.id}
+            </p>
         </div>
       </div>
 
@@ -91,7 +91,7 @@ export const SessionInfo: React.FC<SessionInfoProps> = ({ sessionId }) => {
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-gray-700 mb-2">Players ({session.players.length})</h3>
         <div className="flex flex-wrap gap-2">
-          {session.players.map((player, index) => (
+            {session.players.map((player) => (
             <span
               key={player.id}
               className="px-3 py-1 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 rounded-full text-sm font-medium border border-blue-200"

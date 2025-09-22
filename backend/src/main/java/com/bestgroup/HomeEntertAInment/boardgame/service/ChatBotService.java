@@ -30,28 +30,33 @@ public class ChatBotService {
     public ChatBotDto createOrGetChatBotForSession(Long sessionId) {
         log.info("Creating or getting chatbot for session: {}", sessionId);
         
-        // Check if chatbot already exists
-        Optional<ChatBot> existingChatBot = chatBotRepository.findBySessionId(sessionId);
-        if (existingChatBot.isPresent()) {
-            log.info("ChatBot already exists for session: {}", sessionId);
-            return convertToDto(existingChatBot.get());
+        try {
+            // Get session first
+            Session session = sessionRepository.findById(sessionId)
+                    .orElseThrow(() -> new RuntimeException("Session not found with id: " + sessionId));
+
+            // Check if chatbot already exists for this session
+            Optional<ChatBot> existingChatBot = chatBotRepository.findBySession(session);
+            if (existingChatBot.isPresent()) {
+                log.info("ChatBot already exists for session: {}", sessionId);
+                return convertToDto(existingChatBot.get());
+            }
+
+            // Create new chatbot
+            ChatBot chatBot = ChatBot.builder()
+                    .name("Board Game Rules Assistant")
+                    .isActive(true)
+                    .session(session)
+                    .build();
+
+            ChatBot savedChatBot = chatBotRepository.save(chatBot);
+            log.info("Created new ChatBot with id: {} for session: {}", savedChatBot.getId(), sessionId);
+            
+            return convertToDto(savedChatBot);
+        } catch (Exception e) {
+            log.error("Error creating or getting chatbot for session {}: {}", sessionId, e.getMessage(), e);
+            throw new RuntimeException("Failed to create or get chatbot for session: " + sessionId, e);
         }
-
-        // Get session
-        Session session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session not found with id: " + sessionId));
-
-        // Create new chatbot
-        ChatBot chatBot = ChatBot.builder()
-                .name("Board Game Rules Assistant")
-                .isActive(true)
-                .session(session)
-                .build();
-
-        ChatBot savedChatBot = chatBotRepository.save(chatBot);
-        log.info("Created new ChatBot with id: {} for session: {}", savedChatBot.getId(), sessionId);
-        
-        return convertToDto(savedChatBot);
     }
 
     /**
@@ -59,20 +64,33 @@ public class ChatBotService {
      */
     public Optional<ChatBotDto> getChatBotBySessionId(Long sessionId) {
         log.info("Getting chatbot for session: {}", sessionId);
-        return chatBotRepository.findBySessionId(sessionId)
-                .map(this::convertToDto);
+        try {
+            Session session = sessionRepository.findById(sessionId)
+                    .orElseThrow(() -> new RuntimeException("Session not found with id: " + sessionId));
+            
+            return chatBotRepository.findBySession(session)
+                    .map(this::convertToDto);
+        } catch (Exception e) {
+            log.error("Error getting chatbot for session {}: {}", sessionId, e.getMessage(), e);
+            return Optional.empty();
+        }
     }
 
     /**
      * Convert ChatBot entity to DTO
      */
     private ChatBotDto convertToDto(ChatBot chatBot) {
-        return ChatBotDto.builder()
-                .id(chatBot.getId())
-                .name(chatBot.getName())
-                .isActive(chatBot.getIsActive())
-                .sessionId(chatBot.getSession().getId())
-                .createdAt(chatBot.getCreatedAt())
-                .build();
+        try {
+            return ChatBotDto.builder()
+                    .id(chatBot.getId())
+                    .name(chatBot.getName())
+                    .isActive(chatBot.getIsActive())
+                    .sessionId(chatBot.getSession() != null ? chatBot.getSession().getId() : null)
+                    .createdAt(chatBot.getCreatedAt())
+                    .build();
+        } catch (Exception e) {
+            log.error("Error converting ChatBot to DTO: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to convert ChatBot to DTO", e);
+        }
     }
 }

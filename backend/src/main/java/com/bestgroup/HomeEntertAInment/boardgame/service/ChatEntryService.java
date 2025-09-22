@@ -51,7 +51,7 @@ public class ChatEntryService {
                 .orElseThrow(() -> new RuntimeException("Session not found with id: " + sessionId));
 
         // Get or create chatbot for session
-        ChatBot chatBot = chatBotRepository.findBySessionId(sessionId)
+        ChatBot chatBot = chatBotRepository.findBySession_Id(sessionId)
                 .orElseThrow(() -> new RuntimeException("ChatBot not found for session: " + sessionId));
 
         // Create chat entry

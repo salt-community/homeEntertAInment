@@ -15,13 +15,6 @@ import java.util.Optional;
 @Repository
 public interface SessionRepository extends JpaRepository<Session, Long> {
 
-    /**
-     * Find a session by its unique session ID
-     *
-     * @param sessionId The unique session identifier
-     * @return Optional containing the session if found
-     */
-    Optional<Session> findBySessionId(String sessionId);
 
     /**
      * Find all active sessions

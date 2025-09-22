@@ -21,10 +21,10 @@ public interface ChatBotRepository extends JpaRepository<ChatBot, Long> {
     /**
      * Find chatbot by session ID
      */
-    Optional<ChatBot> findBySessionId(Long sessionId);
+    Optional<ChatBot> findBySession_Id(Long sessionId);
 
     /**
      * Check if chatbot exists for session
      */
-    boolean existsBySessionId(Long sessionId);
+    boolean existsBySession_Id(Long sessionId);
 }

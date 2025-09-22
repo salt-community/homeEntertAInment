@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Service class for managing game sessions
@@ -45,17 +44,6 @@ public class SessionService {
         return sessionRepository.findByIsActiveTrue();
     }
 
-    /**
-     * Find a session by its unique session ID
-     *
-     * @param sessionId The unique session identifier
-     * @return Optional containing the session if found
-     */
-    @Transactional(readOnly = true)
-    public Optional<Session> getSessionById(String sessionId) {
-        log.info("Retrieving session with ID: {}", sessionId);
-        return sessionRepository.findBySessionId(sessionId);
-    }
 
     /**
      * Find a session by its numeric ID
@@ -79,17 +67,14 @@ public class SessionService {
     public Session createSession(String gameName, String userId) {
         log.info("Creating new session for game: {} and user: {}", gameName, userId);
         
-        String sessionId = generateSessionId();
-        
         Session session = Session.builder()
-                .sessionId(sessionId)
                 .gameName(gameName)
                 .gameState("setup")
                 .isActive(true)
                 .build();
         
         Session savedSession = sessionRepository.save(session);
-        log.info("Created session with ID: {}", savedSession.getSessionId());
+        log.info("Created session with ID: {}", savedSession.getId());
         
         return savedSession;
     }
@@ -97,23 +82,23 @@ public class SessionService {
     /**
      * Update session information
      *
-     * @param sessionId The session ID to update
+     * @param id The session ID to update
      * @param gameState The new game state
      * @return The updated session
      */
-    public Optional<Session> updateSession(String sessionId, String gameState) {
-        log.info("Updating session: {}", sessionId);
+    public Optional<Session> updateSession(Long id, String gameState) {
+        log.info("Updating session: {}", id);
         
-        Optional<Session> sessionOpt = sessionRepository.findBySessionId(sessionId);
+        Optional<Session> sessionOpt = sessionRepository.findById(id);
         if (sessionOpt.isPresent()) {
             Session session = sessionOpt.get();
             session.setGameState(gameState);
             Session updatedSession = sessionRepository.save(session);
-            log.info("Updated session: {}", sessionId);
+            log.info("Updated session: {}", id);
             return Optional.of(updatedSession);
         }
         
-        log.warn("Session not found for update: {}", sessionId);
+        log.warn("Session not found for update: {}", id);
         return Optional.empty();
     }
 
@@ -121,22 +106,22 @@ public class SessionService {
     /**
      * Deactivate a session
      *
-     * @param sessionId The session ID to deactivate
+     * @param id The session ID to deactivate
      * @return True if session was deactivated, false if not found
      */
-    public boolean deactivateSession(String sessionId) {
-        log.info("Deactivating session: {}", sessionId);
+    public boolean deactivateSession(Long id) {
+        log.info("Deactivating session: {}", id);
         
-        Optional<Session> sessionOpt = sessionRepository.findBySessionId(sessionId);
+        Optional<Session> sessionOpt = sessionRepository.findById(id);
         if (sessionOpt.isPresent()) {
             Session session = sessionOpt.get();
             session.setIsActive(false);
             sessionRepository.save(session);
-            log.info("Deactivated session: {}", sessionId);
+            log.info("Deactivated session: {}", id);
             return true;
         }
         
-        log.warn("Session not found for deactivation: {}", sessionId);
+        log.warn("Session not found for deactivation: {}", id);
         return false;
     }
 
@@ -150,16 +135,7 @@ public class SessionService {
      * @return The saved session
      */
     public Session saveSession(Session session) {
-        log.info("Saving session: {}", session.getSessionId());
+        log.info("Saving session: {}", session.getId());
         return sessionRepository.save(session);
-    }
-
-    /**
-     * Generate a unique session ID
-     *
-     * @return A unique session identifier
-     */
-    private String generateSessionId() {
-        return "session_" + UUID.randomUUID().toString().replace("-", "");
     }
 }

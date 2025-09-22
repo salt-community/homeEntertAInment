@@ -28,12 +28,6 @@ public class Session {
     private Long id;
 
     /**
-     * Unique session identifier for tracking user interactions
-     */
-    @Column(name = "session_id", unique = true, nullable = false)
-    private String sessionId;
-
-    /**
      * Name of the board game being played
      */
     @Column(name = "game_name", nullable = false)

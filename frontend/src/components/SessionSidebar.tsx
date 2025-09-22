@@ -150,7 +150,11 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
             {sessions.map((session) => (
               <div
                 key={session.id}
-                onClick={() => navigate({ to: `/board-game-rule-inspector/session/${session.id}` })}
+                onClick={() =>
+                  navigate({
+                    to: `/board-game-rule-inspector/session/${session.id}`,
+                  })
+                }
                 className="p-4 rounded-xl transition-all duration-300 bg-white border border-indigo-100 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 hover:shadow-lg hover:border-indigo-200 cursor-pointer"
               >
                 <div className="flex items-start justify-between mb-2">
@@ -164,9 +168,7 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                   ></div>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs text-indigo-600">
-                    ID: {session.sessionId.slice(0, 12)}...
-                  </p>
+                  <p className="text-xs text-indigo-600">ID: {session.id}</p>
                   <p className="text-xs text-indigo-600">
                     Created: {new Date(session.createdAt).toLocaleDateString()}
                   </p>

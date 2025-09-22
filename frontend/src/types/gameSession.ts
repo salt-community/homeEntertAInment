@@ -21,7 +21,6 @@ export interface RuleSet {
 
 export interface Session {
   id: number;
-  sessionId: string;
   gameName: string;
   gameState?: string;
   players: Player[];

@@ -58,20 +58,54 @@ export default function QuizIndex() {
   };
 
   return (
-    <div>
-      <h2>Quiz Generator</h2>
-      <p>Create custom quizzes tailored to your preferences.</p>
-      <div className="mt-4 space-y-4">
-        <NewQuizButton onClick={handleNewQuiz} />
-        <div className="mt-4">
-          <button
-            onClick={handleTakeSampleQuiz}
-            className="px-6 py-3 bg-gradient-to-r from-green-600 to-teal-600 text-white font-semibold rounded-lg shadow-md hover:from-green-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95"
-          >
-            🧪 Try Sample Quiz
-          </button>
+    <div
+      className="w-full text-center relative pt-30 min-h-screen bg-black bg-no-repeat bg-cover bg-center m-0 p-0"
+      style={{ backgroundImage: "url('/landing-bg.png')" }}
+    >
+      <section className="mx-auto w-full max-w-7xl px-6 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold text-white mb-4 tracking-wide">
+            Quiz Generator
+          </h1>
+          <p className="text-xl text-white/90 max-w-2xl mx-auto">
+            Create custom quizzes tailored to your preferences. Turn any topic
+            into a game night with fun, challenging, shareable questions.
+          </p>
         </div>
-      </div>
+
+        <div className="grid gap-8 grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto">
+          <div className="rounded-xl p-[2px] bg-gradient-to-r from-[#F930C7] to-[#3076F9]">
+            <div className="rounded-[10px] bg-black p-8 text-center">
+              <h2 className="mb-4 text-3xl font-semibold tracking-wide text-white">
+                Create New Quiz
+              </h2>
+              <p className="text-sm leading-6 text-white/90 mb-6">
+                Build a personalized quiz with custom topics, difficulty levels,
+                and question counts.
+              </p>
+              <NewQuizButton onClick={handleNewQuiz} />
+            </div>
+          </div>
+
+          <div className="rounded-xl p-[2px] bg-gradient-to-r from-[#3076F9] to-[#F930C7]">
+            <div className="rounded-[10px] bg-black p-8 text-center">
+              <h2 className="mb-4 text-3xl font-semibold tracking-wide text-white">
+                Try Sample Quiz
+              </h2>
+              <p className="text-sm leading-6 text-white/90 mb-6">
+                Experience our quiz system with a pre-made science quiz to see
+                how it works.
+              </p>
+              <button
+                onClick={handleTakeSampleQuiz}
+                className="px-8 py-3 bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white font-semibold rounded-lg shadow-md hover:from-[#F930C7]/80 hover:to-[#3076F9]/80 focus:outline-none focus:ring-2 focus:ring-[#F930C7] focus:ring-offset-2 focus:ring-offset-black transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+              >
+                Start Sample Quiz
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

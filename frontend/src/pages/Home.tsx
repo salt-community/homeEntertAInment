@@ -31,7 +31,7 @@ const Card = ({
 export default function Home() {
   return (
     <div
-      className="w-full text-center relative pt-30 min-h-screen bg-black bg-no-repeat bg-cover bg-center m-0 p-0"
+      className="w-full text-center relative pt-20 min-h-screen bg-black bg-no-repeat bg-cover bg-center m-0 p-0"
       style={{ backgroundImage: "url('/landing-bg.png')" }}
     >
       <section className="mx-auto w-full max-w-7xl px-6 py-12">

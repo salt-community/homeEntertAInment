@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import type { ChatEntry, CreateChatEntryRequest } from "../types/gameSession";
 import { ChatService } from "../services/chatService";
 
@@ -13,22 +13,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Load chat entries when component mounts or sessionId changes
-  useEffect(() => {
-    loadChatEntries();
-    initializeChatBot();
-  }, [sessionId]);
-
-  // Auto-scroll to bottom when new messages arrive
-  useEffect(() => {
-    scrollToBottom();
-  }, [chatEntries]);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const loadChatEntries = async () => {
+  const loadChatEntries = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -41,15 +30,26 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [sessionId]);
 
-  const initializeChatBot = async () => {
+  const initializeChatBot = useCallback(async () => {
     try {
       await ChatService.createChatBot(sessionId);
     } catch (err) {
       console.warn("Failed to initialize chatbot:", err);
     }
-  };
+  }, [sessionId]);
+
+  // Load chat entries when component mounts or sessionId changes
+  useEffect(() => {
+    loadChatEntries();
+    initializeChatBot();
+  }, [sessionId, loadChatEntries, initializeChatBot]);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    scrollToBottom();
+  }, [chatEntries]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,14 +145,36 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
                 className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                   entry.creator === "PLAYER"
                     ? "bg-blue-500 text-white"
+                    : entry.creator === "AI"
+                    ? "bg-gradient-to-r from-purple-100 to-indigo-100 text-gray-800 border border-purple-200"
                     : "bg-gray-100 text-gray-800"
                 }`}
               >
+                <div className="text-xs font-medium mb-1 flex items-center">
+                  {entry.creator === "PLAYER" ? (
+                    <>
+                      <span className="w-2 h-2 bg-blue-300 rounded-full mr-1"></span>
+                      You
+                    </>
+                  ) : entry.creator === "AI" ? (
+                    <>
+                      <span className="w-2 h-2 bg-purple-400 rounded-full mr-1"></span>
+                      AI Assistant
+                    </>
+                  ) : (
+                    <>
+                      <span className="w-2 h-2 bg-gray-400 rounded-full mr-1"></span>
+                      Assistant
+                    </>
+                  )}
+                </div>
                 <p className="text-sm">{entry.content}</p>
                 <p
                   className={`text-xs mt-1 ${
                     entry.creator === "PLAYER"
                       ? "text-blue-100"
+                      : entry.creator === "AI"
+                      ? "text-purple-600"
                       : "text-gray-500"
                   }`}
                 >

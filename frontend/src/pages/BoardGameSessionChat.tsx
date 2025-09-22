@@ -2,7 +2,9 @@ import { SessionSidebar, ChatInterface, SessionInfo } from "../components";
 import { useParams } from "@tanstack/react-router";
 
 export default function BoardGameSessionChat() {
-  const { sessionId } = useParams({ from: "/board-game-rule-inspector/session/$sessionId" });
+  const { sessionId } = useParams({
+    from: "/board-game-rule-inspector/session/$sessionId",
+  });
 
   return (
     <div className="min-h-screen bg-black">
@@ -13,17 +15,15 @@ export default function BoardGameSessionChat() {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-h-0">
           {/* Session Info */}
-          <div className="p-6 pb-0">
+          <div className="p-6 pb-0 flex-shrink-0">
             <SessionInfo sessionId={parseInt(sessionId)} />
           </div>
 
           {/* Chat Interface */}
-          <div className="flex-1 p-6 pt-4">
-            <div className="h-full">
-              <ChatInterface sessionId={parseInt(sessionId)} />
-            </div>
+          <div className="flex-1 p-6 pt-4 min-h-0">
+            <ChatInterface sessionId={parseInt(sessionId)} />
           </div>
         </div>
       </div>

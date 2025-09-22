@@ -10,8 +10,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
   const [chatEntries, setChatEntries] = useState<ChatEntry[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
+  const [isWaitingForAI, setIsWaitingForAI] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const refreshIntervalRef = useRef<number | null>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -32,6 +35,22 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
     }
   }, [sessionId]);
 
+  const startAutoRefresh = useCallback(() => {
+    if (refreshIntervalRef.current) {
+      clearInterval(refreshIntervalRef.current);
+    }
+    refreshIntervalRef.current = setInterval(() => {
+      loadChatEntries();
+    }, 2000); // Refresh every 2 seconds
+  }, [loadChatEntries]);
+
+  const stopAutoRefresh = useCallback(() => {
+    if (refreshIntervalRef.current) {
+      clearInterval(refreshIntervalRef.current);
+      refreshIntervalRef.current = null;
+    }
+  }, []);
+
   const initializeChatBot = useCallback(async () => {
     try {
       await ChatService.createChatBot(sessionId);
@@ -44,19 +63,50 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
   useEffect(() => {
     loadChatEntries();
     initializeChatBot();
-  }, [sessionId, loadChatEntries, initializeChatBot]);
+    
+    // Cleanup on unmount
+    return () => {
+      stopAutoRefresh();
+    };
+  }, [sessionId, loadChatEntries, initializeChatBot, stopAutoRefresh]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     scrollToBottom();
   }, [chatEntries]);
 
+  // Detect new AI responses and stop waiting state
+  useEffect(() => {
+    if (isWaitingForAI) {
+      const hasNewAIResponse = chatEntries.some(entry => 
+        entry.creator === "AI" && 
+        entry.createdAt > new Date(Date.now() - 10000).toISOString() // Created in last 10 seconds
+      );
+      
+      if (hasNewAIResponse) {
+        setIsWaitingForAI(false);
+      }
+    }
+  }, [chatEntries, isWaitingForAI]);
+
+  // Stop auto-refresh when AI is done thinking
+  useEffect(() => {
+    if (!isWaitingForAI && refreshIntervalRef.current) {
+      // Stop auto-refresh after a delay when AI is done
+      setTimeout(() => {
+        stopAutoRefresh();
+      }, 5000); // Stop after 5 seconds of no AI activity
+    }
+  }, [isWaitingForAI, stopAutoRefresh]);
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || isSendingMessage) return;
 
     const messageContent = newMessage.trim();
     setNewMessage("");
+    setIsSendingMessage(true);
+    setIsWaitingForAI(true);
 
     // Optimistic UI update
     const tempEntry: ChatEntry = {
@@ -80,12 +130,18 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
       setChatEntries((prev) =>
         prev.map((entry) => (entry.id === tempEntry.id ? newEntry : entry))
       );
+
+      // Start auto-refresh to catch AI response
+      startAutoRefresh();
     } catch (err) {
       // Remove temporary entry on error
       setChatEntries((prev) =>
         prev.filter((entry) => entry.id !== tempEntry.id)
       );
       setError(err instanceof Error ? err.message : "Failed to send message");
+      setIsWaitingForAI(false);
+    } finally {
+      setIsSendingMessage(false);
     }
   };
 
@@ -184,6 +240,23 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
             </div>
           ))
         )}
+
+        {/* AI Thinking Indicator */}
+        {isWaitingForAI && (
+          <div className="flex justify-start">
+            <div className="max-w-xs lg:max-w-md px-4 py-2 rounded-lg bg-gradient-to-r from-purple-100 to-indigo-100 text-gray-800 border border-purple-200">
+              <div className="text-xs font-medium mb-1 flex items-center">
+                <span className="w-2 h-2 bg-purple-400 rounded-full mr-1 animate-pulse"></span>
+                AI Assistant
+              </div>
+              <div className="text-sm flex items-center">
+                <span className="animate-pulse">Thinking</span>
+                <span className="ml-1 animate-bounce">...</span>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -197,14 +270,14 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
             placeholder="Ask a question about the game rules..."
             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-500"
             style={{ color: "#1f2937", backgroundColor: "#ffffff" }}
-            disabled={isLoading}
+            disabled={isSendingMessage}
           />
           <button
             type="submit"
-            disabled={!newMessage.trim() || isLoading}
+            disabled={!newMessage.trim() || isSendingMessage}
             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            Send
+            {isSendingMessage ? "Sending..." : "Send"}
           </button>
         </form>
       </div>

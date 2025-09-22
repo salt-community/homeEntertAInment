@@ -1,88 +1,79 @@
-# Home Entertainment Platform
+# HomeEntertAInment
 
-A collection of interactive applications designed for family fun and entertainment at home.
+A comprehensive home entertainment platform featuring AI-powered applications for family fun and interactive experiences.
 
-## 🎯 Project Overview
+## 🎯 Features
 
-This platform consists of multiple entertainment applications:
+### ✅ Implemented Features
 
-- **Story Generator**: AI-powered story creation tool for parent-child bonding
-- **Board Game Rule Inspector**: Intelligent assistant for board game rule interpretation
-- **Movie Mood**: Personalized movie/show recommendation engine
-- **Quiz Generator**: Custom quiz creation tool for various topics
+- **Story Generator** - AI-powered story creation tool with customizable characters, themes, and age groups
+- **Quiz Generator** - Create custom quizzes with AI-generated questions on any topic
+- **Board Game Rule Inspector** - Interactive chat-based assistant for board game rule clarification and dispute resolution
+- **Movie Mood** - Movie recommendation system (UI placeholder - coming soon)
 
-## 🏗️ Architecture
+### 🏗️ Architecture
 
-### Backend (Spring Boot)
-- **Framework**: Spring Boot with Java
-- **AI Integration**: Gemini API for content generation
-- **Package Structure**:
-  - `com.bestgroup.HomeEntertAInment.controller` - REST API controllers
-  - `com.bestgroup.HomeEntertAInment.service` - Business logic services
-  - `com.bestgroup.HomeEntertAInment.dto` - Data transfer objects
-  - `com.bestgroup.HomeEntertAInment.boardgame` - Board Game Rule Inspector logic
-    - `boardgame.utils` - Utility classes for board game functionality
+**Backend (Spring Boot + Java 21)**
 
-### Frontend (React + TypeScript)
-- **Framework**: React with TypeScript and Vite
-- **Styling**: Tailwind CSS
-- **Routing**: React Router
-- **Pages**: Home, Story Generator, Board Game Rule Inspector, Movie Mood, Quiz Generator
+- RESTful API with Spring Boot 3.5.5
+- PostgreSQL database with JPA/Hibernate
+- Google Gemini AI integration for content generation
+- ConvertAPI integration for PDF processing
+- Comprehensive package structure:
+  - `controller` - REST API endpoints
+  - `service` - Business logic and AI integration
+  - `storybuilder` - Story generation system
+  - `boardgame` - Board game rule inspector functionality
+  - `dto` - Data transfer objects
 
-## 🎲 Board Game Rule Inspector - Current Status
+**Frontend (React + TypeScript)**
 
-### ✅ Completed
-- **Package Structure**: Created dedicated `boardgame` package
-- **Base64 Decoder Utility**: `DecodeBase64ToString` class with comprehensive functionality
-  - Static method for Base64 to string decoding
-  - Support for custom charsets
-  - Input validation and error handling
-  - Comprehensive test coverage (11 tests, all passing)
-
-### 🔄 In Progress
-- Core rule processing logic
-- Question answering system
-- Game state management
-
-### 📋 Next Steps
-- Rule parser implementation
-- AI integration for rule interpretation
-- Basic user interface components
-- Game rule database setup
+- React 19 with TypeScript and Vite
+- TanStack Router for navigation
+- TanStack Query for state management
+- Tailwind CSS for styling
+- Responsive design with modern UI components
 
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Java 21+
 - Node.js 18+
-- Maven 3.6+
+- PostgreSQL database
+- Google Gemini API key
+- ConvertAPI token (for PDF processing)
+
+### Environment Setup
+
+Create environment variables:
+
+```bash
+GEMINI_API_KEY=your_gemini_api_key
+CONVERT_API_TOKEN=your_convert_api_token
+JDBC_DATABASE_URL=jdbc:postgresql://localhost:5432/entertainmentdb
+JDBC_DATABASE_USERNAME=entertainmentdb
+JDBC_DATABASE_PASSWORD=entertainmentdb
+```
 
 ### Backend Setup
+
 ```bash
 cd backend
 ./mvnw spring-boot:run
 ```
 
+Backend runs on `http://localhost:8080`
+
 ### Frontend Setup
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-## 🧪 Testing
-
-### Backend Tests
-```bash
-cd backend
-./mvnw test
-```
-
-### Frontend Tests
-```bash
-cd frontend
-npm test
-```
+Frontend runs on `http://localhost:5173`
 
 ## 📁 Project Structure
 
@@ -91,46 +82,108 @@ HomeEntertAInment/
 ├── backend/
 │   ├── src/main/java/com/bestgroup/HomeEntertAInment/
 │   │   ├── controller/          # REST API controllers
-│   │   ├── service/            # Business logic services
-│   │   ├── dto/                # Data transfer objects
-│   │   └── boardgame/          # Board Game Rule Inspector
-│   │       └── utils/          # Utility classes
-│   └── src/test/java/          # Test classes
+│   │   │   ├── GeminiController.java
+│   │   │   └── QuizController.java
+│   │   ├── service/             # Business logic services
+│   │   ├── storybuilder/        # Story generation system
+│   │   │   ├── http/            # Story API endpoints
+│   │   │   └── model/           # Story data models
+│   │   ├── boardgame/           # Board game rule inspector
+│   │   │   ├── controller/       # Chat API endpoints
+│   │   │   ├── service/         # Chat and bot services
+│   │   │   ├── entity/          # Database entities
+│   │   │   └── utils/           # Utility classes
+│   │   └── dto/                 # Data transfer objects
+│   └── src/main/resources/
+│       ├── application.yml      # Configuration
+│       └── data.sql            # Database initialization
 ├── frontend/
 │   ├── src/
 │   │   ├── pages/              # Application pages
-│   │   ├── layouts/            # Layout components
-│   │   └── router.tsx          # Routing configuration
-│   └── public/                 # Static assets
-└── .cursor/                    # Development rules and guidelines
+│   │   │   ├── Home.tsx
+│   │   │   ├── StoryGenerator.tsx
+│   │   │   ├── BoardGameRuleInspector.tsx
+│   │   │   ├── BoardGameSessionChat.tsx
+│   │   │   ├── MovieMood.tsx
+│   │   │   └── Quiz/           # Quiz pages
+│   │   ├── components/         # Reusable components
+│   │   ├── story/             # Story generation components
+│   │   ├── services/          # API services
+│   │   └── router.tsx         # Routing configuration
+└── README.md
 ```
 
-## 🔧 Development Workflow
+## 🔧 API Endpoints
 
-### Branch Strategy
-- `feature/[component-name]` - for new features
-- `fix/[issue-description]` - for bug fixes
-- `refactor/[component-name]` - for code refactoring
-- `docs/[update-type]` - for documentation updates
+### Story Generation
 
-### Commit Convention
-- `feat: [component] - [description]` - for new features
-- `fix: [component] - [description]` - for bug fixes
-- `refactor: [component] - [description]` - for refactoring
-- `docs: [component] - [description]` - for documentation
+- `POST /api/story/generate` - Generate a new story
 
-## 📝 Development Rules
+### Quiz Management
 
-See `.cursor/` directory for detailed development guidelines:
-- `general-rules.mdc` - Overall project rules and standards
-- `game-rules-engine-rules.mdc` - Specific rules for Board Game Rule Inspector development
+- `POST /api/quiz/create` - Create a new quiz
+- `GET /api/quiz/{quizId}` - Get quiz by ID
+- `GET /api/quiz/all` - Get all quizzes
+
+### Board Game Chat
+
+- `GET /api/sessions/{sessionId}/chatEntries` - Get chat history
+- `POST /api/sessions/{sessionId}/chatEntry` - Send message
+- `POST /api/sessions/{sessionId}/chatbot` - Initialize chatbot
+
+### System
+
+- `GET /api/gemini/status` - Check Gemini API connectivity
+
+## 🧪 Testing
+
+### Backend Tests
+
+```bash
+cd backend
+./mvnw test
+```
+
+### Frontend Tests
+
+```bash
+cd frontend
+npm test
+```
+
+## 🛠️ Development
+
+### Database
+
+The application uses PostgreSQL with JPA/Hibernate. Database schema is automatically created from entities and initialized with sample data from `data.sql`.
+
+### AI Integration
+
+- **Gemini API**: Used for story generation, quiz creation, and chat responses
+- **ConvertAPI**: Used for PDF to text conversion in board game rule processing
+
+### Key Technologies
+
+- **Backend**: Spring Boot, Spring Data JPA, Spring Web, Lombok
+- **Frontend**: React, TypeScript, Vite, TanStack Router, TanStack Query
+- **Database**: PostgreSQL
+- **AI**: Google Gemini API
+- **Styling**: Tailwind CSS
+
+## 📝 Development Notes
+
+- The application follows a clean architecture pattern with separate layers for controllers, services, and data access
+- AI prompts are carefully crafted for each use case (stories, quizzes, chat)
+- The board game rule inspector includes session management and chat history
+- All API endpoints include proper error handling and logging
+- Frontend components are modular and reusable
 
 ## 🤝 Contributing
 
-1. Create a feature branch following the naming convention
-2. Make your changes with proper testing
-3. Commit with descriptive messages
-4. Update documentation as needed
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes with proper testing
+4. Commit with descriptive messages
 5. Create a pull request for review
 
 ## 📄 License

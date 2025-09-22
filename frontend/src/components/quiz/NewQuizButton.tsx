@@ -14,19 +14,19 @@ export default function NewQuizButton({
       onClick={onClick}
       disabled={disabled}
       className={`
-        px-6 py-3 
-        bg-gradient-to-r from-blue-600 to-purple-600 
+        px-8 py-3 
+        bg-gradient-to-r from-[#F930C7] to-[#3076F9] 
         text-white font-semibold 
         rounded-lg shadow-md 
-        hover:from-blue-700 hover:to-purple-700 
-        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+        hover:from-[#F930C7]/80 hover:to-[#3076F9]/80 
+        focus:outline-none focus:ring-2 focus:ring-[#F930C7] focus:ring-offset-2 focus:ring-offset-black
         disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed
         transition-all duration-200 ease-in-out
         transform hover:scale-105 active:scale-95
         ${className}
       `}
     >
-      🎯 Create New Quiz
+      Create New Quiz
     </button>
   );
 }

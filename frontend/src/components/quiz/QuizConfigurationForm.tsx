@@ -97,48 +97,38 @@ export default function QuizConfigurationForm({
     <>
       <style>{sliderStyles}</style>
       <QuizLoadingModal isOpen={isGenerating} />
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <div className="p-8">
+      <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+        <div className="rounded-xl p-[2px] bg-gradient-to-r from-[#F930C7] to-[#3076F9] max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="rounded-[10px] bg-black p-8">
             <div className="text-center mb-8">
-              <h3 className="text-3xl font-bold text-gray-900 mb-2">
-                🎯 Configure Your Quiz
+              <h3 className="text-3xl font-bold text-white mb-2">
+                Configure Your Quiz
               </h3>
-              <p className="text-gray-600">Customize your quiz experience</p>
+              <p className="text-white/90">Customize your quiz experience</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Age Group */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <label className="block text-sm font-semibold text-gray-800 mb-3">
-                  👥 Age Group
+              <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+                <label className="block text-sm font-semibold text-white mb-3">
+                  Age Group
                 </label>
                 <select
                   value={config.ageGroup}
                   onChange={(e) =>
                     setConfig((prev) => ({ ...prev, ageGroup: e.target.value }))
                   }
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-base"
-                  style={{
-                    color: "#111827",
-                    backgroundColor: "#ffffff",
-                  }}
+                  className="w-full px-4 py-3 border-2 border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F930C7] focus:border-[#F930C7] bg-black text-white text-base"
                   required
                 >
-                  <option
-                    value=""
-                    style={{ color: "#6b7280", backgroundColor: "#ffffff" }}
-                  >
+                  <option value="" className="text-white/70 bg-black">
                     Select age group
                   </option>
                   {AGE_GROUPS.map((group) => (
                     <option
                       key={group.value}
                       value={group.value}
-                      style={{
-                        color: "#111827",
-                        backgroundColor: "#ffffff",
-                      }}
+                      className="text-white bg-black"
                     >
                       {group.label}
                     </option>
@@ -147,30 +137,30 @@ export default function QuizConfigurationForm({
               </div>
 
               {/* Topics */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <label className="block text-sm font-semibold text-gray-800 mb-3">
-                  📚 Topics (Select one or more)
+              <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+                <label className="block text-sm font-semibold text-white mb-3">
+                  Topics (Select one or more)
                 </label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-48 overflow-y-auto border-2 border-gray-200 rounded-lg p-4 bg-white">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-48 overflow-y-auto border-2 border-white/30 rounded-lg p-4 bg-black">
                   {TOPIC_OPTIONS.map((topic) => (
                     <label
                       key={topic}
-                      className="flex items-center space-x-3 cursor-pointer hover:bg-blue-50 p-2 rounded-md transition-colors"
+                      className="flex items-center space-x-3 cursor-pointer hover:bg-white/10 p-2 rounded-md transition-colors"
                     >
                       <input
                         type="checkbox"
                         checked={config.topics.includes(topic)}
                         onChange={() => handleTopicToggle(topic)}
-                        className="w-4 h-4 rounded border-2 border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-2"
+                        className="w-4 h-4 rounded border-2 border-white/30 text-[#F930C7] focus:ring-[#F930C7] focus:ring-2 bg-black"
                       />
-                      <span className="text-sm font-medium text-gray-700">
+                      <span className="text-sm font-medium text-white">
                         {topic}
                       </span>
                     </label>
                   ))}
                 </div>
                 {config.topics.length > 0 && (
-                  <p className="text-xs text-blue-600 mt-2">
+                  <p className="text-xs text-[#F930C7] mt-2">
                     {config.topics.length} topic
                     {config.topics.length !== 1 ? "s" : ""} selected
                   </p>
@@ -178,15 +168,15 @@ export default function QuizConfigurationForm({
               </div>
 
               {/* Difficulty */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <label className="block text-sm font-semibold text-gray-800 mb-3">
-                  ⚡ Difficulty Level
+              <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+                <label className="block text-sm font-semibold text-white mb-3">
+                  Difficulty Level
                 </label>
                 <div className="grid grid-cols-3 gap-3">
                   {DIFFICULTY_LEVELS.map((level) => (
                     <label
                       key={level.value}
-                      className="flex flex-col items-center space-y-2 cursor-pointer p-3 border-2 border-gray-200 rounded-lg hover:border-blue-300 transition-colors"
+                      className="flex flex-col items-center space-y-2 cursor-pointer p-3 border-2 border-white/30 rounded-lg hover:border-[#F930C7] transition-colors"
                     >
                       <input
                         type="radio"
@@ -199,9 +189,9 @@ export default function QuizConfigurationForm({
                             difficulty: e.target.value,
                           }))
                         }
-                        className="w-4 h-4 text-blue-600 focus:ring-blue-500 focus:ring-2"
+                        className="w-4 h-4 text-[#F930C7] focus:ring-[#F930C7] focus:ring-2"
                       />
-                      <span className="text-sm font-medium text-gray-700 text-center">
+                      <span className="text-sm font-medium text-white text-center">
                         {level.label}
                       </span>
                       <div
@@ -219,10 +209,10 @@ export default function QuizConfigurationForm({
               </div>
 
               {/* Question Count */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <label className="block text-sm font-semibold text-gray-800 mb-3">
-                  🔢 Number of Questions:{" "}
-                  <span className="text-blue-600 font-bold">
+              <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+                <label className="block text-sm font-semibold text-white mb-3">
+                  Number of Questions:{" "}
+                  <span className="text-[#F930C7] font-bold">
                     {config.questionCount}
                   </span>
                 </label>
@@ -238,33 +228,33 @@ export default function QuizConfigurationForm({
                         questionCount: parseInt(e.target.value),
                       }))
                     }
-                    className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                    className="w-full h-3 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
                     style={{
-                      background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${
+                      background: `linear-gradient(to right, #F930C7 0%, #F930C7 ${
                         ((config.questionCount - 5) / 10) * 100
-                      }%, #e5e7eb ${
+                      }%, #ffffff20 ${
                         ((config.questionCount - 5) / 10) * 100
-                      }%, #e5e7eb 100%)`,
+                      }%, #ffffff20 100%)`,
                     }}
                   />
                 </div>
               </div>
 
               {/* Buttons */}
-              <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+              <div className="flex justify-end space-x-4 pt-6 border-t border-white/20">
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="px-8 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95"
+                  className="px-8 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-black font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95"
                 >
-                  ❌ Cancel
+                  Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={!isFormValid || isGenerating}
-                  className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95"
+                  className="px-8 py-3 bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white rounded-lg hover:from-[#F930C7]/80 hover:to-[#3076F9]/80 focus:outline-none focus:ring-2 focus:ring-[#F930C7] focus:ring-offset-2 focus:ring-offset-black disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95"
                 >
-                  {isGenerating ? "🔄 Generating..." : "🎯 Generate Quiz"}
+                  {isGenerating ? "Generating..." : "Generate Quiz"}
                 </button>
               </div>
             </form>

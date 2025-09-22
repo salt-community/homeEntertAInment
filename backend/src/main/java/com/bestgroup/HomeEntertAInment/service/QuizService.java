@@ -5,7 +5,9 @@ import com.bestgroup.HomeEntertAInment.dto.QuizResponseDto;
 import com.bestgroup.HomeEntertAInment.dto.QuestionResponseDto;
 import com.bestgroup.HomeEntertAInment.model.Question;
 import com.bestgroup.HomeEntertAInment.model.Quiz;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,7 +20,11 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class QuizService {
+
+    private final GeminiService geminiService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * Generate a quiz based on the provided configuration
@@ -31,13 +37,123 @@ public class QuizService {
     }
 
     /**
-     * Internal method to generate the full quiz model
+     * Internal method to generate the full quiz model using Gemini API
      * @param config The quiz configuration from the frontend
      * @return Generated quiz with questions (including correct answers)
      */
     private Quiz generateQuizInternal(QuizConfigurationDto config) {
+        try {
+            log.info("Generating quiz using Gemini API for configuration: {}", config);
+            
+            // Call Gemini API to generate quiz
+            String quizJson = geminiService.sendQuizPrompt(config);
+            
+            // Parse JSON response to Quiz model
+            Quiz generatedQuiz = parseQuizFromJson(quizJson);
+            
+            // Set the current timestamp
+            generatedQuiz.setCreatedAt(LocalDateTime.now());
+            
+            log.info("Successfully generated quiz with ID: {} and {} questions", 
+                    generatedQuiz.getId(), generatedQuiz.getQuestions().size());
+            
+            return generatedQuiz;
+            
+        } catch (Exception e) {
+            log.error("Failed to generate quiz using Gemini API, falling back to mock data", e);
+            
+            // Fallback to mock data if Gemini API fails
+            return generateMockQuiz(config);
+        }
+    }
+
+    /**
+     * Parse JSON response from Gemini API into Quiz model
+     * @param quizJson JSON string from Gemini API
+     * @return Parsed Quiz model
+     * @throws Exception if parsing fails
+     */
+    private Quiz parseQuizFromJson(String quizJson) throws Exception {
+        try {
+            // Clean the JSON response (remove any markdown formatting if present)
+            String cleanJson = quizJson.trim();
+            if (cleanJson.startsWith("```json")) {
+                cleanJson = cleanJson.substring(7);
+            }
+            if (cleanJson.endsWith("```")) {
+                cleanJson = cleanJson.substring(0, cleanJson.length() - 3);
+            }
+            cleanJson = cleanJson.trim();
+            
+            log.debug("Parsing quiz JSON: {}", cleanJson);
+            
+            // Parse JSON to Quiz model
+            Quiz quiz = objectMapper.readValue(cleanJson, Quiz.class);
+            
+            // Validate the parsed quiz
+            validateQuiz(quiz);
+            
+            return quiz;
+            
+        } catch (Exception e) {
+            log.error("Failed to parse quiz JSON: {}", quizJson, e);
+            throw new Exception("Failed to parse quiz from Gemini API response: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Validate the parsed quiz to ensure it has required fields
+     * @param quiz The quiz to validate
+     * @throws Exception if validation fails
+     */
+    private void validateQuiz(Quiz quiz) throws Exception {
+        if (quiz == null) {
+            throw new Exception("Quiz object is null");
+        }
+        if (quiz.getId() == null || quiz.getId().trim().isEmpty()) {
+            throw new Exception("Quiz ID is missing or empty");
+        }
+        if (quiz.getTitle() == null || quiz.getTitle().trim().isEmpty()) {
+            throw new Exception("Quiz title is missing or empty");
+        }
+        if (quiz.getQuestions() == null || quiz.getQuestions().isEmpty()) {
+            throw new Exception("Quiz has no questions");
+        }
+        if (quiz.getQuestions().size() != quiz.getQuestionCount()) {
+            log.warn("Question count mismatch: expected {}, got {}", 
+                    quiz.getQuestionCount(), quiz.getQuestions().size());
+        }
+        
+        // Validate each question
+        for (int i = 0; i < quiz.getQuestions().size(); i++) {
+            Question question = quiz.getQuestions().get(i);
+            if (question == null) {
+                throw new Exception("Question " + i + " is null");
+            }
+            if (question.getQuestionText() == null || question.getQuestionText().trim().isEmpty()) {
+                throw new Exception("Question " + i + " text is missing or empty");
+            }
+            if (question.getOptions() == null || question.getOptions().size() != 4) {
+                throw new Exception("Question " + i + " must have exactly 4 options");
+            }
+            if (question.getCorrectAnswerIndex() == null || 
+                question.getCorrectAnswerIndex() < 0 || 
+                question.getCorrectAnswerIndex() > 3) {
+                throw new Exception("Question " + i + " has invalid correct answer index");
+            }
+        }
+    }
+
+    /**
+     * Generate a mock quiz as fallback when Gemini API fails
+     * @param config The quiz configuration
+     * @return Mock quiz with sample questions
+     */
+    private Quiz generateMockQuiz(QuizConfigurationDto config) {
+        log.info("Generating mock quiz as fallback for configuration: {}", config);
+        
         // Generate quiz ID
-        String quizId = "quiz_" + System.currentTimeMillis();
+        String quizId = "quiz_mock_" + System.currentTimeMillis();
         
         // Create quiz title based on configuration
         String title = createQuizTitle(config);

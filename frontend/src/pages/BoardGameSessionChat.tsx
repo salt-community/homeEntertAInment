@@ -5,10 +5,10 @@ export default function BoardGameSessionChat() {
   const { sessionId } = useParams({ from: "/board-game-rule-inspector/session/$sessionId" });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
+    <div className="min-h-screen bg-black">
       <div className="flex h-screen">
         {/* Sidebar */}
-        <div className="w-80 flex-shrink-0 shadow-2xl border-r border-indigo-100">
+        <div className="w-80 flex-shrink-0 bg-black border-r border-gray-800">
           <SessionSidebar className="h-full" />
         </div>
 

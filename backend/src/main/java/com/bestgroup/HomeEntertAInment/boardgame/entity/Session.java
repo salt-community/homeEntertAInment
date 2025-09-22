@@ -28,12 +28,6 @@ public class Session {
     private Long id;
 
     /**
-     * Unique session identifier for tracking user interactions
-     */
-    @Column(name = "session_id", unique = true, nullable = false)
-    private String sessionId;
-
-    /**
      * Name of the board game being played
      */
     @Column(name = "game_name", nullable = false)
@@ -70,8 +64,14 @@ public class Session {
     /**
      * Reference to the rule set used in this session
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rule_set_id")
-    @JsonIgnore
     private RuleSet ruleSet;
+
+    /**
+     * Reference to the chatbot for this session
+     */
+    @OneToOne(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private ChatBot chatBot;
 }

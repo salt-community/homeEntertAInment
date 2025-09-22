@@ -72,26 +72,26 @@ public class SessionController {
     }
 
     /**
-     * Get a specific session by session ID
+     * Get a specific session by ID
      * 
-     * @param sessionId The unique session identifier
+     * @param id The session ID
      * @return ResponseEntity containing the session if found
      */
-    @GetMapping("/{sessionId}")
-    public ResponseEntity<Session> getSessionById(@PathVariable String sessionId) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Session> getSessionById(@PathVariable Long id) {
         try {
-            log.info("Received request to get session: {}", sessionId);
-            Optional<Session> session = sessionService.getSessionById(sessionId);
+            log.info("Received request to get session: {}", id);
+            Optional<Session> session = sessionService.getSessionByNumericId(id);
             
             if (session.isPresent()) {
-                log.info("Found session: {}", sessionId);
+                log.info("Found session: {}", id);
                 return ResponseEntity.ok(session.get());
             } else {
-                log.warn("Session not found: {}", sessionId);
+                log.warn("Session not found: {}", id);
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
-            log.error("Error retrieving session {}: {}", sessionId, e.getMessage(), e);
+            log.error("Error retrieving session {}: {}", id, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -111,7 +111,7 @@ public class SessionController {
         try {
             log.info("Received request to create session for game: {} and user: {}", gameName, userId);
             Session session = sessionService.createSession(gameName, userId);
-            log.info("Created session: {}", session.getSessionId());
+            log.info("Created session: {}", session.getId());
             return ResponseEntity.ok(session);
         } catch (Exception e) {
             log.error("Error creating session for game {}: {}", gameName, e.getMessage(), e);
@@ -172,7 +172,7 @@ public class SessionController {
             // Save the updated session with players and rule set
             Session savedSession = sessionService.saveSession(session);
             
-            log.info("Created session with rules: {} with {} players", savedSession.getSessionId(), players.size());
+            log.info("Created session with rules: {} with {} players", savedSession.getId(), players.size());
             return ResponseEntity.ok(savedSession);
             
         } catch (IllegalArgumentException | IllegalStateException e) {
@@ -217,24 +217,24 @@ public class SessionController {
     /**
      * Deactivate a session
      * 
-     * @param sessionId The session ID to deactivate
+     * @param id The session ID to deactivate
      * @return ResponseEntity indicating success or failure
      */
-    @DeleteMapping("/{sessionId}")
-    public ResponseEntity<Void> deactivateSession(@PathVariable String sessionId) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deactivateSession(@PathVariable Long id) {
         try {
-            log.info("Received request to deactivate session: {}", sessionId);
-            boolean deactivated = sessionService.deactivateSession(sessionId);
+            log.info("Received request to deactivate session: {}", id);
+            boolean deactivated = sessionService.deactivateSession(id);
             
             if (deactivated) {
-                log.info("Successfully deactivated session: {}", sessionId);
+                log.info("Successfully deactivated session: {}", id);
                 return ResponseEntity.ok().build();
             } else {
-                log.warn("Session not found for deactivation: {}", sessionId);
+                log.warn("Session not found for deactivation: {}", id);
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
-            log.error("Error deactivating session {}: {}", sessionId, e.getMessage(), e);
+            log.error("Error deactivating session {}: {}", id, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
     }

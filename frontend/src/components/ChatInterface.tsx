@@ -145,9 +145,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-black border border-gray-800 rounded-lg">
+    <div className="flex flex-col h-full bg-black border border-gray-800 rounded-lg min-h-0">
       {/* Chat Header */}
-      <div className="p-4 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
+      <div className="p-4 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10 flex-shrink-0">
         <h3 className="text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
           Board Game Rules Assistant
         </h3>
@@ -158,7 +158,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
 
       {/* Error Display */}
       {error && (
-        <div className="p-3 bg-red-900/20 border-b border-red-800">
+        <div className="p-3 bg-red-900/20 border-b border-red-800 flex-shrink-0">
           <p className="text-sm text-red-400">{error}</p>
           <button
             onClick={() => setError(null)}
@@ -170,7 +170,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
       )}
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
         {isLoading && chatEntries.length === 0 ? (
           <div className="flex justify-center items-center h-32">
             <div className="text-white/60">Loading chat history...</div>
@@ -256,7 +256,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
       </div>
 
       {/* Message Input */}
-      <div className="p-4 border-t border-gray-800">
+      <div className="p-4 border-t border-gray-800 flex-shrink-0">
         <form onSubmit={handleSendMessage} className="flex space-x-2">
           <input
             type="text"

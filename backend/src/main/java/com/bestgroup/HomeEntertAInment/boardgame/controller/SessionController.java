@@ -72,33 +72,6 @@ public class SessionController {
     }
 
     /**
-     * Get a specific session by ID
-     * 
-     * @param id The session ID
-     * @return ResponseEntity containing the session if found
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<Session> getSessionById(@PathVariable Long id) {
-        try {
-            log.info("Received request to get session: {}", id);
-            Optional<Session> session = sessionService.getSessionByNumericId(id);
-            
-            if (session.isPresent()) {
-                log.info("Found session: {}", id);
-                return ResponseEntity.ok(session.get());
-            } else {
-                log.warn("Session not found: {}", id);
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            log.error("Error retrieving session {}: {}", id, e.getMessage(), e);
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
-
-
-    /**
      * Create a new session
      * 
      * @param gameName The name of the board game
@@ -212,6 +185,31 @@ public class SessionController {
             file.getFileData(), // codedData (original Base64)
             decodedData         // decodedData (decoded text)
         );
+    }
+
+    /**
+     * Get a specific session by ID
+     * 
+     * @param id The session ID
+     * @return ResponseEntity containing the session if found
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Session> getSessionById(@PathVariable Long id) {
+        try {
+            log.info("Received request to get session: {}", id);
+            Optional<Session> session = sessionService.getSessionByNumericId(id);
+            
+            if (session.isPresent()) {
+                log.info("Found session: {}", id);
+                return ResponseEntity.ok(session.get());
+            } else {
+                log.warn("Session not found: {}", id);
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            log.error("Error retrieving session {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     /**

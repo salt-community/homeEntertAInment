@@ -166,6 +166,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Ask a question about the game rules..."
             className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 placeholder-gray-500"
+            style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
             disabled={isLoading}
           />
           <button

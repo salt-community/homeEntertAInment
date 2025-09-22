@@ -63,7 +63,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
   useEffect(() => {
     loadChatEntries();
     initializeChatBot();
-    
+
     // Cleanup on unmount
     return () => {
       stopAutoRefresh();
@@ -77,13 +77,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
 
   // Detect new AI responses and stop waiting state
   useEffect(() => {
-    if (isWaitingForAI) {
-      const hasNewAIResponse = chatEntries.some(entry => 
-        entry.creator === "AI" && 
-        entry.createdAt > new Date(Date.now() - 10000).toISOString() // Created in last 10 seconds
-      );
-      
-      if (hasNewAIResponse) {
+    if (isWaitingForAI && chatEntries.length > 0) {
+      // Check if the last entry is from AI
+      const lastEntry = chatEntries[chatEntries.length - 1];
+      if (lastEntry.creator === "AI") {
         setIsWaitingForAI(false);
       }
     }
@@ -92,10 +89,8 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
   // Stop auto-refresh when AI is done thinking
   useEffect(() => {
     if (!isWaitingForAI && refreshIntervalRef.current) {
-      // Stop auto-refresh after a delay when AI is done
-      setTimeout(() => {
-        stopAutoRefresh();
-      }, 5000); // Stop after 5 seconds of no AI activity
+      // Stop auto-refresh immediately when AI is done
+      stopAutoRefresh();
     }
   }, [isWaitingForAI, stopAutoRefresh]);
 

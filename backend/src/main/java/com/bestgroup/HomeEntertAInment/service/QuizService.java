@@ -15,6 +15,7 @@ import com.bestgroup.HomeEntertAInment.dto.QuizResponseDto;
 import com.bestgroup.HomeEntertAInment.model.Question;
 import com.bestgroup.HomeEntertAInment.model.Quiz;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +25,18 @@ import lombok.extern.slf4j.Slf4j;
  * Handles creating quizzes based on configuration and managing quiz data
  */
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class QuizService {
 
     private final GeminiService geminiService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+    
+    public QuizService(GeminiService geminiService) {
+        this.geminiService = geminiService;
+        this.objectMapper = new ObjectMapper();
+        // Register JavaTimeModule to handle Java 8 time types (LocalDateTime, etc.)
+        this.objectMapper.registerModule(new JavaTimeModule());
+    }
 
     /**
      * Generate a quiz based on the provided configuration

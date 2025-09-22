@@ -1,8 +1,10 @@
 import { StoryForm } from "../story/components";
 import { useGenerateStory } from "../story/hooks";
+import { useNavigate } from "@tanstack/react-router";
 
 export default function StoryGenerator() {
-  const { data, loading, error, submit } = useGenerateStory();
+  const { loading, error } = useGenerateStory();
+  const navigate = useNavigate();
 
   return (
     <div className="p-4 flex flex-col items-center space-y-6">
@@ -16,25 +18,18 @@ export default function StoryGenerator() {
       <div className="w-full max-w-2xl">
         <StoryForm
           onSubmit={async (payload) => {
-            await submit(payload);
+            sessionStorage.setItem("storyRequest", JSON.stringify(payload));
+            navigate({ to: "/story-generator/result" });
           }}
           disabled={loading}
         />
       </div>
 
       <div className="w-full max-w-2xl">
-        {loading && <p>Generating...</p>}
         {error && <p className="text-red-600">{error}</p>}
       </div>
 
-      {data?.story && (
-        <div className="w-full max-w-2xl">
-          <h3 className="text-xl font-medium mb-2">Result</h3>
-          <div className="whitespace-pre-wrap border rounded p-3">
-            {data.story}
-          </div>
-        </div>
-      )}
+      {/* Result moved to /story-generator/result */}
     </div>
   );
 }

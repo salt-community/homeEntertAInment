@@ -55,7 +55,7 @@ export default function Home() {
             gradientDirection="pinkToBlue"
           />
           <Card
-            to="/quiz-generator"
+            to="/quiz"
             title="Quiz Generator"
             description="Turn any topic into a game night. Builds a tailored quiz with fun, challenging, shareable questions."
             gradientDirection="blueToPink"

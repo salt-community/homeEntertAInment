@@ -32,6 +32,12 @@ const boardGameRuleInspectorRoute = createRoute({
   component: BoardGameRuleInspector,
 });
 
+const boardGameSessionRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/board-game-rule-inspector/session/$sessionId",
+  component: BoardGameRuleInspector,
+});
+
 const movieMoodRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/movie-mood",
@@ -48,6 +54,7 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   storyGeneratorRoute,
   boardGameRuleInspectorRoute,
+  boardGameSessionRoute,
   movieMoodRoute,
   quizGeneratorRoute,
 ]);

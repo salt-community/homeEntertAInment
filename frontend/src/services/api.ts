@@ -18,6 +18,10 @@ export const API_ENDPOINTS = {
     `${API_BASE_URL}/api/boardgame/rulesets/filename/${fileName}`,
   RULESETS_BY_EXTENSION: (fileExt: string) =>
     `${API_BASE_URL}/api/boardgame/rulesets/extension/${fileExt}`,
+  // Chat endpoints
+  CHAT_ENTRIES: (sessionId: number) => `${API_BASE_URL}/api/sessions/${sessionId}/chatEntries`,
+  CREATE_CHAT_ENTRY: (sessionId: number) => `${API_BASE_URL}/api/sessions/${sessionId}/chatEntry`,
+  CREATE_CHATBOT: (sessionId: number) => `${API_BASE_URL}/api/sessions/${sessionId}/chatbot`,
 } as const;
 
 export default API_BASE_URL;

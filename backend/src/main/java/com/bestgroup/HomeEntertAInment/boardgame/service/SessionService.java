@@ -58,6 +58,18 @@ public class SessionService {
     }
 
     /**
+     * Find a session by its numeric ID
+     *
+     * @param id The numeric session ID
+     * @return Optional containing the session if found
+     */
+    @Transactional(readOnly = true)
+    public Optional<Session> getSessionByNumericId(Long id) {
+        log.info("Retrieving session with numeric ID: {}", id);
+        return sessionRepository.findById(id);
+    }
+
+    /**
      * Create a new game session
      *
      * @param gameName The name of the board game

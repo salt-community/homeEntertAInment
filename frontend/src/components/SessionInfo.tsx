@@ -20,7 +20,7 @@ export const SessionInfo: React.FC<SessionInfoProps> = ({ sessionId }) => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await fetch(API_ENDPOINTS.SESSION_BY_ID(sessionId.toString()));
+      const response = await fetch(API_ENDPOINTS.SESSION_BY_NUMERIC_ID(sessionId));
       if (!response.ok) {
         throw new Error(`Failed to fetch session: ${response.statusText}`);
       }

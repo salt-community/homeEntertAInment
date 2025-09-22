@@ -96,6 +96,31 @@ public class SessionController {
         }
     }
 
+    /**
+     * Get a specific session by numeric ID
+     * 
+     * @param id The numeric session ID
+     * @return ResponseEntity containing the session if found
+     */
+    @GetMapping("/by-id/{id}")
+    public ResponseEntity<Session> getSessionByNumericId(@PathVariable Long id) {
+        try {
+            log.info("Received request to get session by numeric ID: {}", id);
+            Optional<Session> session = sessionService.getSessionByNumericId(id);
+            
+            if (session.isPresent()) {
+                log.info("Found session with numeric ID: {}", id);
+                return ResponseEntity.ok(session.get());
+            } else {
+                log.warn("Session not found with numeric ID: {}", id);
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            log.error("Error retrieving session with numeric ID {}: {}", id, e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
 
 
     /**

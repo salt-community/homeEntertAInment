@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
   SESSIONS: `${API_BASE_URL}/api/boardgame/sessions`,
   SESSIONS_ACTIVE: `${API_BASE_URL}/api/boardgame/sessions/active`,
   SESSION_BY_ID: (id: string) => `${API_BASE_URL}/api/boardgame/sessions/${id}`,
+  SESSION_BY_NUMERIC_ID: (id: number) => `${API_BASE_URL}/api/boardgame/sessions/by-id/${id}`,
   SESSIONS_BY_USER: (userId: string) =>
     `${API_BASE_URL}/api/boardgame/sessions/user/${userId}`,
   SESSIONS_CREATE_WITH_RULES: `${API_BASE_URL}/api/boardgame/sessions/create-with-rules`,

@@ -107,7 +107,7 @@ export default function QuizCard({
               {!isFirstQuestion && (
                 <button
                   onClick={handlePrevious}
-                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 font-medium transition-colors"
+                  className="px-8 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-lg hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95"
                 >
                   ← Previous
                 </button>
@@ -117,9 +117,9 @@ export default function QuizCard({
             {selectedAnswers[currentQuestionIndex] !== undefined && (
               <button
                 onClick={handleNext}
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-colors"
+                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95"
               >
-                {isLastQuestion ? "Finish Quiz" : "Next →"}
+                {isLastQuestion ? "🎯 Finish Quiz" : "Next →"}
               </button>
             )}
           </div>
@@ -128,9 +128,9 @@ export default function QuizCard({
           <div className="flex justify-center">
             <button
               onClick={handleBackToQuiz}
-              className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 font-medium transition-colors"
+              className="px-8 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 font-semibold transition-all duration-200 transform hover:scale-105 active:scale-95"
             >
-              Cancel
+              ❌ Cancel
             </button>
           </div>
         </div>

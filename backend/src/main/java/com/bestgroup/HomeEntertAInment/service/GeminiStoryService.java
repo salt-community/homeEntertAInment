@@ -45,11 +45,10 @@ public class GeminiStoryService {
             );
 
             // Extract the response text from the nested structure
-            String resultText = Objects.requireNonNull(response.getBody())
-                .candidates().get(0)
-                .content().parts().get(0)
+            return Objects.requireNonNull(response.getBody())
+                .candidates().getFirst()
+                .content().parts().getFirst()
                 .text();
-            return resultText;
 
         } catch (Exception e) {
             e.printStackTrace();

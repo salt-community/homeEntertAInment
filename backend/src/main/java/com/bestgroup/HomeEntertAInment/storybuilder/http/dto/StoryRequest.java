@@ -22,6 +22,7 @@ public record StoryRequest(
 
     @Size(max = 200)
     String custom
+
 ) {
 }
 

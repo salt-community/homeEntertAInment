@@ -1,6 +1,8 @@
-package com.bestgroup.HomeEntertAInment.storybuilder;
+package com.bestgroup.HomeEntertAInment.storybuilder.service;
 
 import com.bestgroup.HomeEntertAInment.service.GeminiStoryService;
+import com.bestgroup.HomeEntertAInment.storybuilder.http.dto.ImageRequest;
+import com.bestgroup.HomeEntertAInment.storybuilder.http.dto.ImageResponse;
 import com.bestgroup.HomeEntertAInment.storybuilder.http.dto.StoryRequest;
 import com.bestgroup.HomeEntertAInment.storybuilder.http.dto.StoryResponse;
 import com.bestgroup.HomeEntertAInment.storybuilder.model.Story;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 public class StoryService {
 
     private final GeminiStoryService geminiService;
+    private final ImageService imageService;
     private final StoryRepository storyRepository;
 
     public StoryResponse generateStory(StoryRequest request) {
@@ -59,4 +62,8 @@ public class StoryService {
         return new StoryResponse(generatedStory);
     }
 
+    public ImageResponse generateImage(ImageRequest imageRequest) {
+        String url = imageService.generateImage(imageRequest.description(), "1024x1024");
+        return new ImageResponse(url);
+    }
 }

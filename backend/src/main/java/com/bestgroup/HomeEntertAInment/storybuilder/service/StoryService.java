@@ -36,7 +36,7 @@ public class StoryService {
             - Output should be just the story text, nothing else.
             
             Story specification:
-            - Hero: %s
+            - Character: %s
             - Theme: %s
             - Target age group: %s
             

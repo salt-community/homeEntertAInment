@@ -97,27 +97,46 @@ public class SessionController {
      * 
      * @param gameName The name of the board game
      * @param playerNames Comma-separated list of player names
-     * @param ruleFile The PDF file containing game rules
+     * @param ruleFile The PDF file containing game rules (optional)
+     * @param ruleText The text content containing game rules (optional)
      * @return ResponseEntity containing the created session with rule set
      */
     @PostMapping("/create-with-rules")
     public ResponseEntity<Session> createSessionWithRules(@RequestParam String gameName,
                                                         @RequestParam String playerNames,
-                                                        @RequestParam("ruleFile") MultipartFile ruleFile) {
+                                                        @RequestParam(value = "ruleFile", required = false) MultipartFile ruleFile,
+                                                        @RequestParam(value = "ruleText", required = false) String ruleText) {
         try {
             log.info("Received request to create session with rules for game: {} with players: {}", gameName, playerNames);
             
-            if (ruleFile.isEmpty()) {
-                log.warn("Rule file is empty");
+            // Validate that either ruleFile or ruleText is provided, but not both
+            boolean hasRuleFile = ruleFile != null && !ruleFile.isEmpty();
+            boolean hasRuleText = ruleText != null && !ruleText.trim().isEmpty();
+            
+            if (!hasRuleFile && !hasRuleText) {
+                log.warn("Neither rule file nor rule text provided");
                 return ResponseEntity.badRequest().build();
             }
-
-            // Convert PDF to text using ConvertApiService
-            ConvertApiResponseDto convertResult = convertApiService.convertPdfToText(ruleFile);
-            DecodedConvertApiResponse decodedResponse = transformToDecodedResponse(convertResult);
             
-            // Create RuleSet from the decoded response
-            RuleSet ruleSet = ruleSetService.createRuleSet(decodedResponse);
+            if (hasRuleFile && hasRuleText) {
+                log.warn("Both rule file and rule text provided - only one should be provided");
+                return ResponseEntity.badRequest().build();
+            }
+            
+            RuleSet ruleSet;
+            
+            if (hasRuleFile) {
+                // Handle PDF file processing (existing flow)
+                log.info("Processing PDF rule file: {}", ruleFile.getOriginalFilename());
+                ConvertApiResponseDto convertResult = convertApiService.convertPdfToText(ruleFile);
+                DecodedConvertApiResponse decodedResponse = transformToDecodedResponse(convertResult);
+                ruleSet = ruleSetService.createRuleSet(decodedResponse);
+            } else {
+                // Handle text input (new flow)
+                log.info("Processing text rule input");
+                ruleSet = ruleSetService.createRuleSetFromText(gameName, ruleText.trim());
+            }
+            
             log.info("Created rule set: {}", ruleSet.getId());
             
             // Create Session

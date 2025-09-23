@@ -14,6 +14,21 @@ export const CreateSessionCard = () => {
 
   const { refetch } = useSessions();
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.type === "application/pdf") {
+        setRuleFile(file);
+        setRuleText(""); // Clear textarea when PDF is selected
+        setShowTextarea(false); // Hide textarea when PDF is selected
+        setError(null);
+      } else {
+        setError("Please select a PDF file");
+        setRuleFile(null);
+      }
+    }
+  };
+
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
     setRuleText(text);

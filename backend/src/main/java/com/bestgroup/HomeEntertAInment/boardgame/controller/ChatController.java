@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/api/sessions")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin
 public class ChatController {
 
     private final ChatEntryService chatEntryService;

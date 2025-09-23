@@ -6,6 +6,8 @@ export const CreateSessionCard = () => {
   const [gameName, setGameName] = useState("");
   const [playerNames, setPlayerNames] = useState("");
   const [ruleFile, setRuleFile] = useState<File | null>(null);
+  const [ruleText, setRuleText] = useState("");
+  const [showTextarea, setShowTextarea] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -17,10 +19,25 @@ export const CreateSessionCard = () => {
     if (file) {
       if (file.type === "application/pdf") {
         setRuleFile(file);
+        setRuleText(""); // Clear textarea when PDF is selected
+        setShowTextarea(false); // Hide textarea when PDF is selected
         setError(null);
       } else {
         setError("Please select a PDF file");
         setRuleFile(null);
+      }
+    }
+  };
+
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value;
+    setRuleText(text);
+    if (text.trim()) {
+      setRuleFile(null); // Clear PDF when text is entered
+      // Clear the file input
+      const fileInput = document.getElementById('ruleFile') as HTMLInputElement;
+      if (fileInput) {
+        fileInput.value = '';
       }
     }
   };
@@ -33,8 +50,13 @@ export const CreateSessionCard = () => {
       return;
     }
 
-    if (!ruleFile) {
-      setError("Please select a PDF rule file");
+    if (!ruleFile && !ruleText.trim()) {
+      setError("Please either upload a PDF file or enter rules in the text area");
+      return;
+    }
+
+    if (ruleFile && ruleText.trim()) {
+      setError("Please choose either PDF upload or text input, not both");
       return;
     }
 
@@ -46,7 +68,12 @@ export const CreateSessionCard = () => {
       const formData = new FormData();
       formData.append("gameName", gameName.trim());
       formData.append("playerNames", playerNames.trim());
-      formData.append("ruleFile", ruleFile);
+      
+      if (ruleFile) {
+        formData.append("ruleFile", ruleFile);
+      } else if (ruleText.trim()) {
+        formData.append("ruleText", ruleText.trim());
+      }
 
       const response = await fetch(API_ENDPOINTS.SESSIONS_CREATE_WITH_RULES, {
         method: "POST",
@@ -64,6 +91,8 @@ export const CreateSessionCard = () => {
       setGameName("");
       setPlayerNames("");
       setRuleFile(null);
+      setRuleText("");
+      setShowTextarea(false);
 
       // Refresh sessions list
       refetch();
@@ -142,25 +171,69 @@ export const CreateSessionCard = () => {
           </p>
         </div>
 
-        {/* Rule File Upload */}
+        {/* Rule Input Options */}
         <div>
-          <label
-            htmlFor="ruleFile"
-            className="block text-sm font-medium text-white/80 mb-1"
-          >
-            Game Rules PDF *
+          <label className="block text-sm font-medium text-white/80 mb-2">
+            Game Rules *
           </label>
-          <input
-            type="file"
-            id="ruleFile"
-            accept=".pdf"
-            onChange={handleFileChange}
-            className="w-full px-4 py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white"
-            required
-          />
-          <p className="text-xs text-white/60 mt-1">
-            Upload a PDF file containing the game rules
-          </p>
+          
+          {/* PDF Upload Option */}
+          <div className="mb-4">
+            <label
+              htmlFor="ruleFile"
+              className="block text-sm font-medium text-white/70 mb-1"
+            >
+              Upload PDF File
+            </label>
+            <input
+              type="file"
+              id="ruleFile"
+              accept=".pdf"
+              onChange={handleFileChange}
+              className="w-full px-4 py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white"
+            />
+            <p className="text-xs text-white/60 mt-1">
+              Upload a PDF file containing the game rules
+            </p>
+          </div>
+
+          {/* Divider */}
+          <div className="flex items-center my-4">
+            <div className="flex-1 h-px bg-gray-700"></div>
+            <span className="px-3 text-sm text-white/50">OR</span>
+            <div className="flex-1 h-px bg-gray-700"></div>
+          </div>
+
+          {/* Text Input Option */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-medium text-white/70">
+                Enter Rules as Text
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowTextarea(!showTextarea)}
+                className="text-sm text-[#3076F9] hover:text-[#3076F9]/80 transition-colors"
+              >
+                {showTextarea ? "Hide" : "Show"} Text Input
+              </button>
+            </div>
+            
+            {showTextarea && (
+              <textarea
+                id="ruleText"
+                value={ruleText}
+                onChange={handleTextareaChange}
+                placeholder="Enter the game rules here..."
+                rows={8}
+                className="w-full px-4 py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white resize-vertical"
+                style={{ color: "#ffffff", backgroundColor: "#1f2937" }}
+              />
+            )}
+            <p className="text-xs text-white/60 mt-1">
+              Type or paste the game rules directly
+            </p>
+          </div>
         </div>
 
         {/* Error Message */}

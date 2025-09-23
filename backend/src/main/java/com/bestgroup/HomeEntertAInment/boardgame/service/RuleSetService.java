@@ -134,14 +134,42 @@ public class RuleSetService {
     }
 
     /**
-     * Get rule sets by file extension
+     * Create a new rule set from text input
      * 
-     * @param fileExt the file extension
-     * @return List of rule sets with the specified extension
+     * @param gameName the name of the game
+     * @param ruleText the text content of the rules
+     * @return the created rule set
      */
-    @Transactional(readOnly = true)
-    public List<RuleSet> getRuleSetsByFileExtension(String fileExt) {
-        log.info("Retrieving rule sets with file extension: {}", fileExt);
-        return ruleSetRepository.findByFileExt(fileExt);
+    public RuleSet createRuleSetFromText(String gameName, String ruleText) {
+        if (gameName == null || gameName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Game name cannot be null or empty");
+        }
+        if (ruleText == null || ruleText.trim().isEmpty()) {
+            throw new IllegalArgumentException("Rule text cannot be null or empty");
+        }
+
+        log.info("Creating rule set from text for game: {}", gameName);
+        
+        // Generate a unique file name based on game name and timestamp
+        String fileName = gameName.replaceAll("[^a-zA-Z0-9]", "_") + "_rules_" + System.currentTimeMillis() + ".txt";
+        
+        // Check if rule set already exists with this file name
+        if (ruleSetRepository.existsByFileName(fileName)) {
+            log.warn("Rule set with file name {} already exists", fileName);
+            throw new IllegalArgumentException("Rule set with file name " + fileName + " already exists");
+        }
+
+        RuleSet ruleSet = RuleSet.builder()
+                .fileName(fileName)
+                .fileExt("txt")
+                .fileSize(ruleText.length())
+                .codedData(null) // No coded data for text input
+                .decodedData(ruleText.trim())
+                .build();
+        
+        RuleSet savedRuleSet = ruleSetRepository.save(ruleSet);
+        
+        log.info("Created rule set from text with ID: {}", savedRuleSet.getId());
+        return savedRuleSet;
     }
 }

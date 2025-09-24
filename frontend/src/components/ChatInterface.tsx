@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import type { ChatEntry, CreateChatEntryRequest } from "../types/gameSession";
 import { ChatService } from "../services/chatService";
+import { useAuthenticatedFetch } from "../services/apiClient";
 
 interface ChatInterfaceProps {
   sessionId: number;
@@ -15,6 +16,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const refreshIntervalRef = useRef<number | null>(null);
+  const authenticatedFetch = useAuthenticatedFetch();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -24,7 +26,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
     try {
       setIsLoading(true);
       setError(null);
-      const entries = await ChatService.getChatEntries(sessionId);
+      const entries = await ChatService.getChatEntries(
+        sessionId,
+        authenticatedFetch
+      );
       setChatEntries(entries);
     } catch (err) {
       setError(
@@ -33,7 +38,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [sessionId]);
+  }, [sessionId, authenticatedFetch]);
 
   const startAutoRefresh = useCallback(() => {
     if (refreshIntervalRef.current) {
@@ -53,11 +58,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
 
   const initializeChatBot = useCallback(async () => {
     try {
-      await ChatService.createChatBot(sessionId);
+      await ChatService.createChatBot(sessionId, authenticatedFetch);
     } catch (err) {
       console.warn("Failed to initialize chatbot:", err);
     }
-  }, [sessionId]);
+  }, [sessionId, authenticatedFetch]);
 
   // Load chat entries when component mounts or sessionId changes
   useEffect(() => {
@@ -119,7 +124,11 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
         content: messageContent,
         creator: "PLAYER",
       };
-      const newEntry = await ChatService.createChatEntry(sessionId, request);
+      const newEntry = await ChatService.createChatEntry(
+        sessionId,
+        request,
+        authenticatedFetch
+      );
 
       // Replace temporary entry with real one
       setChatEntries((prev) =>

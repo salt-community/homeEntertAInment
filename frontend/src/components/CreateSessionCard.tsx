@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSessions } from "../hooks/useSessions";
 import { API_ENDPOINTS } from "../services/api";
+import { useAuthenticatedFetch } from "../services/apiClient";
 
 export const CreateSessionCard = () => {
   const [gameName, setGameName] = useState("");
@@ -13,6 +14,7 @@ export const CreateSessionCard = () => {
   const [success, setSuccess] = useState<string | null>(null);
 
   const { refetch } = useSessions();
+  const authenticatedFetch = useAuthenticatedFetch();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -35,9 +37,9 @@ export const CreateSessionCard = () => {
     if (text.trim()) {
       setRuleFile(null); // Clear PDF when text is entered
       // Clear the file input
-      const fileInput = document.getElementById('ruleFile') as HTMLInputElement;
+      const fileInput = document.getElementById("ruleFile") as HTMLInputElement;
       if (fileInput) {
-        fileInput.value = '';
+        fileInput.value = "";
       }
     }
   };
@@ -51,7 +53,9 @@ export const CreateSessionCard = () => {
     }
 
     if (!ruleFile && !ruleText.trim()) {
-      setError("Please either upload a PDF file or enter rules in the text area");
+      setError(
+        "Please either upload a PDF file or enter rules in the text area"
+      );
       return;
     }
 
@@ -68,17 +72,20 @@ export const CreateSessionCard = () => {
       const formData = new FormData();
       formData.append("gameName", gameName.trim());
       formData.append("playerNames", playerNames.trim());
-      
+
       if (ruleFile) {
         formData.append("ruleFile", ruleFile);
       } else if (ruleText.trim()) {
         formData.append("ruleText", ruleText.trim());
       }
 
-      const response = await fetch(API_ENDPOINTS.SESSIONS_CREATE_WITH_RULES, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await authenticatedFetch(
+        API_ENDPOINTS.SESSIONS_CREATE_WITH_RULES,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to create session");
@@ -176,7 +183,7 @@ export const CreateSessionCard = () => {
           <label className="block text-sm font-medium text-white/80 mb-2">
             Game Rules *
           </label>
-          
+
           {/* PDF Upload Option */}
           <div className="mb-4">
             <label
@@ -218,7 +225,7 @@ export const CreateSessionCard = () => {
                 {showTextarea ? "Hide" : "Show"} Text Input
               </button>
             </div>
-            
+
             {showTextarea && (
               <textarea
                 id="ruleText"

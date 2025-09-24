@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useGenerateStory } from "../story/hooks";
 import type { StoryRequest } from "../story/types";
 import { Link } from "@tanstack/react-router";
+import { StoryViewer } from "../story/components";
 
 export default function StoryGeneratorResult() {
   const hasStartedRef = useRef(false);
@@ -70,8 +71,8 @@ export default function StoryGeneratorResult() {
       {data?.story && (
         <div className="w-full max-w-2xl">
           <h3 className="text-xl font-medium mb-2">Result</h3>
-          <div className="whitespace-pre-wrap border rounded p-4 shadow-sm">
-            {data.story}
+          <div className="border rounded p-4 shadow-sm">
+            <StoryViewer markdown={data.story} />
           </div>
         </div>
       )}

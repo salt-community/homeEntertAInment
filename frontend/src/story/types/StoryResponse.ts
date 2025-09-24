@@ -1,3 +1,3 @@
 export interface StoryResponse {
-  story: string;
+  story: string; // This will now contain markdown content
 }

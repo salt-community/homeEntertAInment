@@ -3,3 +3,4 @@ export { default as CharacterField } from "./CharacterField";
 export { default as ThemeSelector } from "./ThemeSelector";
 export { default as TextInput } from "./fields/TextInput";
 export { default as SelectField } from "./fields/SelectField";
+export { StoryViewer } from "./StoryViewer";

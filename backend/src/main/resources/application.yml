@@ -29,6 +29,7 @@ app:
 
 GEMINI_API_KEY: ${GEMINI_API_KEY}
 FAL_API_KEY: ${FAL_API_KEY}
+RUNWARE_API_KEY: ${RUNWARE_API_KEY}
 
 # ConvertAPI configuration for PDF to text conversion
 CONVERT_API_TOKEN: ${CONVERT_API_TOKEN}

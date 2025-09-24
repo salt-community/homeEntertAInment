@@ -1,12 +1,22 @@
+server:
+  port: ${SERVER_PORT:8080}
+
 spring:
+  config:
+    import: optional:file:.env[.properties]
   servlet:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${CLERK_JWT_ISSUER_URI:}
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/entertainmentdb}
-    username: ${JDBC_DATABASE_USERNAME:entertainmentdb}
-    password: ${JDBC_DATABASE_PASSWORD:entertainmentdb}
+    url: ${JDBC_DATABASE_URL:}
+    username: ${JDBC_DATABASE_USERNAME:}
+    password: ${JDBC_DATABASE_PASSWORD:}
     hikari:
       maxLifetime: 300000
       validationTimeout: 3000
@@ -15,22 +25,28 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: ${JPA_DDL_AUTO:create-drop}
-    show-sql: true
+      ddl-auto: ${JPA_DDL_AUTO:}
+    show-sql: ${JPA_SHOW_SQL:}
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     defer-datasource-initialization: true
   sql:
     init:
       mode: always
 
+# Application specific configuration
 app:
   base:
     url: ${APP_BASE_URL:http://localhost:8080}
 
-GEMINI_API_KEY: ${GEMINI_API_KEY}
+# External API configurations
+GEMINI_API_KEY: ${GEMINI_API_KEY:}
+CONVERT_API_TOKEN: ${CONVERT_API_TOKEN:}
 FAL_API_KEY: ${FAL_API_KEY}
 RUNWARE_API_KEY: ${RUNWARE_API_KEY}
 
-# ConvertAPI configuration for PDF to text conversion
-CONVERT_API_TOKEN: ${CONVERT_API_TOKEN}
+# Logging configuration
+logging:
+  level:
+    com.bestgroup.HomeEntertAInment: ${LOG_LEVEL:INFO}
+    org.springframework.web: ${SPRING_WEB_LOG_LEVEL:INFO}
 

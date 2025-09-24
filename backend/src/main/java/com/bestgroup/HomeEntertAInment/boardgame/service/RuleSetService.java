@@ -24,10 +24,24 @@ public class RuleSetService {
     private final RuleSetRepository ruleSetRepository;
 
     /**
-     * Get all rule sets
+     * Get all rule sets for a specific user
+     * 
+     * @param clerkUserId The Clerk user ID
+     * @return List of rule sets owned by the user
+     */
+    @Transactional(readOnly = true)
+    public List<RuleSet> getAllRuleSetsForUser(String clerkUserId) {
+        log.info("Retrieving all rule sets for user: {}", clerkUserId);
+        return ruleSetRepository.findByClerkUserIdOrderByCreatedAtDesc(clerkUserId);
+    }
+
+    /**
+     * Get all rule sets (deprecated - use getAllRuleSetsForUser instead)
      * 
      * @return List of all rule sets
+     * @deprecated Use getAllRuleSetsForUser instead for user-specific data
      */
+    @Deprecated
     @Transactional(readOnly = true)
     public List<RuleSet> getAllRuleSets() {
         log.info("Retrieving all rule sets");
@@ -35,11 +49,26 @@ public class RuleSetService {
     }
 
     /**
-     * Get rule set by ID
+     * Get rule set by ID and user
+     * 
+     * @param id the rule set ID
+     * @param clerkUserId The Clerk user ID
+     * @return Optional containing the rule set if found and owned by user
+     */
+    @Transactional(readOnly = true)
+    public Optional<RuleSet> getRuleSetByIdAndUser(Long id, String clerkUserId) {
+        log.info("Retrieving rule set with ID: {} for user: {}", id, clerkUserId);
+        return ruleSetRepository.findByIdAndClerkUserId(id, clerkUserId);
+    }
+
+    /**
+     * Get rule set by ID (deprecated - use getRuleSetByIdAndUser instead)
      * 
      * @param id the rule set ID
      * @return Optional containing the rule set if found
+     * @deprecated Use getRuleSetByIdAndUser instead for user-specific data
      */
+    @Deprecated
     @Transactional(readOnly = true)
     public Optional<RuleSet> getRuleSetById(Long id) {
         log.info("Retrieving rule set with ID: {}", id);
@@ -59,11 +88,41 @@ public class RuleSetService {
     }
 
     /**
-     * Create a new rule set from DecodedConvertApiResponse
+     * Create a new rule set from DecodedConvertApiResponse for a specific user
+     * 
+     * @param response the decoded API response
+     * @param clerkUserId The Clerk user ID
+     * @return the created rule set
+     */
+    public RuleSet createRuleSetForUser(DecodedConvertApiResponse response, String clerkUserId) {
+        if (response == null) {
+            throw new IllegalArgumentException("DecodedConvertApiResponse cannot be null");
+        }
+
+        log.info("Creating rule set for file: {} and user: {}", response.getFileName(), clerkUserId);
+        
+        // Check if rule set already exists for this user
+        if (ruleSetRepository.existsByFileNameAndClerkUserId(response.getFileName(), clerkUserId)) {
+            log.warn("Rule set with file name {} already exists for user: {}", response.getFileName(), clerkUserId);
+            throw new IllegalArgumentException("Rule set with file name " + response.getFileName() + " already exists for this user");
+        }
+
+        RuleSet ruleSet = RuleSet.fromDecodedConvertApiResponse(response);
+        ruleSet.setClerkUserId(clerkUserId);
+        RuleSet savedRuleSet = ruleSetRepository.save(ruleSet);
+        
+        log.info("Created rule set with ID: {} for user: {}", savedRuleSet.getId(), clerkUserId);
+        return savedRuleSet;
+    }
+
+    /**
+     * Create a new rule set from DecodedConvertApiResponse (deprecated - use createRuleSetForUser instead)
      * 
      * @param response the decoded API response
      * @return the created rule set
+     * @deprecated Use createRuleSetForUser instead for user-specific data
      */
+    @Deprecated
     public RuleSet createRuleSet(DecodedConvertApiResponse response) {
         if (response == null) {
             throw new IllegalArgumentException("DecodedConvertApiResponse cannot be null");
@@ -134,14 +193,86 @@ public class RuleSetService {
     }
 
     /**
-     * Get rule sets by file extension
+     * Create a new rule set from text input for a specific user
      * 
-     * @param fileExt the file extension
-     * @return List of rule sets with the specified extension
+     * @param gameName the name of the game
+     * @param ruleText the text content of the rules
+     * @param clerkUserId The Clerk user ID
+     * @return the created rule set
      */
-    @Transactional(readOnly = true)
-    public List<RuleSet> getRuleSetsByFileExtension(String fileExt) {
-        log.info("Retrieving rule sets with file extension: {}", fileExt);
-        return ruleSetRepository.findByFileExt(fileExt);
+    public RuleSet createRuleSetFromTextForUser(String gameName, String ruleText, String clerkUserId) {
+        if (gameName == null || gameName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Game name cannot be null or empty");
+        }
+        if (ruleText == null || ruleText.trim().isEmpty()) {
+            throw new IllegalArgumentException("Rule text cannot be null or empty");
+        }
+
+        log.info("Creating rule set from text for game: {} and user: {}", gameName, clerkUserId);
+        
+        // Generate a unique file name based on game name and timestamp
+        String fileName = gameName.replaceAll("[^a-zA-Z0-9]", "_") + "_rules_" + System.currentTimeMillis() + ".txt";
+        
+        // Check if rule set already exists with this file name for this user
+        if (ruleSetRepository.existsByFileNameAndClerkUserId(fileName, clerkUserId)) {
+            log.warn("Rule set with file name {} already exists for user: {}", fileName, clerkUserId);
+            throw new IllegalArgumentException("Rule set with file name " + fileName + " already exists for this user");
+        }
+
+        RuleSet ruleSet = RuleSet.builder()
+                .fileName(fileName)
+                .fileExt("txt")
+                .fileSize(ruleText.length())
+                .codedData(null) // No coded data for text input
+                .decodedData(ruleText.trim())
+                .clerkUserId(clerkUserId)
+                .build();
+        
+        RuleSet savedRuleSet = ruleSetRepository.save(ruleSet);
+        
+        log.info("Created rule set from text with ID: {} for user: {}", savedRuleSet.getId(), clerkUserId);
+        return savedRuleSet;
+    }
+
+    /**
+     * Create a new rule set from text input (deprecated - use createRuleSetFromTextForUser instead)
+     * 
+     * @param gameName the name of the game
+     * @param ruleText the text content of the rules
+     * @return the created rule set
+     * @deprecated Use createRuleSetFromTextForUser instead for user-specific data
+     */
+    @Deprecated
+    public RuleSet createRuleSetFromText(String gameName, String ruleText) {
+        if (gameName == null || gameName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Game name cannot be null or empty");
+        }
+        if (ruleText == null || ruleText.trim().isEmpty()) {
+            throw new IllegalArgumentException("Rule text cannot be null or empty");
+        }
+
+        log.info("Creating rule set from text for game: {}", gameName);
+        
+        // Generate a unique file name based on game name and timestamp
+        String fileName = gameName.replaceAll("[^a-zA-Z0-9]", "_") + "_rules_" + System.currentTimeMillis() + ".txt";
+        
+        // Check if rule set already exists with this file name
+        if (ruleSetRepository.existsByFileName(fileName)) {
+            log.warn("Rule set with file name {} already exists", fileName);
+            throw new IllegalArgumentException("Rule set with file name " + fileName + " already exists");
+        }
+
+        RuleSet ruleSet = RuleSet.builder()
+                .fileName(fileName)
+                .fileExt("txt")
+                .fileSize(ruleText.length())
+                .codedData(null) // No coded data for text input
+                .decodedData(ruleText.trim())
+                .build();
+        
+        RuleSet savedRuleSet = ruleSetRepository.save(ruleSet);
+        
+        log.info("Created rule set from text with ID: {}", savedRuleSet.getId());
+        return savedRuleSet;
     }
 }

@@ -44,4 +44,47 @@ public interface RuleSetRepository extends JpaRepository<RuleSet, Long> {
      * @return List of rule sets ordered by creation date descending
      */
     List<RuleSet> findAllByOrderByCreatedAtDesc();
+
+    /**
+     * Find all rule sets for a specific Clerk user
+     *
+     * @param clerkUserId The Clerk user ID
+     * @return List of rule sets owned by the user
+     */
+    List<RuleSet> findByClerkUserId(String clerkUserId);
+
+    /**
+     * Find all rule sets for a specific Clerk user ordered by creation date (newest first)
+     *
+     * @param clerkUserId The Clerk user ID
+     * @return List of rule sets owned by the user ordered by creation date descending
+     */
+    List<RuleSet> findByClerkUserIdOrderByCreatedAtDesc(String clerkUserId);
+
+    /**
+     * Find a specific rule set by ID and Clerk user ID
+     *
+     * @param id The rule set ID
+     * @param clerkUserId The Clerk user ID
+     * @return Optional containing the rule set if found and owned by user
+     */
+    Optional<RuleSet> findByIdAndClerkUserId(Long id, String clerkUserId);
+
+    /**
+     * Find rule set by file name and Clerk user ID
+     *
+     * @param fileName The name of the file
+     * @param clerkUserId The Clerk user ID
+     * @return Optional containing the rule set if found and owned by user
+     */
+    Optional<RuleSet> findByFileNameAndClerkUserId(String fileName, String clerkUserId);
+
+    /**
+     * Check if a rule set exists by file name and Clerk user ID
+     *
+     * @param fileName The name of the file
+     * @param clerkUserId The Clerk user ID
+     * @return true if the rule set exists and is owned by user, false otherwise
+     */
+    boolean existsByFileNameAndClerkUserId(String fileName, String clerkUserId);
 }

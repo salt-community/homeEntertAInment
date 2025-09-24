@@ -9,9 +9,11 @@ import com.bestgroup.HomeEntertAInment.boardgame.service.ConvertApiService;
 import com.bestgroup.HomeEntertAInment.boardgame.service.RuleSetService;
 import com.bestgroup.HomeEntertAInment.boardgame.service.SessionService;
 import com.bestgroup.HomeEntertAInment.boardgame.utils.DecodeBase64ToString;
+import com.bestgroup.HomeEntertAInment.config.ClerkUserExtractor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,37 +36,48 @@ public class SessionController {
     private final SessionService sessionService;
     private final RuleSetService ruleSetService;
     private final ConvertApiService convertApiService;
+    private final ClerkUserExtractor clerkUserExtractor;
 
     /**
-     * Get all sessions
+     * Get all sessions for the authenticated user
      * 
-     * @return ResponseEntity containing list of all sessions
+     * @param authentication The Spring Security authentication object
+     * @return ResponseEntity containing list of user's sessions
      */
     @GetMapping
-    public ResponseEntity<List<Session>> getAllSessions() {
+    public ResponseEntity<List<Session>> getAllSessions(Authentication authentication) {
         try {
-            log.info("Received request to get all sessions");
-            List<Session> sessions = sessionService.getAllSessions();
-            log.info("Retrieved {} sessions", sessions.size());
+            String clerkUserId = clerkUserExtractor.extractClerkUserIdRequired(authentication);
+            log.info("Received request to get all sessions for user: {}", clerkUserId);
+            List<Session> sessions = sessionService.getAllSessionsForUser(clerkUserId);
+            log.info("Retrieved {} sessions for user: {}", sessions.size(), clerkUserId);
             return ResponseEntity.ok(sessions);
+        } catch (IllegalStateException e) {
+            log.error("Authentication error: {}", e.getMessage());
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
-            log.error("Error retrieving all sessions: {}", e.getMessage(), e);
+            log.error("Error retrieving sessions: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
     }
 
     /**
-     * Get all active sessions
+     * Get all active sessions for the authenticated user
      * 
-     * @return ResponseEntity containing list of active sessions
+     * @param authentication The Spring Security authentication object
+     * @return ResponseEntity containing list of user's active sessions
      */
     @GetMapping("/active")
-    public ResponseEntity<List<Session>> getActiveSessions() {
+    public ResponseEntity<List<Session>> getActiveSessions(Authentication authentication) {
         try {
-            log.info("Received request to get active sessions");
-            List<Session> activeSessions = sessionService.getActiveSessions();
-            log.info("Retrieved {} active sessions", activeSessions.size());
+            String clerkUserId = clerkUserExtractor.extractClerkUserIdRequired(authentication);
+            log.info("Received request to get active sessions for user: {}", clerkUserId);
+            List<Session> activeSessions = sessionService.getActiveSessionsForUser(clerkUserId);
+            log.info("Retrieved {} active sessions for user: {}", activeSessions.size(), clerkUserId);
             return ResponseEntity.ok(activeSessions);
+        } catch (IllegalStateException e) {
+            log.error("Authentication error: {}", e.getMessage());
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
             log.error("Error retrieving active sessions: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
@@ -72,20 +85,24 @@ public class SessionController {
     }
 
     /**
-     * Create a new session
+     * Create a new session for the authenticated user
      * 
      * @param gameName The name of the board game
-     * @param userId Optional user identifier
+     * @param authentication The Spring Security authentication object
      * @return ResponseEntity containing the created session
      */
     @PostMapping
     public ResponseEntity<Session> createSession(@RequestParam String gameName, 
-                                               @RequestParam(required = false) String userId) {
+                                               Authentication authentication) {
         try {
-            log.info("Received request to create session for game: {} and user: {}", gameName, userId);
-            Session session = sessionService.createSession(gameName, userId);
-            log.info("Created session: {}", session.getId());
+            String clerkUserId = clerkUserExtractor.extractClerkUserIdRequired(authentication);
+            log.info("Received request to create session for game: {} and user: {}", gameName, clerkUserId);
+            Session session = sessionService.createSessionForUser(gameName, clerkUserId);
+            log.info("Created session: {} for user: {}", session.getId(), clerkUserId);
             return ResponseEntity.ok(session);
+        } catch (IllegalStateException e) {
+            log.error("Authentication error: {}", e.getMessage());
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
             log.error("Error creating session for game {}: {}", gameName, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
@@ -93,35 +110,57 @@ public class SessionController {
     }
 
     /**
-     * Create a new session with PDF rule file and players
+     * Create a new session with PDF rule file and players for the authenticated user
      * 
      * @param gameName The name of the board game
      * @param playerNames Comma-separated list of player names
-     * @param ruleFile The PDF file containing game rules
+     * @param ruleFile The PDF file containing game rules (optional)
+     * @param ruleText The text content containing game rules (optional)
+     * @param authentication The Spring Security authentication object
      * @return ResponseEntity containing the created session with rule set
      */
     @PostMapping("/create-with-rules")
     public ResponseEntity<Session> createSessionWithRules(@RequestParam String gameName,
                                                         @RequestParam String playerNames,
-                                                        @RequestParam("ruleFile") MultipartFile ruleFile) {
+                                                        @RequestParam(value = "ruleFile", required = false) MultipartFile ruleFile,
+                                                        @RequestParam(value = "ruleText", required = false) String ruleText,
+                                                        Authentication authentication) {
         try {
-            log.info("Received request to create session with rules for game: {} with players: {}", gameName, playerNames);
+            String clerkUserId = clerkUserExtractor.extractClerkUserIdRequired(authentication);
+            log.info("Received request to create session with rules for game: {} with players: {} for user: {}", gameName, playerNames, clerkUserId);
             
-            if (ruleFile.isEmpty()) {
-                log.warn("Rule file is empty");
+            // Validate that either ruleFile or ruleText is provided, but not both
+            boolean hasRuleFile = ruleFile != null && !ruleFile.isEmpty();
+            boolean hasRuleText = ruleText != null && !ruleText.trim().isEmpty();
+            
+            if (!hasRuleFile && !hasRuleText) {
+                log.warn("Neither rule file nor rule text provided");
                 return ResponseEntity.badRequest().build();
             }
-
-            // Convert PDF to text using ConvertApiService
-            ConvertApiResponseDto convertResult = convertApiService.convertPdfToText(ruleFile);
-            DecodedConvertApiResponse decodedResponse = transformToDecodedResponse(convertResult);
             
-            // Create RuleSet from the decoded response
-            RuleSet ruleSet = ruleSetService.createRuleSet(decodedResponse);
-            log.info("Created rule set: {}", ruleSet.getId());
+            if (hasRuleFile && hasRuleText) {
+                log.warn("Both rule file and rule text provided - only one should be provided");
+                return ResponseEntity.badRequest().build();
+            }
+            
+            RuleSet ruleSet;
+            
+            if (hasRuleFile) {
+                // Handle PDF file processing (existing flow)
+                log.info("Processing PDF rule file: {} for user: {}", ruleFile.getOriginalFilename(), clerkUserId);
+                ConvertApiResponseDto convertResult = convertApiService.convertPdfToText(ruleFile);
+                DecodedConvertApiResponse decodedResponse = transformToDecodedResponse(convertResult);
+                ruleSet = ruleSetService.createRuleSetForUser(decodedResponse, clerkUserId);
+            } else {
+                // Handle text input (new flow)
+                log.info("Processing text rule input for user: {}", clerkUserId);
+                ruleSet = ruleSetService.createRuleSetFromTextForUser(gameName, ruleText.trim(), clerkUserId);
+            }
+            
+            log.info("Created rule set: {} for user: {}", ruleSet.getId(), clerkUserId);
             
             // Create Session
-            Session session = sessionService.createSession(gameName, null);
+            Session session = sessionService.createSessionForUser(gameName, clerkUserId);
             
             // Set the rule set to the session
             session.setRuleSet(ruleSet);
@@ -145,10 +184,13 @@ public class SessionController {
             // Save the updated session with players and rule set
             Session savedSession = sessionService.saveSession(session);
             
-            log.info("Created session with rules: {} with {} players", savedSession.getId(), players.size());
+            log.info("Created session with rules: {} with {} players for user: {}", savedSession.getId(), players.size(), clerkUserId);
             return ResponseEntity.ok(savedSession);
             
-        } catch (IllegalArgumentException | IllegalStateException e) {
+        } catch (IllegalStateException e) {
+            log.error("Authentication error: {}", e.getMessage());
+            return ResponseEntity.status(401).build();
+        } catch (IllegalArgumentException e) {
             log.error("Invalid request: {}", e.getMessage());
             return ResponseEntity.badRequest().build();
         } catch (IOException e) {
@@ -188,24 +230,29 @@ public class SessionController {
     }
 
     /**
-     * Get a specific session by ID
+     * Get a specific session by ID for the authenticated user
      * 
      * @param id The session ID
-     * @return ResponseEntity containing the session if found
+     * @param authentication The Spring Security authentication object
+     * @return ResponseEntity containing the session if found and owned by user
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Session> getSessionById(@PathVariable Long id) {
+    public ResponseEntity<Session> getSessionById(@PathVariable Long id, Authentication authentication) {
         try {
-            log.info("Received request to get session: {}", id);
-            Optional<Session> session = sessionService.getSessionByNumericId(id);
+            String clerkUserId = clerkUserExtractor.extractClerkUserIdRequired(authentication);
+            log.info("Received request to get session: {} for user: {}", id, clerkUserId);
+            Optional<Session> session = sessionService.getSessionByNumericIdAndUser(id, clerkUserId);
             
             if (session.isPresent()) {
-                log.info("Found session: {}", id);
+                log.info("Found session: {} for user: {}", id, clerkUserId);
                 return ResponseEntity.ok(session.get());
             } else {
-                log.warn("Session not found: {}", id);
+                log.warn("Session not found: {} for user: {}", id, clerkUserId);
                 return ResponseEntity.notFound().build();
             }
+        } catch (IllegalStateException e) {
+            log.error("Authentication error: {}", e.getMessage());
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
             log.error("Error retrieving session {}: {}", id, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
@@ -213,24 +260,29 @@ public class SessionController {
     }
 
     /**
-     * Deactivate a session
+     * Deactivate a session for the authenticated user
      * 
      * @param id The session ID to deactivate
+     * @param authentication The Spring Security authentication object
      * @return ResponseEntity indicating success or failure
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deactivateSession(@PathVariable Long id) {
+    public ResponseEntity<Void> deactivateSession(@PathVariable Long id, Authentication authentication) {
         try {
-            log.info("Received request to deactivate session: {}", id);
-            boolean deactivated = sessionService.deactivateSession(id);
+            String clerkUserId = clerkUserExtractor.extractClerkUserIdRequired(authentication);
+            log.info("Received request to deactivate session: {} for user: {}", id, clerkUserId);
+            boolean deactivated = sessionService.deactivateSessionForUser(id, clerkUserId);
             
             if (deactivated) {
-                log.info("Successfully deactivated session: {}", id);
+                log.info("Successfully deactivated session: {} for user: {}", id, clerkUserId);
                 return ResponseEntity.ok().build();
             } else {
-                log.warn("Session not found for deactivation: {}", id);
+                log.warn("Session not found for deactivation: {} for user: {}", id, clerkUserId);
                 return ResponseEntity.notFound().build();
             }
+        } catch (IllegalStateException e) {
+            log.error("Authentication error: {}", e.getMessage());
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
             log.error("Error deactivating session {}: {}", id, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();

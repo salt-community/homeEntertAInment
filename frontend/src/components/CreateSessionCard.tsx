@@ -1,26 +1,113 @@
 import { useState } from "react";
 import { useSessions } from "../hooks/useSessions";
 import { API_ENDPOINTS } from "../services/api";
+import { useAuthenticatedFetch } from "../services/apiClient";
+import { useUser } from "@clerk/clerk-react";
 
 export const CreateSessionCard = () => {
   const [gameName, setGameName] = useState("");
   const [playerNames, setPlayerNames] = useState("");
   const [ruleFile, setRuleFile] = useState<File | null>(null);
+  const [ruleText, setRuleText] = useState("");
+  const [showTextarea, setShowTextarea] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  const { isSignedIn, isLoaded } = useUser();
   const { refetch } = useSessions();
+  const authenticatedFetch = useAuthenticatedFetch();
+
+  // Show login prompt if user is not signed in
+  if (!isLoaded) {
+    return (
+      <div className="bg-black rounded-xl shadow-lg border border-gray-800 p-6 hover:shadow-xl hover:border-[#F930C7]/50 transition-all duration-300 bg-gradient-to-br from-black to-gray-900">
+        <div className="animate-pulse">
+          <div className="h-6 bg-gray-800 rounded w-1/3 mb-4"></div>
+          <div className="h-4 bg-gray-800 rounded w-1/2 mb-2"></div>
+          <div className="h-4 bg-gray-800 rounded w-1/4"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isSignedIn) {
+    return (
+      <div className="bg-black rounded-xl shadow-lg border border-gray-800 p-6 hover:shadow-xl hover:border-[#F930C7]/50 transition-all duration-300 bg-gradient-to-br from-black to-gray-900">
+        <div className="flex items-center space-x-3 mb-6">
+          <div className="w-10 h-10 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
+            <svg
+              className="w-5 h-5 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              width={32}
+              height={32}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
+            </svg>
+          </div>
+          <h2 className="text-xl font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
+            Create New Game Session
+          </h2>
+        </div>
+
+        <div className="text-center py-8">
+          <div className="w-16 h-16 bg-gradient-to-r from-[#F930C7]/20 to-[#3076F9]/20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+            <svg
+              className="w-8 h-8 text-[#3076F9]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
+            </svg>
+          </div>
+          <p className="text-white/70 text-sm mb-1 font-medium">
+            Please log in to create sessions
+          </p>
+          <p className="text-white/50 text-xs">
+            Sign in to start creating and managing your game sessions
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.type === "application/pdf") {
         setRuleFile(file);
+        setRuleText(""); // Clear textarea when PDF is selected
+        setShowTextarea(false); // Hide textarea when PDF is selected
         setError(null);
       } else {
         setError("Please select a PDF file");
         setRuleFile(null);
+      }
+    }
+  };
+
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value;
+    setRuleText(text);
+    if (text.trim()) {
+      setRuleFile(null); // Clear PDF when text is entered
+      // Clear the file input
+      const fileInput = document.getElementById("ruleFile") as HTMLInputElement;
+      if (fileInput) {
+        fileInput.value = "";
       }
     }
   };
@@ -33,8 +120,15 @@ export const CreateSessionCard = () => {
       return;
     }
 
-    if (!ruleFile) {
-      setError("Please select a PDF rule file");
+    if (!ruleFile && !ruleText.trim()) {
+      setError(
+        "Please either upload a PDF file or enter rules in the text area"
+      );
+      return;
+    }
+
+    if (ruleFile && ruleText.trim()) {
+      setError("Please choose either PDF upload or text input, not both");
       return;
     }
 
@@ -46,12 +140,20 @@ export const CreateSessionCard = () => {
       const formData = new FormData();
       formData.append("gameName", gameName.trim());
       formData.append("playerNames", playerNames.trim());
-      formData.append("ruleFile", ruleFile);
 
-      const response = await fetch(API_ENDPOINTS.SESSIONS_CREATE_WITH_RULES, {
-        method: "POST",
-        body: formData,
-      });
+      if (ruleFile) {
+        formData.append("ruleFile", ruleFile);
+      } else if (ruleText.trim()) {
+        formData.append("ruleText", ruleText.trim());
+      }
+
+      const response = await authenticatedFetch(
+        API_ENDPOINTS.SESSIONS_CREATE_WITH_RULES,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to create session");
@@ -64,6 +166,8 @@ export const CreateSessionCard = () => {
       setGameName("");
       setPlayerNames("");
       setRuleFile(null);
+      setRuleText("");
+      setShowTextarea(false);
 
       // Refresh sessions list
       refetch();
@@ -142,25 +246,69 @@ export const CreateSessionCard = () => {
           </p>
         </div>
 
-        {/* Rule File Upload */}
+        {/* Rule Input Options */}
         <div>
-          <label
-            htmlFor="ruleFile"
-            className="block text-sm font-medium text-white/80 mb-1"
-          >
-            Game Rules PDF *
+          <label className="block text-sm font-medium text-white/80 mb-2">
+            Game Rules *
           </label>
-          <input
-            type="file"
-            id="ruleFile"
-            accept=".pdf"
-            onChange={handleFileChange}
-            className="w-full px-4 py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white"
-            required
-          />
-          <p className="text-xs text-white/60 mt-1">
-            Upload a PDF file containing the game rules
-          </p>
+
+          {/* PDF Upload Option */}
+          <div className="mb-4">
+            <label
+              htmlFor="ruleFile"
+              className="block text-sm font-medium text-white/70 mb-1"
+            >
+              Upload PDF File
+            </label>
+            <input
+              type="file"
+              id="ruleFile"
+              accept=".pdf"
+              onChange={handleFileChange}
+              className="w-full px-4 py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white"
+            />
+            <p className="text-xs text-white/60 mt-1">
+              Upload a PDF file containing the game rules
+            </p>
+          </div>
+
+          {/* Divider */}
+          <div className="flex items-center my-4">
+            <div className="flex-1 h-px bg-gray-700"></div>
+            <span className="px-3 text-sm text-white/50">OR</span>
+            <div className="flex-1 h-px bg-gray-700"></div>
+          </div>
+
+          {/* Text Input Option */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-medium text-white/70">
+                Enter Rules as Text
+              </label>
+              <button
+                type="button"
+                onClick={() => setShowTextarea(!showTextarea)}
+                className="text-sm text-[#3076F9] hover:text-[#3076F9]/80 transition-colors"
+              >
+                {showTextarea ? "Hide" : "Show"} Text Input
+              </button>
+            </div>
+
+            {showTextarea && (
+              <textarea
+                id="ruleText"
+                value={ruleText}
+                onChange={handleTextareaChange}
+                placeholder="Enter the game rules here..."
+                rows={8}
+                className="w-full px-4 py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white resize-vertical"
+                style={{ color: "#ffffff", backgroundColor: "#1f2937" }}
+              />
+            )}
+            <p className="text-xs text-white/60 mt-1">
+              Type or paste the game rules directly
+            </p>
+          </div>
         </div>
 
         {/* Error Message */}

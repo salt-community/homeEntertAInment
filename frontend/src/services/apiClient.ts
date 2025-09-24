@@ -1,4 +1,5 @@
 import { useAuth } from "@clerk/clerk-react";
+import { useCallback } from "react";
 
 /**
  * API client utility that automatically includes Clerk JWT token in requests
@@ -27,7 +28,7 @@ export const createAuthenticatedFetch = () => {
 export const useAuthenticatedFetch = () => {
   const { getToken } = useAuth();
 
-  const authenticatedFetch = async (url: string, options: RequestInit = {}): Promise<Response> => {
+  const authenticatedFetch = useCallback(async (url: string, options: RequestInit = {}): Promise<Response> => {
     const token = await getToken();
     
     const headers = {
@@ -39,7 +40,7 @@ export const useAuthenticatedFetch = () => {
       ...options,
       headers,
     });
-  };
+  }, [getToken]);
 
   return authenticatedFetch;
 };

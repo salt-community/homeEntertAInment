@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Session, CreateSessionRequest } from "../types/gameSession";
 import { API_ENDPOINTS } from "../services/api";
 import { useAuthenticatedFetch } from "../services/apiClient";
+import { useUser } from "@clerk/clerk-react";
 
 /**
  * Custom hook for managing game sessions
@@ -10,6 +11,7 @@ import { useAuthenticatedFetch } from "../services/apiClient";
 export const useSessions = () => {
   const queryClient = useQueryClient();
   const authenticatedFetch = useAuthenticatedFetch();
+  const { isSignedIn, isLoaded } = useUser();
 
   // Fetch all sessions
   const {
@@ -26,6 +28,7 @@ export const useSessions = () => {
       }
       return response.json();
     },
+    enabled: isLoaded && isSignedIn, // Only run query when user is loaded and signed in
     staleTime: 30000, // 30 seconds
     refetchOnWindowFocus: false,
   });
@@ -44,6 +47,7 @@ export const useSessions = () => {
       }
       return response.json();
     },
+    enabled: isLoaded && isSignedIn, // Only run query when user is loaded and signed in
     staleTime: 30000,
     refetchOnWindowFocus: false,
   });

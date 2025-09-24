@@ -50,4 +50,38 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
      * @return List of active sessions in the specified game state
      */
     List<Session> findByGameStateAndIsActiveTrue(String gameState);
+
+    /**
+     * Find all sessions for a specific Clerk user
+     *
+     * @param clerkUserId The Clerk user ID
+     * @return List of sessions owned by the user
+     */
+    List<Session> findByClerkUserId(String clerkUserId);
+
+    /**
+     * Find active sessions for a specific Clerk user
+     *
+     * @param clerkUserId The Clerk user ID
+     * @return List of active sessions owned by the user
+     */
+    List<Session> findByClerkUserIdAndIsActiveTrue(String clerkUserId);
+
+    /**
+     * Find sessions by Clerk user ID and game state
+     *
+     * @param clerkUserId The Clerk user ID
+     * @param gameState The current game state
+     * @return List of sessions owned by the user in the specified game state
+     */
+    List<Session> findByClerkUserIdAndGameState(String clerkUserId, String gameState);
+
+    /**
+     * Find a specific session by ID and Clerk user ID
+     *
+     * @param id The session ID
+     * @param clerkUserId The Clerk user ID
+     * @return Optional containing the session if found and owned by user
+     */
+    Optional<Session> findByIdAndClerkUserId(Long id, String clerkUserId);
 }

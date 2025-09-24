@@ -24,8 +24,46 @@ public class ChatBotService {
     private final SessionRepository sessionRepository;
 
     /**
-     * Create or get existing chatbot for a session
+     * Create or get existing chatbot for a session and user
      */
+    @Transactional
+    public ChatBotDto createOrGetChatBotForSessionAndUser(Long sessionId, String clerkUserId) {
+        log.info("Creating or getting chatbot for session: {} and user: {}", sessionId, clerkUserId);
+        
+        try {
+            // Get session first, ensuring it belongs to the user
+            Session session = sessionRepository.findByIdAndClerkUserId(sessionId, clerkUserId)
+                    .orElseThrow(() -> new RuntimeException("Session not found with id: " + sessionId + " for user: " + clerkUserId));
+
+            // Check if chatbot already exists for this session
+            Optional<ChatBot> existingChatBot = chatBotRepository.findBySession_IdAndClerkUserId(sessionId, clerkUserId);
+            if (existingChatBot.isPresent()) {
+                log.info("ChatBot already exists for session: {} and user: {}", sessionId, clerkUserId);
+                return convertToDto(existingChatBot.get());
+            }
+
+            // Create new chatbot
+            ChatBot chatBot = ChatBot.builder()
+                    .name("Board Game Rules Assistant")
+                    .isActive(true)
+                    .session(session)
+                    .clerkUserId(clerkUserId)
+                    .build();
+
+            ChatBot savedChatBot = chatBotRepository.save(chatBot);
+            log.info("Created new ChatBot with id: {} for session: {} and user: {}", savedChatBot.getId(), sessionId, clerkUserId);
+            
+            return convertToDto(savedChatBot);
+        } catch (Exception e) {
+            log.error("Error creating or getting chatbot for session {} and user {}: {}", sessionId, clerkUserId, e.getMessage(), e);
+            throw new RuntimeException("Failed to create or get chatbot for session: " + sessionId + " and user: " + clerkUserId, e);
+        }
+    }
+
+    /**
+     * Create or get existing chatbot for a session (deprecated - use createOrGetChatBotForSessionAndUser instead)
+     */
+    @Deprecated
     @Transactional
     public ChatBotDto createOrGetChatBotForSession(Long sessionId) {
         log.info("Creating or getting chatbot for session: {}", sessionId);
@@ -60,8 +98,26 @@ public class ChatBotService {
     }
 
     /**
-     * Get chatbot for a session
+     * Get chatbot for a session and user
      */
+    public Optional<ChatBotDto> getChatBotBySessionIdAndUser(Long sessionId, String clerkUserId) {
+        log.info("Getting chatbot for session: {} and user: {}", sessionId, clerkUserId);
+        try {
+            Session session = sessionRepository.findByIdAndClerkUserId(sessionId, clerkUserId)
+                    .orElseThrow(() -> new RuntimeException("Session not found with id: " + sessionId + " for user: " + clerkUserId));
+            
+            return chatBotRepository.findBySession_IdAndClerkUserId(sessionId, clerkUserId)
+                    .map(this::convertToDto);
+        } catch (Exception e) {
+            log.error("Error getting chatbot for session {} and user {}: {}", sessionId, clerkUserId, e.getMessage(), e);
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Get chatbot for a session (deprecated - use getChatBotBySessionIdAndUser instead)
+     */
+    @Deprecated
     public Optional<ChatBotDto> getChatBotBySessionId(Long sessionId) {
         log.info("Getting chatbot for session: {}", sessionId);
         try {

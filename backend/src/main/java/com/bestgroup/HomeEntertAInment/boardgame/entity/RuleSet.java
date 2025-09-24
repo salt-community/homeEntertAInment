@@ -64,6 +64,12 @@ public class RuleSet {
     private LocalDateTime createdAt;
 
     /**
+     * Clerk user ID who owns this rule set
+     */
+    @Column(name = "clerk_user_id", nullable = false)
+    private String clerkUserId;
+
+    /**
      * Create RuleSet from DecodedConvertApiResponse
      */
     public static RuleSet fromDecodedConvertApiResponse(DecodedConvertApiResponse response) {

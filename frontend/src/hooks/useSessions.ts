@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Session, CreateSessionRequest } from "../types/gameSession";
 import { API_ENDPOINTS } from "../services/api";
+import { useAuthenticatedFetch } from "../services/apiClient";
+import { useUser } from "@clerk/clerk-react";
 
 /**
  * Custom hook for managing game sessions
@@ -8,6 +10,8 @@ import { API_ENDPOINTS } from "../services/api";
  */
 export const useSessions = () => {
   const queryClient = useQueryClient();
+  const authenticatedFetch = useAuthenticatedFetch();
+  const { isSignedIn, isLoaded } = useUser();
 
   // Fetch all sessions
   const {
@@ -18,12 +22,13 @@ export const useSessions = () => {
   } = useQuery<Session[]>({
     queryKey: ["sessions"],
     queryFn: async () => {
-      const response = await fetch(API_ENDPOINTS.SESSIONS);
+      const response = await authenticatedFetch(API_ENDPOINTS.SESSIONS);
       if (!response.ok) {
         throw new Error("Failed to fetch sessions");
       }
       return response.json();
     },
+    enabled: isLoaded && isSignedIn, // Only run query when user is loaded and signed in
     staleTime: 30000, // 30 seconds
     refetchOnWindowFocus: false,
   });
@@ -36,12 +41,13 @@ export const useSessions = () => {
   } = useQuery<Session[]>({
     queryKey: ["sessions", "active"],
     queryFn: async () => {
-      const response = await fetch(API_ENDPOINTS.SESSIONS_ACTIVE);
+      const response = await authenticatedFetch(API_ENDPOINTS.SESSIONS_ACTIVE);
       if (!response.ok) {
         throw new Error("Failed to fetch active sessions");
       }
       return response.json();
     },
+    enabled: isLoaded && isSignedIn, // Only run query when user is loaded and signed in
     staleTime: 30000,
     refetchOnWindowFocus: false,
   });
@@ -54,7 +60,7 @@ export const useSessions = () => {
         ...(request.userId && { userId: request.userId }),
       });
 
-      const response = await fetch(API_ENDPOINTS.SESSIONS, {
+      const response = await authenticatedFetch(API_ENDPOINTS.SESSIONS, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -76,9 +82,12 @@ export const useSessions = () => {
   // Deactivate session mutation
   const deactivateSessionMutation = useMutation({
     mutationFn: async (sessionId: string) => {
-      const response = await fetch(API_ENDPOINTS.SESSION_BY_ID(sessionId), {
-        method: "DELETE",
-      });
+      const response = await authenticatedFetch(
+        API_ENDPOINTS.SESSION_BY_ID(sessionId),
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to deactivate session");
@@ -93,7 +102,9 @@ export const useSessions = () => {
   // Get session by ID
   const getSessionById = async (sessionId: string): Promise<Session | null> => {
     try {
-      const response = await fetch(API_ENDPOINTS.SESSION_BY_ID(sessionId));
+      const response = await authenticatedFetch(
+        API_ENDPOINTS.SESSION_BY_ID(sessionId)
+      );
       if (!response.ok) {
         return null;
       }

@@ -18,6 +18,7 @@ public class SecurityConfig {
         http
                 .csrf((csrf -> csrf.disable()))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/boardgame/**").authenticated()
                         .requestMatchers("/api/sessions/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/**").authenticated()

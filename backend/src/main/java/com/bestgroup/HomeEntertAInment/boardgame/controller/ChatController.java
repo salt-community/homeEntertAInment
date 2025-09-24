@@ -41,7 +41,7 @@ public class ChatController {
             return ResponseEntity.ok(entries);
         } catch (IllegalStateException e) {
             log.error("Authentication error: {}", e.getMessage());
-            return ResponseEntity.unauthorized().build();
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
             log.error("Error retrieving chat entries for session {}: {}", sessionId, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
@@ -64,7 +64,7 @@ public class ChatController {
             return ResponseEntity.ok(entry);
         } catch (IllegalStateException e) {
             log.error("Authentication error: {}", e.getMessage());
-            return ResponseEntity.unauthorized().build();
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
             log.error("Error creating chat entry for session {}: {}", sessionId, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
@@ -84,7 +84,7 @@ public class ChatController {
             return ResponseEntity.ok(chatbot);
         } catch (IllegalStateException e) {
             log.error("Authentication error: {}", e.getMessage());
-            return ResponseEntity.unauthorized().build();
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
             log.error("Error creating/getting chatbot for session {}: {}", sessionId, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();

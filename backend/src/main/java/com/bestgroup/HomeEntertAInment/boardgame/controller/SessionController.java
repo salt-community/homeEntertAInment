@@ -54,7 +54,7 @@ public class SessionController {
             return ResponseEntity.ok(sessions);
         } catch (IllegalStateException e) {
             log.error("Authentication error: {}", e.getMessage());
-            return ResponseEntity.unauthorized().build();
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
             log.error("Error retrieving sessions: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
@@ -77,7 +77,7 @@ public class SessionController {
             return ResponseEntity.ok(activeSessions);
         } catch (IllegalStateException e) {
             log.error("Authentication error: {}", e.getMessage());
-            return ResponseEntity.unauthorized().build();
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
             log.error("Error retrieving active sessions: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
@@ -102,7 +102,7 @@ public class SessionController {
             return ResponseEntity.ok(session);
         } catch (IllegalStateException e) {
             log.error("Authentication error: {}", e.getMessage());
-            return ResponseEntity.unauthorized().build();
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
             log.error("Error creating session for game {}: {}", gameName, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
@@ -189,7 +189,7 @@ public class SessionController {
             
         } catch (IllegalStateException e) {
             log.error("Authentication error: {}", e.getMessage());
-            return ResponseEntity.unauthorized().build();
+            return ResponseEntity.status(401).build();
         } catch (IllegalArgumentException e) {
             log.error("Invalid request: {}", e.getMessage());
             return ResponseEntity.badRequest().build();
@@ -252,7 +252,7 @@ public class SessionController {
             }
         } catch (IllegalStateException e) {
             log.error("Authentication error: {}", e.getMessage());
-            return ResponseEntity.unauthorized().build();
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
             log.error("Error retrieving session {}: {}", id, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
@@ -282,7 +282,7 @@ public class SessionController {
             }
         } catch (IllegalStateException e) {
             log.error("Authentication error: {}", e.getMessage());
-            return ResponseEntity.unauthorized().build();
+            return ResponseEntity.status(401).build();
         } catch (Exception e) {
             log.error("Error deactivating session {}: {}", id, e.getMessage(), e);
             return ResponseEntity.internalServerError().build();

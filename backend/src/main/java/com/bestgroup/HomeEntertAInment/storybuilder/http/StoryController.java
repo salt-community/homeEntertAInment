@@ -49,6 +49,7 @@ public class StoryController {
     public ResponseEntity<ImageResponse> generateImage(@RequestBody ImageRequest iamgeRequest) {
         try {
             ImageResponse imageResponse = storyService.generateImage(iamgeRequest);
+            System.out.println("imageResponse = " + imageResponse);
             return ResponseEntity.ok(imageResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);

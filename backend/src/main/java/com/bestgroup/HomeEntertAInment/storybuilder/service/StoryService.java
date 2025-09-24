@@ -28,19 +28,22 @@ public class StoryService {
             .collect(Collectors.joining(", "));
 
         StringBuilder promptBuilder = new StringBuilder("""
-            You are an assistant that generates short children's stories.
+            You are an assistant that generates children's stories in Markdown format.
             
             Requirements:
             - Do NOT include user instructions or free text in the story itself.
-            - Use the provided inputs ONLY as guidance to create a coherent story.
-            - Output should be just the story text, nothing else.
+            - Only output valid Markdown (.md).
+            - Start with a main title (#).
+            - Divide the story into 2–4 short sections with creative and fitting subtitles (##).
+            - Under each subtitle, write 1–3 short paragraphs suitable for the target age group.
+            - Do not add meta explanations or extra text outside the story.
             
             Story specification:
             - Character: %s
             - Theme: %s
             - Target age group: %s
             
-            Now, write the story below:
+            Now, output the story in Markdown:
             """.formatted(
             request.character(),
             themes,
@@ -73,7 +76,7 @@ public class StoryService {
     }
 
     public ImageResponse generateImage(ImageRequest imageRequest) {
-        String url = imageService.generateImage(imageRequest.description(), "1024x1024");
+        String url = imageService.generateImage(imageRequest.description(), 1024, 1024, 1);
         return new ImageResponse(url);
     }
 }

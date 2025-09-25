@@ -19,6 +19,7 @@ public class SecurityConfig {
                 .csrf((csrf -> csrf.disable()))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/sessions/**").authenticated()
+                        .requestMatchers("/api/quiz/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/**").authenticated()

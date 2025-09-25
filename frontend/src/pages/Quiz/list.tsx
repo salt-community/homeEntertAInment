@@ -1,12 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { QuizService, type QuizListItem } from "../../services/quizService";
+import { ShareQuizModal } from "../../components";
 
 export default function QuizList() {
   const navigate = useNavigate();
   const [quizzes, setQuizzes] = useState<QuizListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [shareModal, setShareModal] = useState<{
+    isOpen: boolean;
+    quizId: string;
+    quizTitle: string;
+  }>({
+    isOpen: false,
+    quizId: "",
+    quizTitle: "",
+  });
 
   useEffect(() => {
     const fetchQuizzes = async () => {
@@ -33,6 +43,27 @@ export default function QuizList() {
 
   const handleBackToIndex = () => {
     navigate({ to: "/quiz" });
+  };
+
+  const handleShareQuiz = (
+    e: React.MouseEvent,
+    quizId: string,
+    quizTitle: string
+  ) => {
+    e.stopPropagation(); // Prevent triggering the quiz click
+    setShareModal({
+      isOpen: true,
+      quizId,
+      quizTitle,
+    });
+  };
+
+  const handleCloseShareModal = () => {
+    setShareModal({
+      isOpen: false,
+      quizId: "",
+      quizTitle: "",
+    });
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -186,9 +217,30 @@ export default function QuizList() {
 
                   <div className="flex justify-between items-center text-sm text-white/70">
                     <span>{quiz.questionCount} questions</span>
-                    <span className="text-[#F930C7] font-medium">
-                      Play Quiz →
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={(e) => handleShareQuiz(e, quiz.id, quiz.title)}
+                        className="p-1 text-white/60 hover:text-white transition-colors"
+                        title="Share quiz"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+                          />
+                        </svg>
+                      </button>
+                      <span className="text-[#F930C7] font-medium">
+                        Play Quiz →
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -196,6 +248,13 @@ export default function QuizList() {
           </div>
         )}
       </section>
+
+      <ShareQuizModal
+        isOpen={shareModal.isOpen}
+        onClose={handleCloseShareModal}
+        quizId={shareModal.quizId}
+        quizTitle={shareModal.quizTitle}
+      />
     </div>
   );
 }

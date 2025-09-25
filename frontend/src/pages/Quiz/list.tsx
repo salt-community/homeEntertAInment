@@ -15,7 +15,9 @@ export default function QuizList() {
         const quizList = await QuizService.getAllQuizzes();
         setQuizzes(quizList);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to fetch quizzes");
+        setError(
+          err instanceof Error ? err.message : "Failed to fetch quizzes"
+        );
         console.error("Error fetching quizzes:", err);
       } finally {
         setLoading(false);
@@ -80,7 +82,9 @@ export default function QuizList() {
       >
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="text-red-400 text-xl mb-4">Error loading quizzes</div>
+            <div className="text-red-400 text-xl mb-4">
+              Error loading quizzes
+            </div>
             <div className="text-white/70 mb-6">{error}</div>
             <button
               onClick={handleBackToIndex}
@@ -117,7 +121,9 @@ export default function QuizList() {
 
         {quizzes.length === 0 ? (
           <div className="text-center">
-            <div className="text-white/70 text-xl mb-6">No quizzes available yet</div>
+            <div className="text-white/70 text-xl mb-6">
+              No quizzes available yet
+            </div>
             <button
               onClick={handleBackToIndex}
               className="px-6 py-2 bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white font-semibold rounded-lg hover:from-[#F930C7]/80 hover:to-[#3076F9]/80 transition-all duration-200"
@@ -137,7 +143,7 @@ export default function QuizList() {
                   <h3 className="text-xl font-semibold text-white mb-3 line-clamp-2">
                     {quiz.title}
                   </h3>
-                  
+
                   <p className="text-sm text-white/80 mb-4 line-clamp-3">
                     {quiz.description}
                   </p>
@@ -180,7 +186,9 @@ export default function QuizList() {
 
                   <div className="flex justify-between items-center text-sm text-white/70">
                     <span>{quiz.questionCount} questions</span>
-                    <span className="text-[#F930C7] font-medium">Play Quiz →</span>
+                    <span className="text-[#F930C7] font-medium">
+                      Play Quiz →
+                    </span>
                   </div>
                 </div>
               </div>

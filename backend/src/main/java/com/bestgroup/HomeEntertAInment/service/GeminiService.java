@@ -100,17 +100,14 @@ public class GeminiService {
         // Add detailed instructions for JSON structure
         promptBuilder.append("Return a JSON object with the following structure:\n");
         promptBuilder.append("{\n");
-        promptBuilder.append("  \"id\": \"unique-quiz-id\",\n");
         promptBuilder.append("  \"title\": \"Engaging quiz title related to the topics\",\n");
         promptBuilder.append("  \"description\": \"Brief description of the quiz content\",\n");
         promptBuilder.append("  \"ageGroup\": \"").append(config.getAgeGroup()).append("\",\n");
         promptBuilder.append("  \"topics\": [").append(String.join(", ", config.getTopics().stream().map(topic -> "\"" + topic + "\"").toArray(String[]::new))).append("],\n");
         promptBuilder.append("  \"difficulty\": \"").append(config.getDifficulty()).append("\",\n");
         promptBuilder.append("  \"questionCount\": ").append(config.getQuestionCount()).append(",\n");
-        promptBuilder.append("  \"createdAt\": \"2024-01-01T00:00:00\",\n");
         promptBuilder.append("  \"questions\": [\n");
         promptBuilder.append("    {\n");
-        promptBuilder.append("      \"id\": \"question-1\",\n");
         promptBuilder.append("      \"questionText\": \"Clear and engaging question text\",\n");
         promptBuilder.append("      \"options\": [\"Option A\", \"Option B\", \"Option C\", \"Option D\"],\n");
         promptBuilder.append("      \"correctAnswerIndex\": 0,\n");

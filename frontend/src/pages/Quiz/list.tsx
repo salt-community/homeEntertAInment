@@ -28,7 +28,7 @@ export default function QuizList() {
   }, []);
 
   const handleQuizClick = (quizId: string) => {
-    navigate({ to: `/quiz/play`, search: { quizId } });
+    navigate({ to: "/quiz/play", search: { quizId } });
   };
 
   const handleBackToIndex = () => {

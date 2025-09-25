@@ -52,7 +52,8 @@ export default function QuizIndex() {
   };
 
   const handleTakeSampleQuiz = () => {
-    // Store quiz data in sessionStorage for the quiz page to retrieve
+    // For the sample quiz, we'll still use sessionStorage since it's a mock quiz
+    // In a real scenario, you might want to create a sample quiz in the database
     sessionStorage.setItem("currentQuiz", JSON.stringify(mockQuiz));
     navigate({ to: "/quiz/play" });
   };

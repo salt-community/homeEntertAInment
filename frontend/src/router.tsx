@@ -71,6 +71,11 @@ const quizRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/quiz/play",
   component: Quiz,
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      quizId: (search.quizId as string) || undefined,
+    };
+  },
 });
 
 const quizListRoute = createRoute({

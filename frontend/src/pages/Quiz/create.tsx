@@ -19,12 +19,9 @@ export default function QuizCreate() {
       // Create the quiz with the configuration
       const response = await QuizService.createQuiz(config);
 
-      if (response.success && response.quiz) {
-        // Store the created quiz in sessionStorage
-        sessionStorage.setItem("currentQuiz", JSON.stringify(response.quiz));
-
-        // Navigate to the quiz page with the created quiz
-        navigate({ to: "/quiz/play" });
+      if (response.success && response.quiz && response.quizId) {
+        // Navigate to the quiz page using the quiz ID
+        navigate({ to: "/quiz/play", search: { quizId: response.quizId } });
       } else {
         console.error("Failed to create quiz:", response.message);
         // TODO: Show error message to user

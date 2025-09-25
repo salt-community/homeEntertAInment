@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.annotation.PostConstruct;
+
 import com.bestgroup.HomeEntertAInment.quiz.dto.QuestionResponseDto;
 import com.bestgroup.HomeEntertAInment.quiz.dto.QuizConfigurationDto;
 import com.bestgroup.HomeEntertAInment.quiz.dto.QuizResponseDto;
@@ -36,11 +38,10 @@ public class QuizService {
 
     private final GeminiService geminiService;
     private final QuizRepository quizRepository;
-    private final ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
     
-    public QuizService(GeminiService geminiService, QuizRepository quizRepository) {
-        this.geminiService = geminiService;
-        this.quizRepository = quizRepository;
+    @PostConstruct
+    public void init() {
         this.objectMapper = new ObjectMapper();
         // Register JavaTimeModule to handle Java 8 time types (LocalDateTime, etc.)
         this.objectMapper.registerModule(new JavaTimeModule());

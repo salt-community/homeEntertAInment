@@ -39,7 +39,9 @@ export default function Quiz() {
         }
       } catch (error) {
         console.error("Error fetching quiz:", error);
-        setError(error instanceof Error ? error.message : "Failed to load quiz");
+        setError(
+          error instanceof Error ? error.message : "Failed to load quiz"
+        );
       } finally {
         setLoading(false);
       }

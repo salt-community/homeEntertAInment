@@ -3,9 +3,10 @@ import type { StoryRequest, StoryResponse } from "../types";
 const BASE_URL = "http://localhost:8080";
 
 export async function generateStory(
-  request: StoryRequest
+  request: StoryRequest,
+  authenticatedFetch: (url: string, options?: RequestInit) => Promise<Response>
 ): Promise<StoryResponse> {
-  const response = await fetch(`${BASE_URL}/api/story/generate`, {
+  const response = await authenticatedFetch(`${BASE_URL}/api/story/generate`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

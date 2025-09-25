@@ -5,19 +5,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bestgroup.HomeEntertAInment.quiz.dto.QuestionResponseDto;
 import com.bestgroup.HomeEntertAInment.quiz.dto.QuizConfigurationDto;
 import com.bestgroup.HomeEntertAInment.quiz.dto.QuizResponseDto;
 import com.bestgroup.HomeEntertAInment.quiz.model.Question;
 import com.bestgroup.HomeEntertAInment.quiz.model.Quiz;
+import com.bestgroup.HomeEntertAInment.quiz.repository.QuizRepository;
 import com.bestgroup.HomeEntertAInment.service.GeminiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -26,13 +31,16 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class QuizService {
 
     private final GeminiService geminiService;
+    private final QuizRepository quizRepository;
     private final ObjectMapper objectMapper;
     
-    public QuizService(GeminiService geminiService) {
+    public QuizService(GeminiService geminiService, QuizRepository quizRepository) {
         this.geminiService = geminiService;
+        this.quizRepository = quizRepository;
         this.objectMapper = new ObjectMapper();
         // Register JavaTimeModule to handle Java 8 time types (LocalDateTime, etc.)
         this.objectMapper.registerModule(new JavaTimeModule());
@@ -43,9 +51,46 @@ public class QuizService {
      * @param config The quiz configuration from the frontend
      * @return Generated quiz response DTO (with complete question data)
      */
+    @Transactional
     public QuizResponseDto generateQuiz(QuizConfigurationDto config) {
         Quiz quiz = generateQuizInternal(config);
-        return convertToResponseDto(quiz);
+        // Save the quiz to the database
+        Quiz savedQuiz = quizRepository.save(quiz);
+        return convertToResponseDto(savedQuiz);
+    }
+    
+    /**
+     * Get a quiz by ID
+     * @param id The quiz ID
+     * @return Optional containing the quiz response DTO, or empty if not found
+     */
+    public Optional<QuizResponseDto> getQuizById(UUID id) {
+        return quizRepository.findByIdWithQuestions(id)
+                .map(this::convertToResponseDto);
+    }
+    
+    /**
+     * Get all quizzes
+     * @return List of all quiz response DTOs
+     */
+    public List<QuizResponseDto> getAllQuizzes() {
+        return quizRepository.findAllWithQuestions().stream()
+                .map(this::convertToResponseDto)
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * Delete a quiz by ID
+     * @param id The quiz ID to delete
+     * @return true if the quiz was deleted, false if not found
+     */
+    @Transactional
+    public boolean deleteQuiz(UUID id) {
+        if (quizRepository.existsById(id)) {
+            quizRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -122,8 +167,8 @@ public class QuizService {
         if (quiz == null) {
             throw new Exception("Quiz object is null");
         }
-        if (quiz.getId() == null || quiz.getId().trim().isEmpty()) {
-            throw new Exception("Quiz ID is missing or empty");
+        if (quiz.getId() == null) {
+            throw new Exception("Quiz ID is missing");
         }
         if (quiz.getTitle() == null || quiz.getTitle().trim().isEmpty()) {
             throw new Exception("Quiz title is missing or empty");
@@ -145,7 +190,10 @@ public class QuizService {
             if (question.getQuestionText() == null || question.getQuestionText().trim().isEmpty()) {
                 throw new Exception("Question " + i + " text is missing or empty");
             }
-            if (question.getOptions() == null || question.getOptions().size() != 4) {
+            if (question.getOptions() == null || question.getOptions().isEmpty()) {
+                throw new Exception("Question " + i + " options are missing or empty");
+            }
+            if (question.getOptions().size() != 4) {
                 throw new Exception("Question " + i + " must have exactly 4 options");
             }
             if (question.getCorrectAnswerIndex() == null || 
@@ -164,27 +212,27 @@ public class QuizService {
     private Quiz generateMockQuiz(QuizConfigurationDto config) {
         log.info("Generating mock quiz as fallback for configuration: {}", config);
         
-        // Generate quiz ID
-        String quizId = "quiz_mock_" + System.currentTimeMillis();
-        
         // Create quiz title based on configuration
         String title = createQuizTitle(config);
         
-        // Generate questions based on configuration
-        List<Question> questions = generateQuestions(config);
-        
-        // Create and return the quiz
-        return Quiz.builder()
-                .id(quizId)
+        // Create the quiz first (without questions)
+        Quiz quiz = Quiz.builder()
                 .title(title)
-                .questions(questions)
                 .ageGroup(config.getAgeGroup())
                 .topics(config.getTopics())
                 .difficulty(config.getDifficulty())
                 .questionCount(config.getQuestionCount())
-                .createdAt(LocalDateTime.now())
                 .description(createQuizDescription(config))
                 .build();
+        
+        // Generate questions and link them to the quiz
+        List<Question> questions = generateQuestions(config);
+        for (Question question : questions) {
+            question.setQuiz(quiz);
+        }
+        quiz.setQuestions(questions);
+        
+        return quiz;
     }
 
     /**
@@ -271,7 +319,6 @@ public class QuizService {
         
         // Children Science Questions
         questions.add(Question.builder()
-                .id("sci_001")
                 .questionText("What do plants need to make their own food?")
                 .options(Arrays.asList("Water and soil", "Sunlight and water", "Air and soil", "Sunlight, water, and air"))
                 .correctAnswerIndex(3)
@@ -282,7 +329,6 @@ public class QuizService {
                 .build());
         
         questions.add(Question.builder()
-                .id("sci_002")
                 .questionText("Which planet is closest to the Sun?")
                 .options(Arrays.asList("Venus", "Mercury", "Earth", "Mars"))
                 .correctAnswerIndex(1)
@@ -294,7 +340,6 @@ public class QuizService {
         
         // Teen Science Questions
         questions.add(Question.builder()
-                .id("sci_003")
                 .questionText("What is the chemical symbol for gold?")
                 .options(Arrays.asList("Go", "Gd", "Au", "Ag"))
                 .correctAnswerIndex(2)
@@ -305,7 +350,6 @@ public class QuizService {
                 .build());
         
         questions.add(Question.builder()
-                .id("sci_004")
                 .questionText("What type of bond forms between a metal and a non-metal?")
                 .options(Arrays.asList("Covalent", "Ionic", "Metallic", "Hydrogen"))
                 .correctAnswerIndex(1)
@@ -317,7 +361,6 @@ public class QuizService {
         
         // Adult Science Questions
         questions.add(Question.builder()
-                .id("sci_005")
                 .questionText("What is the Heisenberg Uncertainty Principle?")
                 .options(Arrays.asList("Energy cannot be created or destroyed", "You cannot simultaneously know the exact position and momentum of a particle", "Light behaves as both wave and particle", "Matter and energy are equivalent"))
                 .correctAnswerIndex(1)
@@ -339,7 +382,6 @@ public class QuizService {
         
         // Children History Questions
         questions.add(Question.builder()
-                .id("hist_001")
                 .questionText("Who was the first President of the United States?")
                 .options(Arrays.asList("Thomas Jefferson", "George Washington", "John Adams", "Benjamin Franklin"))
                 .correctAnswerIndex(1)
@@ -351,7 +393,6 @@ public class QuizService {
         
         // Teen History Questions
         questions.add(Question.builder()
-                .id("hist_002")
                 .questionText("In which year did World War II end?")
                 .options(Arrays.asList("1944", "1945", "1946", "1947"))
                 .correctAnswerIndex(1)
@@ -363,7 +404,6 @@ public class QuizService {
         
         // Adult History Questions
         questions.add(Question.builder()
-                .id("hist_003")
                 .questionText("What was the name of the economic policy that led to the Great Depression?")
                 .options(Arrays.asList("Laissez-faire", "Keynesianism", "Mercantilism", "Socialism"))
                 .correctAnswerIndex(0)
@@ -385,7 +425,6 @@ public class QuizService {
         
         // Children Geography Questions
         questions.add(Question.builder()
-                .id("geo_001")
                 .questionText("What is the largest ocean on Earth?")
                 .options(Arrays.asList("Atlantic", "Pacific", "Indian", "Arctic"))
                 .correctAnswerIndex(1)
@@ -397,7 +436,6 @@ public class QuizService {
         
         // Teen Geography Questions
         questions.add(Question.builder()
-                .id("geo_002")
                 .questionText("Which country has the most natural lakes?")
                 .options(Arrays.asList("Russia", "Canada", "United States", "Finland"))
                 .correctAnswerIndex(1)
@@ -409,7 +447,6 @@ public class QuizService {
         
         // Adult Geography Questions
         questions.add(Question.builder()
-                .id("geo_003")
                 .questionText("What is the name of the deepest point in the world's oceans?")
                 .options(Arrays.asList("Mariana Trench", "Puerto Rico Trench", "Java Trench", "Tonga Trench"))
                 .correctAnswerIndex(0)
@@ -431,7 +468,6 @@ public class QuizService {
         
         // Children General Knowledge Questions
         questions.add(Question.builder()
-                .id("gk_001")
                 .questionText("How many days are in a week?")
                 .options(Arrays.asList("5", "6", "7", "8"))
                 .correctAnswerIndex(2)
@@ -443,7 +479,6 @@ public class QuizService {
         
         // Teen General Knowledge Questions
         questions.add(Question.builder()
-                .id("gk_002")
                 .questionText("What is the capital of Australia?")
                 .options(Arrays.asList("Sydney", "Melbourne", "Canberra", "Perth"))
                 .correctAnswerIndex(2)
@@ -455,7 +490,6 @@ public class QuizService {
         
         // Adult General Knowledge Questions
         questions.add(Question.builder()
-                .id("gk_003")
                 .questionText("Who wrote '1984'?")
                 .options(Arrays.asList("Aldous Huxley", "George Orwell", "Ray Bradbury", "H.G. Wells"))
                 .correctAnswerIndex(1)
@@ -479,7 +513,7 @@ public class QuizService {
                 .collect(Collectors.toList());
 
         return QuizResponseDto.builder()
-                .id(quiz.getId())
+                .id(quiz.getId().toString())
                 .title(quiz.getTitle())
                 .questions(questionDtos)
                 .ageGroup(quiz.getAgeGroup())
@@ -496,7 +530,7 @@ public class QuizService {
      */
     private QuestionResponseDto convertQuestionToResponseDto(Question question) {
         return QuestionResponseDto.builder()
-                .id(question.getId())
+                .id(question.getId().toString())
                 .questionText(question.getQuestionText())
                 .options(question.getOptions())
                 .correctAnswerIndex(question.getCorrectAnswerIndex())
@@ -506,6 +540,7 @@ public class QuizService {
                 .build();
     }
 
+    
     /**
      * Capitalize the first letter of a string
      * @param str The string to capitalize

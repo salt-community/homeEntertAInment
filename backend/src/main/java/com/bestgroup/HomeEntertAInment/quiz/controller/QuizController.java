@@ -1,5 +1,9 @@
 package com.bestgroup.HomeEntertAInment.quiz.controller;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -58,9 +62,10 @@ public class QuizController {
      * @return ResponseEntity containing quiz data
      */
     @GetMapping("/{quizId}")
-    public ResponseEntity<String> getQuiz(@PathVariable String quizId) {
-        // TODO: Implement quiz retrieval logic
-        return ResponseEntity.ok("Get quiz endpoint - not implemented yet");
+    public ResponseEntity<QuizResponseDto> getQuiz(@PathVariable UUID quizId) {
+        Optional<QuizResponseDto> quiz = quizService.getQuizById(quizId);
+        return quiz.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     /**
@@ -68,9 +73,9 @@ public class QuizController {
      * @return ResponseEntity containing list of quizzes
      */
     @GetMapping("/all")
-    public ResponseEntity<String> getAllQuizzes() {
-        // TODO: Implement get all quizzes logic
-        return ResponseEntity.ok("Get all quizzes endpoint - not implemented yet");
+    public ResponseEntity<List<QuizResponseDto>> getAllQuizzes() {
+        List<QuizResponseDto> quizzes = quizService.getAllQuizzes();
+        return ResponseEntity.ok(quizzes);
     }
 
     /**
@@ -79,7 +84,7 @@ public class QuizController {
      * @return ResponseEntity containing quiz results
      */
     @PostMapping("/{quizId}/submit")
-    public ResponseEntity<String> submitQuiz(@PathVariable String quizId) {
+    public ResponseEntity<String> submitQuiz(@PathVariable UUID quizId) {
         // TODO: Implement quiz submission logic
         return ResponseEntity.ok("Submit quiz endpoint - not implemented yet");
     }
@@ -90,9 +95,13 @@ public class QuizController {
      * @return ResponseEntity indicating deletion status
      */
     @DeleteMapping("/{quizId}")
-    public ResponseEntity<String> deleteQuiz(@PathVariable String quizId) {
-        // TODO: Implement quiz deletion logic
-        return ResponseEntity.ok("Delete quiz endpoint - not implemented yet");
+    public ResponseEntity<String> deleteQuiz(@PathVariable UUID quizId) {
+        boolean deleted = quizService.deleteQuiz(quizId);
+        if (deleted) {
+            return ResponseEntity.ok("Quiz deleted successfully");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     /**

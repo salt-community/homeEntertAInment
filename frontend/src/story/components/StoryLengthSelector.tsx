@@ -1,4 +1,5 @@
 import type { StoryLengthValue } from "../types";
+import { StoryLength } from "../types";
 
 interface StoryLengthSelectorProps {
   selected: StoryLengthValue | "";
@@ -9,7 +10,7 @@ interface StoryLengthSelectorProps {
 
 const STORY_LENGTH_OPTIONS = [
   {
-    value: "short" as const,
+    value: StoryLength.SHORT,
     label: "Short",
     wordCount: "~500 words",
     icon: (
@@ -21,7 +22,7 @@ const STORY_LENGTH_OPTIONS = [
     ),
   },
   {
-    value: "medium" as const,
+    value: StoryLength.MEDIUM,
     label: "Medium",
     wordCount: "~1000 words",
     icon: (
@@ -34,7 +35,7 @@ const STORY_LENGTH_OPTIONS = [
     ),
   },
   {
-    value: "full" as const,
+    value: StoryLength.FULL,
     label: "Full",
     wordCount: "~1500 words",
     icon: (

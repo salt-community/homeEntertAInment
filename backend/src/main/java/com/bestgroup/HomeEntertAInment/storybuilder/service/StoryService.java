@@ -1,6 +1,7 @@
 package com.bestgroup.HomeEntertAInment.storybuilder.service;
 
 import com.bestgroup.HomeEntertAInment.service.GeminiStoryService;
+import com.bestgroup.HomeEntertAInment.storybuilder.service.ImageService;
 import com.bestgroup.HomeEntertAInment.storybuilder.http.dto.ImageRequest;
 import com.bestgroup.HomeEntertAInment.storybuilder.http.dto.ImageResponse;
 import com.bestgroup.HomeEntertAInment.storybuilder.http.dto.StoryRequest;

@@ -34,9 +34,9 @@ export const Twist = {
 } as const;
 
 export const StoryLength = {
-  SHORT: "short",
-  MEDIUM: "medium",
-  FULL: "full",
+  SHORT: "SHORT",
+  MEDIUM: "MEDIUM",
+  FULL: "FULL",
 } as const;
 
 export type ThemeValue = (typeof Theme)[keyof typeof Theme];

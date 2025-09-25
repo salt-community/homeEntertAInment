@@ -42,11 +42,10 @@ app:
 GEMINI_API_KEY: ${GEMINI_API_KEY:}
 CONVERT_API_TOKEN: ${CONVERT_API_TOKEN:}
 FAL_API_KEY: ${FAL_API_KEY}
-RUNWARE_API_KEY: ${RUNWARE_API_KEY}
+RUNWARE_API_KEY: ${RUNWARE_API_KEY:}
 
 # Logging configuration
 logging:
   level:
     com.bestgroup.HomeEntertAInment: ${LOG_LEVEL:INFO}
     org.springframework.web: ${SPRING_WEB_LOG_LEVEL:INFO}
-

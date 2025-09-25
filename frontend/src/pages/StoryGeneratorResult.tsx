@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { useGenerateStory } from "../story/hooks";
+import { useGenerateStory, useGenerateImage } from "../story/hooks";
 import { StoryViewer } from "../story/components";
 import type { StoryRequest } from "../story/types";
 import { Link } from "@tanstack/react-router";
@@ -7,6 +7,12 @@ import { Link } from "@tanstack/react-router";
 export default function StoryGeneratorResult() {
   const hasStartedRef = useRef(false);
   const { data, loading, error, submit } = useGenerateStory();
+  const {
+    data: imageData,
+    loading: imageLoading,
+    error: imageError,
+    submit: generateImage,
+  } = useGenerateImage();
 
   const request: StoryRequest | null = useMemo(() => {
     try {
@@ -25,6 +31,19 @@ export default function StoryGeneratorResult() {
       });
     }
   }, [request, submit]);
+
+  const handleGenerateCoverImage = async () => {
+    if (!data?.story || !request) return;
+
+    const heroName = request.character;
+    const description = `Cover image for story about ${heroName}. Title: '${heroName} and the Adventure of Friendship'. Style: colorful, illustrated book cover with text.`;
+
+    try {
+      await generateImage({ description });
+    } catch (err) {
+      console.error("Failed to generate cover image:", err);
+    }
+  };
 
   return (
     <div className="p-4 flex flex-col items-center space-y-6">
@@ -71,6 +90,47 @@ export default function StoryGeneratorResult() {
       {data?.story && (
         <div className="w-full max-w-2xl">
           <h3 className="text-xl font-medium mb-2">Result</h3>
+
+          {/* Generate Cover Image Button */}
+          <div className="mb-4 flex justify-center">
+            <button
+              onClick={handleGenerateCoverImage}
+              disabled={imageLoading}
+              className="inline-flex items-center px-4 py-2 text-sm bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            >
+              {imageLoading ? (
+                <>
+                  <GradientSpinner />
+                  <span className="ml-2">Generating...</span>
+                </>
+              ) : (
+                "Generate Cover Image"
+              )}
+            </button>
+          </div>
+
+          {/* Image Error Display */}
+          {imageError && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-600 text-sm">
+                Failed to generate cover image: {imageError}
+              </p>
+            </div>
+          )}
+
+          {/* Cover Image Display */}
+          {imageData?.imageUrl && (
+            <div className="mb-6 flex justify-center">
+              <img
+                src={imageData.imageUrl}
+                alt="Story cover"
+                className="max-w-full h-auto rounded-lg shadow-lg border"
+                style={{ maxHeight: "400px" }}
+              />
+            </div>
+          )}
+
+          {/* Story Content */}
           <div className="border rounded p-4 shadow-sm">
             <StoryViewer markdown={data.story} />
           </div>

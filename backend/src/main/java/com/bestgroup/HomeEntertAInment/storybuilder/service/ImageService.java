@@ -26,25 +26,34 @@ public class ImageService {
 
     public String generateImage(String prompt, int width, int height, int numberResults) {
         try {
+            // Check if API key is configured
+            if (apiKey == null || apiKey.trim().isEmpty()) {
+                return "Error: RUNWARE_API_KEY is not configured. Please set the environment variable.";
+            }
+
             String taskUUID = UUID.randomUUID().toString();
 
-            List<Map<String, Object>> body = List.of(
-                Map.of(
-                    "taskType", "imageInference",
-                    "taskUUID", taskUUID,
-                    "positivePrompt", prompt,
-                    "width", width,
-                    "height", height,
-                    "model", "runware:101@1",
-                    "numberResults", numberResults
-                )
+            // Runware API expects an array of objects
+            Map<String, Object> requestObject = Map.of(
+                "taskType", "imageInference",
+                "taskUUID", taskUUID,
+                "positivePrompt", prompt,
+                "width", width,
+                "height", height,
+                "model", "runware:101@1",
+                "numberResults", numberResults
             );
+
+            // Wrap the request object in an array as required by Runware API
+            List<Map<String, Object>> requestBody = List.of(requestObject);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setBearerAuth(apiKey);
 
-            HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(body, headers);
+            HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(requestBody, headers);
+
+            System.out.println("Sending request to Runware API: " + requestBody);
 
             ResponseEntity<Map> response = restTemplate.exchange(
                 URL, HttpMethod.POST, entity, Map.class
@@ -60,7 +69,11 @@ public class ImageService {
 
             return "Error: no images returned from Runware. Full response: " + responseBody;
 
+        } catch (org.springframework.web.client.HttpClientErrorException e) {
+            System.err.println("HTTP Client Error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
+            return "Error: HTTP " + e.getStatusCode() + " - " + e.getResponseBodyAsString();
         } catch (Exception e) {
+            System.err.println("Exception in generateImage: " + e.getMessage());
             e.printStackTrace();
             return "Error: failed to generate image – " + e.getMessage();
         }

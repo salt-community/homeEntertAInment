@@ -3,7 +3,6 @@ package com.bestgroup.HomeEntertAInment.quiz.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -120,7 +119,7 @@ public class QuizService {
             log.error("Failed to generate quiz using Gemini API, falling back to mock data", e);
             
             // Fallback to mock data if Gemini API fails
-            return generateMockQuiz(config);
+            return generateMockQuiz();
         }
     }
 
@@ -204,27 +203,23 @@ public class QuizService {
 
     /**
      * Generate a mock quiz as fallback when Gemini API fails
-     * @param config The quiz configuration
      * @return Mock quiz with sample questions
      */
-    private Quiz generateMockQuiz(QuizConfigurationDto config) {
-        log.info("Generating mock quiz as fallback for configuration: {}", config);
+    private Quiz generateMockQuiz() {
+        log.info("Generating fallback sample quiz - Quiz generator is down");
         
-        // Create quiz title based on configuration
-        String title = createQuizTitle(config);
-        
-        // Create the quiz first (without questions)
+        // Create a simple fallback quiz indicating the generator is down
         Quiz quiz = Quiz.builder()
-                .title(title)
-                .ageGroup(config.getAgeGroup())
-                .topics(config.getTopics())
-                .difficulty(config.getDifficulty())
-                .questionCount(config.getQuestionCount())
-                .description(createQuizDescription(config))
+                .title("Sample Quiz - Quiz Generator Temporarily Unavailable")
+                .ageGroup("general")
+                .topics(Arrays.asList("General Knowledge"))
+                .difficulty("medium")
+                .questionCount(3)
+                .description("The quiz generator is currently down. This is a sample quiz to demonstrate the functionality.")
                 .build();
         
-        // Generate questions and link them to the quiz
-        List<Question> questions = generateQuestions(config);
+        // Generate simple sample questions
+        List<Question> questions = getSampleQuestions();
         for (Question question : questions) {
             question.setQuiz(quiz);
         }
@@ -234,271 +229,45 @@ public class QuizService {
     }
 
     /**
-     * Generate questions based on the quiz configuration
-     * @param config The quiz configuration
-     * @return List of questions
+     * Get simple sample questions for the fallback quiz
+     * @return List of sample questions
      */
-    private List<Question> generateQuestions(QuizConfigurationDto config) {
-        List<Question> allQuestions = getAllMockQuestions();
-        
-        // Filter questions by age group, topics, and difficulty
-        List<Question> filteredQuestions = allQuestions.stream()
-                .filter(q -> q.getAgeGroup().equals(config.getAgeGroup()))
-                .filter(q -> config.getTopics().contains(q.getTopic()))
-                .filter(q -> q.getDifficulty().equals(config.getDifficulty()))
-                .collect(Collectors.toList());
-        
-        // If we don't have enough questions, add some from other topics
-        if (filteredQuestions.size() < config.getQuestionCount()) {
-            List<Question> additionalQuestions = allQuestions.stream()
-                    .filter(q -> q.getAgeGroup().equals(config.getAgeGroup()))
-                    .filter(q -> q.getDifficulty().equals(config.getDifficulty()))
-                    .filter(q -> !config.getTopics().contains(q.getTopic()))
-                    .collect(Collectors.toList());
-            
-            filteredQuestions.addAll(additionalQuestions);
-        }
-        
-        // Shuffle and limit to requested count
-        Collections.shuffle(filteredQuestions);
-        return filteredQuestions.stream()
-                .limit(config.getQuestionCount())
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * Create a descriptive title for the quiz
-     * @param config The quiz configuration
-     * @return Quiz title
-     */
-    private String createQuizTitle(QuizConfigurationDto config) {
-        String topicsStr = String.join(", ", config.getTopics());
-        return String.format("%s %s Quiz - %s", 
-                capitalizeFirst(config.getAgeGroup()), 
-                capitalizeFirst(config.getDifficulty()), 
-                topicsStr);
-    }
-
-    /**
-     * Create a description for the quiz
-     * @param config The quiz configuration
-     * @return Quiz description
-     */
-    private String createQuizDescription(QuizConfigurationDto config) {
-        return String.format("A %s difficulty quiz with %d questions covering %s topics, designed for %s.",
-                config.getDifficulty(),
-                config.getQuestionCount(),
-                config.getTopics().size(),
-                config.getAgeGroup());
-    }
-
-    /**
-     * Get all available mock questions
-     * @return List of all mock questions
-     */
-    private List<Question> getAllMockQuestions() {
+    private List<Question> getSampleQuestions() {
         List<Question> questions = new ArrayList<>();
         
-        // Science questions
-        questions.addAll(getScienceQuestions());
-        questions.addAll(getHistoryQuestions());
-        questions.addAll(getGeographyQuestions());
-        questions.addAll(getGeneralKnowledgeQuestions());
-        
-        return questions;
-    }
-
-    /**
-     * Get science-related questions
-     * @return List of science questions
-     */
-    private List<Question> getScienceQuestions() {
-        List<Question> questions = new ArrayList<>();
-        
-        // Children Science Questions
         questions.add(Question.builder()
-                .questionText("What do plants need to make their own food?")
-                .options(Arrays.asList("Water and soil", "Sunlight and water", "Air and soil", "Sunlight, water, and air"))
-                .correctAnswerIndex(3)
-                .explanation("Plants use sunlight, water, and carbon dioxide from the air to make their own food through photosynthesis.")
-                .topic("Science")
-                .difficulty("easy")
-                .ageGroup("children")
-                .build());
-        
-        questions.add(Question.builder()
-                .questionText("Which planet is closest to the Sun?")
-                .options(Arrays.asList("Venus", "Mercury", "Earth", "Mars"))
-                .correctAnswerIndex(1)
-                .explanation("Mercury is the closest planet to the Sun in our solar system.")
-                .topic("Science")
-                .difficulty("easy")
-                .ageGroup("children")
-                .build());
-        
-        // Teen Science Questions
-        questions.add(Question.builder()
-                .questionText("What is the chemical symbol for gold?")
-                .options(Arrays.asList("Go", "Gd", "Au", "Ag"))
+                .questionText("What is the capital of France?")
+                .options(Arrays.asList("London", "Berlin", "Paris", "Madrid"))
                 .correctAnswerIndex(2)
-                .explanation("The chemical symbol for gold is Au, derived from the Latin word 'aurum'.")
-                .topic("Science")
-                .difficulty("medium")
-                .ageGroup("teen")
-                .build());
-        
-        questions.add(Question.builder()
-                .questionText("What type of bond forms between a metal and a non-metal?")
-                .options(Arrays.asList("Covalent", "Ionic", "Metallic", "Hydrogen"))
-                .correctAnswerIndex(1)
-                .explanation("Ionic bonds form between metals and non-metals when electrons are transferred from the metal to the non-metal.")
-                .topic("Science")
-                .difficulty("hard")
-                .ageGroup("teen")
-                .build());
-        
-        // Adult Science Questions
-        questions.add(Question.builder()
-                .questionText("What is the Heisenberg Uncertainty Principle?")
-                .options(Arrays.asList("Energy cannot be created or destroyed", "You cannot simultaneously know the exact position and momentum of a particle", "Light behaves as both wave and particle", "Matter and energy are equivalent"))
-                .correctAnswerIndex(1)
-                .explanation("The Heisenberg Uncertainty Principle states that the more precisely you know a particle's position, the less precisely you can know its momentum, and vice versa.")
-                .topic("Science")
-                .difficulty("hard")
-                .ageGroup("adult")
-                .build());
-        
-        return questions;
-    }
-
-    /**
-     * Get history-related questions
-     * @return List of history questions
-     */
-    private List<Question> getHistoryQuestions() {
-        List<Question> questions = new ArrayList<>();
-        
-        // Children History Questions
-        questions.add(Question.builder()
-                .questionText("Who was the first President of the United States?")
-                .options(Arrays.asList("Thomas Jefferson", "George Washington", "John Adams", "Benjamin Franklin"))
-                .correctAnswerIndex(1)
-                .explanation("George Washington was the first President of the United States, serving from 1789 to 1797.")
-                .topic("History")
-                .difficulty("easy")
-                .ageGroup("children")
-                .build());
-        
-        // Teen History Questions
-        questions.add(Question.builder()
-                .questionText("In which year did World War II end?")
-                .options(Arrays.asList("1944", "1945", "1946", "1947"))
-                .correctAnswerIndex(1)
-                .explanation("World War II ended in 1945 with the surrender of Japan on September 2, 1945.")
-                .topic("History")
-                .difficulty("medium")
-                .ageGroup("teen")
-                .build());
-        
-        // Adult History Questions
-        questions.add(Question.builder()
-                .questionText("What was the name of the economic policy that led to the Great Depression?")
-                .options(Arrays.asList("Laissez-faire", "Keynesianism", "Mercantilism", "Socialism"))
-                .correctAnswerIndex(0)
-                .explanation("Laissez-faire economic policies, which advocated minimal government intervention, contributed to the conditions that led to the Great Depression.")
-                .topic("History")
-                .difficulty("hard")
-                .ageGroup("adult")
-                .build());
-        
-        return questions;
-    }
-
-    /**
-     * Get geography-related questions
-     * @return List of geography questions
-     */
-    private List<Question> getGeographyQuestions() {
-        List<Question> questions = new ArrayList<>();
-        
-        // Children Geography Questions
-        questions.add(Question.builder()
-                .questionText("What is the largest ocean on Earth?")
-                .options(Arrays.asList("Atlantic", "Pacific", "Indian", "Arctic"))
-                .correctAnswerIndex(1)
-                .explanation("The Pacific Ocean is the largest ocean on Earth, covering more than 30% of the Earth's surface.")
-                .topic("Geography")
-                .difficulty("easy")
-                .ageGroup("children")
-                .build());
-        
-        // Teen Geography Questions
-        questions.add(Question.builder()
-                .questionText("Which country has the most natural lakes?")
-                .options(Arrays.asList("Russia", "Canada", "United States", "Finland"))
-                .correctAnswerIndex(1)
-                .explanation("Canada has the most natural lakes in the world, with over 2 million lakes.")
-                .topic("Geography")
-                .difficulty("medium")
-                .ageGroup("teen")
-                .build());
-        
-        // Adult Geography Questions
-        questions.add(Question.builder()
-                .questionText("What is the name of the deepest point in the world's oceans?")
-                .options(Arrays.asList("Mariana Trench", "Puerto Rico Trench", "Java Trench", "Tonga Trench"))
-                .correctAnswerIndex(0)
-                .explanation("The Mariana Trench in the western Pacific Ocean is the deepest point on Earth, reaching depths of over 36,000 feet.")
-                .topic("Geography")
-                .difficulty("hard")
-                .ageGroup("adult")
-                .build());
-        
-        return questions;
-    }
-
-    /**
-     * Get general knowledge questions
-     * @return List of general knowledge questions
-     */
-    private List<Question> getGeneralKnowledgeQuestions() {
-        List<Question> questions = new ArrayList<>();
-        
-        // Children General Knowledge Questions
-        questions.add(Question.builder()
-                .questionText("How many days are in a week?")
-                .options(Arrays.asList("5", "6", "7", "8"))
-                .correctAnswerIndex(2)
-                .explanation("There are 7 days in a week: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, and Sunday.")
-                .topic("General Knowledge")
-                .difficulty("easy")
-                .ageGroup("children")
-                .build());
-        
-        // Teen General Knowledge Questions
-        questions.add(Question.builder()
-                .questionText("What is the capital of Australia?")
-                .options(Arrays.asList("Sydney", "Melbourne", "Canberra", "Perth"))
-                .correctAnswerIndex(2)
-                .explanation("Canberra is the capital of Australia, not Sydney or Melbourne which are larger cities.")
+                .explanation("Paris is the capital and largest city of France.")
                 .topic("General Knowledge")
                 .difficulty("medium")
-                .ageGroup("teen")
+                .ageGroup("general")
                 .build());
         
-        // Adult General Knowledge Questions
         questions.add(Question.builder()
-                .questionText("Who wrote '1984'?")
-                .options(Arrays.asList("Aldous Huxley", "George Orwell", "Ray Bradbury", "H.G. Wells"))
+                .questionText("How many sides does a triangle have?")
+                .options(Arrays.asList("2", "3", "4", "5"))
                 .correctAnswerIndex(1)
-                .explanation("George Orwell wrote '1984', a dystopian novel published in 1949.")
+                .explanation("A triangle is a polygon with exactly three sides.")
                 .topic("General Knowledge")
-                .difficulty("hard")
-                .ageGroup("adult")
+                .difficulty("easy")
+                .ageGroup("general")
+                .build());
+        
+        questions.add(Question.builder()
+                .questionText("What is the largest planet in our solar system?")
+                .options(Arrays.asList("Earth", "Saturn", "Jupiter", "Neptune"))
+                .correctAnswerIndex(2)
+                .explanation("Jupiter is the largest planet in our solar system, more than twice as massive as all other planets combined.")
+                .topic("General Knowledge")
+                .difficulty("medium")
+                .ageGroup("general")
                 .build());
         
         return questions;
     }
+
 
     /**
      * Convert Quiz model to QuizResponseDto (with complete question data)
@@ -538,16 +307,4 @@ public class QuizService {
                 .build();
     }
 
-    
-    /**
-     * Capitalize the first letter of a string
-     * @param str The string to capitalize
-     * @return Capitalized string
-     */
-    private String capitalizeFirst(String str) {
-        if (str == null || str.isEmpty()) {
-            return str;
-        }
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
-    }
 }

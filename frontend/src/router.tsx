@@ -12,6 +12,7 @@ import MovieMood from "./pages/MovieMood.tsx";
 import QuizIndex from "./pages/Quiz/index.tsx";
 import QuizCreate from "./pages/Quiz/create.tsx";
 import Quiz from "./pages/Quiz/quiz.tsx";
+import QuizList from "./pages/Quiz/list.tsx";
 import Home from "./pages/Home.tsx";
 
 const rootRoute = createRootRoute({
@@ -72,6 +73,12 @@ const quizRoute = createRoute({
   component: Quiz,
 });
 
+const quizListRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/quiz/list",
+  component: QuizList,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   storyGeneratorRoute,
@@ -82,6 +89,7 @@ const routeTree = rootRoute.addChildren([
   quizIndexRoute,
   quizCreateRoute,
   quizRoute,
+  quizListRoute,
 ]);
 
 export const router = createRouter({

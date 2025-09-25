@@ -1,7 +1,6 @@
-import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useEffect } from "react";
 import { StoryViewer } from "./components";
-import { generateStory } from "./api";
+import { useGenerateStory } from "./hooks";
 import type { StoryRequest } from "./types";
 
 interface StoryPageProps {
@@ -27,13 +26,16 @@ interface StoryPageProps {
 export const StoryPage: React.FC<StoryPageProps> = ({ storyRequest }) => {
   const {
     data: storyResponse,
-    isLoading,
+    loading: isLoading,
     error,
-  } = useQuery({
-    queryKey: ["story", storyRequest],
-    queryFn: () => generateStory(storyRequest),
-    enabled: !!storyRequest,
-  });
+    submit,
+  } = useGenerateStory();
+
+  useEffect(() => {
+    if (storyRequest) {
+      submit(storyRequest);
+    }
+  }, [storyRequest, submit]);
 
   if (isLoading) {
     return (
@@ -47,7 +49,7 @@ export const StoryPage: React.FC<StoryPageProps> = ({ storyRequest }) => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-red-500 text-lg">
-          Error generating story: {error.message}
+          Error generating story: {error}
         </div>
       </div>
     );

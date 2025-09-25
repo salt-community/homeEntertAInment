@@ -30,19 +30,19 @@ public class StoryController {
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<StoryResponse> generateStory(
-            @RequestBody StoryRequest storyRequest,
-            @RequestHeader(value = "Authorization", required = false) String authorization) {
+        @RequestBody StoryRequest storyRequest,
+        @RequestHeader(value = "Authorization", required = false) String authorization) {
         try {
             // Log the Authorization header for verification
             if (authorization != null) {
-                log.info("Story generation request received with Authorization header: {}", 
+                log.info("Story generation request received with Authorization header: {}",
                     authorization.startsWith("Bearer ") ? "Bearer [REDACTED]" : authorization);
             } else {
                 log.warn("Story generation request received without Authorization header");
             }
-            
+
             StoryResponse storyResponse = storyService.generateStory(storyRequest);
-            log.info("Story generated successfully with title: {}", storyRequest.getTitle());
+            log.info("Story generated successfully with title: {}", storyRequest.character());
             return ResponseEntity.ok(storyResponse);
         } catch (IllegalArgumentException e) {
             log.error("Invalid input for story generation: {}", e.getMessage());

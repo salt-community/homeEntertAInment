@@ -146,6 +146,13 @@ public class QuizService {
             // Parse JSON to Quiz model
             Quiz quiz = objectMapper.readValue(cleanJson, Quiz.class);
             
+            // Establish bidirectional relationship between quiz and questions
+            if (quiz.getQuestions() != null) {
+                for (Question question : quiz.getQuestions()) {
+                    question.setQuiz(quiz);
+                }
+            }
+            
             // Validate the parsed quiz
             validateQuiz(quiz);
             

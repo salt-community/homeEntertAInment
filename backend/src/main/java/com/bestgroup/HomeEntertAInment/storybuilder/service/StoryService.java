@@ -85,7 +85,7 @@ public class StoryService {
     }
 
     public ImageResponse generateImage(ImageRequest imageRequest) {
-        String url = imageService.generateImage(imageRequest.description(), 1024, 1024, 1);
+        String url = imageService.generateImage(imageRequest.description(), 512, 512, 1);
         return new ImageResponse(url);
     }
 

@@ -9,9 +9,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
- * Service for interacting with FAL NANO BANANA API
  * Image generation
  */
 @Service
@@ -26,21 +26,23 @@ public class ImageService {
 
     public String generateImage(String prompt, int width, int height, int numberResults) {
         try {
-            // Runware requires an array of request objects
+            String taskUUID = UUID.randomUUID().toString();
+
             List<Map<String, Object>> body = List.of(
                 Map.of(
                     "taskType", "imageInference",
+                    "taskUUID", taskUUID,
                     "positivePrompt", prompt,
                     "width", width,
                     "height", height,
-                    "model", "runware:101@1",   // example model
+                    "model", "runware:101@1",
                     "numberResults", numberResults
                 )
             );
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("Authorization", "Bearer " + apiKey);
+            headers.setBearerAuth(apiKey);
 
             HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(body, headers);
 
@@ -49,18 +51,19 @@ public class ImageService {
             );
 
             Map<String, Object> responseBody = Objects.requireNonNull(response.getBody());
+            System.out.println("Runware response: " + responseBody);
 
-            // Runware typically returns results under "data" or "results"
             List<Map<String, Object>> data = (List<Map<String, Object>>) responseBody.get("data");
-            if (data != null && !data.isEmpty()) {
-                return (String) data.get(0).get("imageURL"); // adjust key if needed
-            } else {
-                return "Error: no images returned from Runware";
+            if (data != null && !data.isEmpty() && data.get(0).containsKey("imageURL")) {
+                return (String) data.get(0).get("imageURL");
             }
+
+            return "Error: no images returned from Runware. Full response: " + responseBody;
 
         } catch (Exception e) {
             e.printStackTrace();
             return "Error: failed to generate image – " + e.getMessage();
         }
     }
+
 }

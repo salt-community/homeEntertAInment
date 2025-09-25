@@ -3,6 +3,7 @@ import { useGenerateStory, useGenerateImage } from "../story/hooks";
 import { StoryViewer } from "../story/components";
 import type { StoryRequest } from "../story/types";
 import { Link } from "@tanstack/react-router";
+import { generateCoverImagePrompt } from "../story/utils/storyAnalyzer";
 
 export default function StoryGeneratorResult() {
   const hasStartedRef = useRef(false);
@@ -35,8 +36,10 @@ export default function StoryGeneratorResult() {
   const handleGenerateCoverImage = async () => {
     if (!data?.story || !request) return;
 
-    const heroName = request.character;
-    const description = `Cover image for story about ${heroName}. Title: '${heroName} and the Adventure of Friendship'. Style: colorful, illustrated book cover with text.`;
+    // Generate dynamic prompt based on the actual story content
+    const description = generateCoverImagePrompt(data.story, request.character);
+
+    console.log("Generated dynamic cover image prompt:", description);
 
     try {
       await generateImage({ description });

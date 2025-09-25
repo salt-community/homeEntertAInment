@@ -1,4 +1,4 @@
-package com.bestgroup.HomeEntertAInment.service;
+package com.bestgroup.HomeEntertAInment.quiz.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,11 +9,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.bestgroup.HomeEntertAInment.dto.QuestionResponseDto;
-import com.bestgroup.HomeEntertAInment.dto.QuizConfigurationDto;
-import com.bestgroup.HomeEntertAInment.dto.QuizResponseDto;
-import com.bestgroup.HomeEntertAInment.model.Question;
-import com.bestgroup.HomeEntertAInment.model.Quiz;
+import com.bestgroup.HomeEntertAInment.quiz.dto.QuestionResponseDto;
+import com.bestgroup.HomeEntertAInment.quiz.dto.QuizConfigurationDto;
+import com.bestgroup.HomeEntertAInment.quiz.dto.QuizResponseDto;
+import com.bestgroup.HomeEntertAInment.quiz.model.Question;
+import com.bestgroup.HomeEntertAInment.quiz.model.Quiz;
+import com.bestgroup.HomeEntertAInment.service.GeminiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 

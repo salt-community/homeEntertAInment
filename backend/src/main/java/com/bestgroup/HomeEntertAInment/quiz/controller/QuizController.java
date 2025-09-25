@@ -1,4 +1,4 @@
-package com.bestgroup.HomeEntertAInment.controller;
+package com.bestgroup.HomeEntertAInment.quiz.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bestgroup.HomeEntertAInment.dto.QuizConfigurationDto;
-import com.bestgroup.HomeEntertAInment.dto.QuizResponseDto;
-import com.bestgroup.HomeEntertAInment.service.QuizService;
+import com.bestgroup.HomeEntertAInment.quiz.dto.QuizConfigurationDto;
+import com.bestgroup.HomeEntertAInment.quiz.dto.QuizResponseDto;
+import com.bestgroup.HomeEntertAInment.quiz.service.QuizService;
 
 import lombok.RequiredArgsConstructor;
 

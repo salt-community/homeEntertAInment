@@ -17,7 +17,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.bestgroup.HomeEntertAInment.dto.GeminiResponseDto;
-import com.bestgroup.HomeEntertAInment.dto.QuizConfigurationDto;
+import com.bestgroup.HomeEntertAInment.quiz.dto.QuizConfigurationDto;
 
 import lombok.RequiredArgsConstructor;
 

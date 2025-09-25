@@ -1,4 +1,4 @@
-package com.bestgroup.HomeEntertAInment.dto;
+package com.bestgroup.HomeEntertAInment.quiz.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

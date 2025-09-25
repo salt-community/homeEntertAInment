@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useGenerateStory, useGenerateImage } from "../story/hooks";
-import { StoryViewer } from "../story/components";
+import { StoryViewer, SaveToPdfButton } from "../story/components";
 import type { StoryRequest } from "../story/types";
 import { Link } from "@tanstack/react-router";
 import { generateCoverImagePrompt } from "../story/utils/storyAnalyzer";
@@ -94,8 +94,8 @@ export default function StoryGeneratorResult() {
         <div className="w-full max-w-2xl">
           <h3 className="text-xl font-medium mb-2">Result</h3>
 
-          {/* Generate Cover Image Button */}
-          <div className="mb-4 flex justify-center">
+          {/* Action Buttons */}
+          <div className="mb-4 flex flex-col sm:flex-row gap-3 justify-center items-center">
             <button
               onClick={handleGenerateCoverImage}
               disabled={imageLoading}
@@ -110,6 +110,11 @@ export default function StoryGeneratorResult() {
                 "Generate Cover Image"
               )}
             </button>
+
+            <SaveToPdfButton
+              storyMarkdown={data.story}
+              coverImageUrl={imageData?.imageUrl}
+            />
           </div>
 
           {/* Image Error Display */}

@@ -32,6 +32,9 @@ public class Story {
     private AgeGroup ageGroup;
 
     @Enumerated(EnumType.STRING)
+    private StoryLength storyLength;
+
+    @Enumerated(EnumType.STRING)
     private Twist twist;
 
     private String custom;

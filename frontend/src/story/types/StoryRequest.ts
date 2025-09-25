@@ -33,9 +33,16 @@ export const Twist = {
   WISH_COMES_TRUE: "WISH_COMES_TRUE",
 } as const;
 
+export const StoryLength = {
+  SHORT: "short",
+  MEDIUM: "medium",
+  FULL: "full",
+} as const;
+
 export type ThemeValue = (typeof Theme)[keyof typeof Theme];
 export type AgeGroupValue = (typeof AgeGroup)[keyof typeof AgeGroup];
 export type TwistValue = (typeof Twist)[keyof typeof Twist];
+export type StoryLengthValue = (typeof StoryLength)[keyof typeof StoryLength];
 
 export interface StoryRequest {
   character: string;
@@ -43,4 +50,5 @@ export interface StoryRequest {
   ageGroup: AgeGroupValue;
   twist?: TwistValue;
   custom?: string;
+  storyLength?: StoryLengthValue;
 }

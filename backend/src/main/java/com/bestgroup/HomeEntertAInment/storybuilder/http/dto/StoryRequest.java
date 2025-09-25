@@ -1,6 +1,7 @@
 package com.bestgroup.HomeEntertAInment.storybuilder.http.dto;
 
 import com.bestgroup.HomeEntertAInment.storybuilder.model.AgeGroup;
+import com.bestgroup.HomeEntertAInment.storybuilder.model.StoryLength;
 import com.bestgroup.HomeEntertAInment.storybuilder.model.Theme;
 import com.bestgroup.HomeEntertAInment.storybuilder.model.Twist;
 import jakarta.validation.constraints.NotNull;
@@ -17,6 +18,8 @@ public record StoryRequest(
     List<Theme> theme,
 
     AgeGroup ageGroup,
+
+    StoryLength storyLength,
 
     Twist twist,
 

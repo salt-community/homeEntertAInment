@@ -53,9 +53,16 @@ public class QuizService {
     @Transactional
     public QuizResponseDto generateQuiz(QuizConfigurationDto config) {
         Quiz quiz = generateQuizInternal(config);
-        // Save the quiz to the database
-        Quiz savedQuiz = quizRepository.save(quiz);
-        return convertToResponseDto(savedQuiz);
+        
+        // Only save the quiz to the database if it's not a mock quiz
+        if (isMockQuiz(quiz)) {
+            log.info("Skipping database save for mock quiz: {}", quiz.getTitle());
+            return convertToResponseDto(quiz);
+        } else {
+            // Save the quiz to the database
+            Quiz savedQuiz = quizRepository.save(quiz);
+            return convertToResponseDto(savedQuiz);
+        }
     }
     
     /**
@@ -275,6 +282,15 @@ public class QuizService {
         return questions;
     }
 
+    /**
+     * Check if a quiz is a mock quiz (fallback quiz)
+     * @param quiz The quiz to check
+     * @return true if it's a mock quiz, false otherwise
+     */
+    private boolean isMockQuiz(Quiz quiz) {
+        return quiz.getTitle() != null && 
+               quiz.getTitle().contains("Sample Quiz - Quiz Generator Temporarily Unavailable");
+    }
 
     /**
      * Convert Quiz model to QuizResponseDto (with complete question data)

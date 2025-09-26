@@ -43,4 +43,10 @@ public class QuizConfigurationDto {
      * ID of the user creating this quiz
      */
     private String userId;
+    
+    /**
+     * Whether the quiz is private (not shown in public quiz list)
+     * If true, quiz will not appear in getAllQuizzes() but can still be accessed via direct link
+     */
+    private Boolean isPrivate;
 }

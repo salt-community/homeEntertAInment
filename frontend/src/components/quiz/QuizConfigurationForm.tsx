@@ -7,6 +7,7 @@ export interface QuizFormConfiguration {
   topics: string[];
   difficulty: string;
   questionCount: number;
+  isPrivate: boolean;
 }
 
 // Custom slider styles
@@ -74,6 +75,7 @@ export default function QuizConfigurationForm({
     topics: [],
     difficulty: "",
     questionCount: 10,
+    isPrivate: false,
   });
 
   const [isGenerating, setIsGenerating] = useState(false);
@@ -352,6 +354,32 @@ export default function QuizConfigurationForm({
                     }}
                   />
                 </div>
+              </div>
+
+              {/* Privacy Setting */}
+              <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={config.isPrivate}
+                    onChange={(e) =>
+                      setConfig((prev) => ({
+                        ...prev,
+                        isPrivate: e.target.checked,
+                      }))
+                    }
+                    className="w-5 h-5 text-[#F930C7] bg-white/20 border-white/30 rounded focus:ring-[#F930C7] focus:ring-2"
+                  />
+                  <div>
+                    <span className="text-sm font-semibold text-white">
+                      Make this quiz private
+                    </span>
+                    <p className="text-xs text-white/70 mt-1">
+                      Private quizzes won't appear in the public quiz list but
+                      can still be shared via direct link
+                    </p>
+                  </div>
+                </label>
               </div>
 
               {/* Buttons */}

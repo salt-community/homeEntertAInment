@@ -76,11 +76,12 @@ public class QuizService {
     }
     
     /**
-     * Get all quizzes
-     * @return List of all quiz response DTOs
+     * Get all public quizzes (excludes private quizzes)
+     * @return List of all public quiz response DTOs
      */
     public List<QuizResponseDto> getAllQuizzes() {
         return quizRepository.findAllWithQuestions().stream()
+                .filter(quiz -> !quiz.getIsPrivate()) // Filter out private quizzes
                 .map(this::convertToResponseDto)
                 .collect(Collectors.toList());
     }
@@ -125,9 +126,10 @@ public class QuizService {
             // Parse JSON response to Quiz model
             Quiz generatedQuiz = parseQuizFromJson(quizJson);
             
-            // Set the current timestamp and user ID
+            // Set the current timestamp, user ID, and privacy setting
             generatedQuiz.setCreatedAt(LocalDateTime.now());
             generatedQuiz.setUserId(config.getUserId());
+            generatedQuiz.setIsPrivate(Boolean.TRUE.equals(config.getIsPrivate()));
             
             log.info("Successfully generated quiz with title: '{}' and {} questions for user: {}", 
                     generatedQuiz.getTitle(), generatedQuiz.getQuestions().size(), config.getUserId());

@@ -101,4 +101,11 @@ public class Quiz {
      */
     @Column(name = "user_id", nullable = false)
     private String userId;
+    
+    /**
+     * Whether the quiz is private (not shown in public quiz list)
+     */
+    @Column(name = "is_private", nullable = false)
+    @Builder.Default
+    private Boolean isPrivate = false;
 }

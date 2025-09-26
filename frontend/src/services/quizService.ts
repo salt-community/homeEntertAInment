@@ -9,6 +9,7 @@ export interface QuizConfiguration {
   difficulty: string;
   questionCount: number;
   userId: string;
+  isPrivate: boolean;
 }
 
 // Question response type (matches QuestionResponseDto from backend)

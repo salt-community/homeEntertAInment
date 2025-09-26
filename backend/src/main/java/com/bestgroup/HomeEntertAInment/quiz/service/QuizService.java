@@ -129,17 +129,31 @@ public class QuizService {
     }
     
     /**
-     * Delete a quiz by ID
+     * Delete a quiz by ID with user ownership validation
      * @param id The quiz ID to delete
-     * @return true if the quiz was deleted, false if not found
+     * @param userId The ID of the user making the request
+     * @return true if the quiz was deleted, false if not found or not owned by user
      */
     @Transactional
-    public boolean deleteQuiz(UUID id) {
-        if (quizRepository.existsById(id)) {
-            quizRepository.deleteById(id);
-            return true;
+    public boolean deleteQuiz(UUID id, String userId) {
+        Optional<Quiz> quizOpt = quizRepository.findById(id);
+        
+        if (quizOpt.isEmpty()) {
+            log.warn("Quiz not found with ID: {}", id);
+            return false;
         }
-        return false;
+        
+        Quiz quiz = quizOpt.get();
+        
+        // Verify that the user owns this quiz
+        if (!userId.equals(quiz.getUserId())) {
+            log.warn("User {} attempted to delete quiz {} owned by {}", userId, id, quiz.getUserId());
+            return false;
+        }
+        
+        quizRepository.deleteById(id);
+        log.info("Quiz {} deleted by user {}", id, userId);
+        return true;
     }
 
     /**

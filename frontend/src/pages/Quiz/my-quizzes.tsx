@@ -146,6 +146,30 @@ export default function MyQuizzes() {
     }
   };
 
+  const handleDeleteQuiz = async (quizId: string) => {
+    if (!user?.id) {
+      console.error("User ID not available");
+      return;
+    }
+
+    try {
+      const token = await getToken();
+      if (!token) {
+        throw new Error("Authentication token not available");
+      }
+
+      await QuizService.deleteQuiz(quizId, user.id, token);
+      
+      // Remove the quiz from the local state
+      setQuizzes(prevQuizzes =>
+        prevQuizzes.filter(quiz => quiz.id !== quizId)
+      );
+    } catch (error) {
+      console.error("Error deleting quiz:", error);
+      // You could add a toast notification here to show the error to the user
+    }
+  };
+
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
       case "easy":
@@ -416,6 +440,7 @@ export default function MyQuizzes() {
           quizTitle={settingsModal.quizTitle}
           isPrivate={settingsModal.isPrivate}
           onPrivacyToggle={handlePrivacyToggle}
+          onDelete={handleDeleteQuiz}
         />
       </section>
     </div>

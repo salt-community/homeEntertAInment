@@ -251,4 +251,38 @@ export class QuizService {
       throw error;
     }
   }
+
+  /**
+   * Delete a quiz
+   * @param quizId The ID of the quiz to delete
+   * @param userId The ID of the user making the request
+   * @param token The authentication token
+   * @returns Promise that resolves when the deletion is complete
+   */
+  static async deleteQuiz(
+    quizId: string,
+    userId: string,
+    token: string
+  ): Promise<void> {
+    try {
+      const response = await fetch(`${this.BASE_URL}/${quizId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to delete quiz: ${errorText}`);
+      }
+    } catch (error) {
+      console.error("Error deleting quiz:", error);
+      throw error;
+    }
+  }
 }

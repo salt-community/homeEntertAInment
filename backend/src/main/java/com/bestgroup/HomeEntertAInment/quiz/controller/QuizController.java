@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bestgroup.HomeEntertAInment.quiz.dto.QuizConfigurationDto;
+import com.bestgroup.HomeEntertAInment.quiz.dto.QuizDeleteDto;
 import com.bestgroup.HomeEntertAInment.quiz.dto.QuizPrivacyUpdateDto;
 import com.bestgroup.HomeEntertAInment.quiz.dto.QuizResponseDto;
 import com.bestgroup.HomeEntertAInment.quiz.service.QuizService;
@@ -108,12 +109,16 @@ public class QuizController {
      * @return ResponseEntity indicating deletion status
      */
     @DeleteMapping("/{quizId}")
-    public ResponseEntity<String> deleteQuiz(@PathVariable UUID quizId) {
-        boolean deleted = quizService.deleteQuiz(quizId);
+    public ResponseEntity<String> deleteQuiz(
+            @PathVariable UUID quizId,
+            @RequestBody QuizDeleteDto request) {
+        
+        boolean deleted = quizService.deleteQuiz(quizId, request.getUserId());
+        
         if (deleted) {
             return ResponseEntity.ok("Quiz deleted successfully");
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body("Failed to delete quiz. Quiz not found or not owned by user.");
         }
     }
 

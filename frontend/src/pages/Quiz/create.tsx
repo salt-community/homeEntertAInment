@@ -64,7 +64,8 @@ export default function QuizCreate() {
               Login Required
             </h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              You need to be logged in to create quizzes. Please sign in to continue.
+              You need to be logged in to create quizzes. Please sign in to
+              continue.
             </p>
           </div>
 
@@ -76,17 +77,18 @@ export default function QuizCreate() {
                     Sign In to Create
                   </h2>
                   <p className="text-sm leading-6 text-white/90">
-                    Access the quiz creation tools and start building your custom quizzes.
+                    Access the quiz creation tools and start building your
+                    custom quizzes.
                   </p>
                 </div>
-                
+
                 <div className="space-y-4">
                   <SignInButton>
                     <button className="w-full px-8 py-3 bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white font-semibold rounded-lg shadow-md hover:from-[#F930C7]/80 hover:to-[#3076F9]/80 focus:outline-none focus:ring-2 focus:ring-[#F930C7] focus:ring-offset-2 focus:ring-offset-black transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95">
                       Sign In to Create Quiz
                     </button>
                   </SignInButton>
-                  
+
                   <button
                     onClick={() => navigate({ to: "/quiz" })}
                     className="w-full px-8 py-3 bg-transparent border-2 border-white/20 text-white font-semibold rounded-lg hover:border-white/40 hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-black transition-all duration-200 ease-in-out"

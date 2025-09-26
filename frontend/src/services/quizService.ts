@@ -72,26 +72,17 @@ export class QuizService {
   /**
    * Create a new quiz with the given configuration
    * @param config Quiz configuration data
-   * @param token Optional JWT token for authentication
    * @returns Promise with quiz creation response
    */
   static async createQuiz(
-    config: QuizConfiguration,
-    token?: string
+    config: QuizConfiguration
   ): Promise<QuizCreationResponse> {
     try {
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-
-      // Add authorization header if token is provided
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
-
       const response = await fetch(`${this.BASE_URL}/create`, {
         method: "POST",
-        headers,
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(config),
       });
 

@@ -1,10 +1,10 @@
 package com.bestgroup.HomeEntertAInment.quiz.dto;
 
+import java.util.List;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
-import java.util.List;
 
 /**
  * Data Transfer Object for Quiz Configuration
@@ -38,4 +38,9 @@ public class QuizConfigurationDto {
      * Range: 5-15
      */
     private Integer questionCount;
+    
+    /**
+     * ID of the user creating this quiz
+     */
+    private String userId;
 }

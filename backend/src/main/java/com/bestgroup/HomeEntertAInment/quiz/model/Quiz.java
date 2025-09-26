@@ -95,4 +95,10 @@ public class Quiz {
      */
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+    
+    /**
+     * ID of the user who created this quiz
+     */
+    @Column(name = "user_id", nullable = false)
+    private String userId;
 }

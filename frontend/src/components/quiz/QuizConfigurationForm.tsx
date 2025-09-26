@@ -169,7 +169,7 @@ export default function QuizConfigurationForm({
                 <label className="block text-sm font-semibold text-white mb-3">
                   Topics (Select one or more)
                 </label>
-                
+
                 {/* Selected Topics Display */}
                 {config.topics.length > 0 && (
                   <div className="mb-4">
@@ -186,15 +186,26 @@ export default function QuizConfigurationForm({
                             className="ml-1 text-[#F930C7] hover:text-white transition-colors"
                             title="Remove topic"
                           >
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            <svg
+                              className="w-3 h-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
                             </svg>
                           </button>
                         </span>
                       ))}
                     </div>
                     <p className="text-xs text-[#F930C7]">
-                      {config.topics.length} topic{config.topics.length !== 1 ? "s" : ""} selected
+                      {config.topics.length} topic
+                      {config.topics.length !== 1 ? "s" : ""} selected
                     </p>
                   </div>
                 )}

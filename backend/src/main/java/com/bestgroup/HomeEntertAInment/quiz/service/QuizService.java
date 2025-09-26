@@ -114,11 +114,12 @@ public class QuizService {
             // Parse JSON response to Quiz model
             Quiz generatedQuiz = parseQuizFromJson(quizJson);
             
-            // Set the current timestamp
+            // Set the current timestamp and user ID
             generatedQuiz.setCreatedAt(LocalDateTime.now());
+            generatedQuiz.setUserId(config.getUserId());
             
-            log.info("Successfully generated quiz with title: '{}' and {} questions", 
-                    generatedQuiz.getTitle(), generatedQuiz.getQuestions().size());
+            log.info("Successfully generated quiz with title: '{}' and {} questions for user: {}", 
+                    generatedQuiz.getTitle(), generatedQuiz.getQuestions().size(), config.getUserId());
             
             return generatedQuiz;
             
@@ -126,7 +127,7 @@ public class QuizService {
             log.error("Failed to generate quiz using Gemini API, falling back to mock data", e);
             
             // Fallback to mock data if Gemini API fails
-            return generateMockQuiz();
+            return generateMockQuiz(config);
         }
     }
 
@@ -217,9 +218,10 @@ public class QuizService {
 
     /**
      * Generate a mock quiz as fallback when Gemini API fails
+     * @param config The quiz configuration to get user ID from
      * @return Mock quiz with sample questions
      */
-    private Quiz generateMockQuiz() {
+    private Quiz generateMockQuiz(QuizConfigurationDto config) {
         log.info("Generating fallback sample quiz - Quiz generator is down");
         
         // Create a simple fallback quiz indicating the generator is down
@@ -230,6 +232,7 @@ public class QuizService {
                 .difficulty("medium")
                 .questionCount(3)
                 .description("The quiz generator is currently down. This is a sample quiz to demonstrate the functionality.")
+                .userId(config.getUserId() != null ? config.getUserId() : "system") // Use provided user ID or default to system
                 .build();
         
         // Generate simple sample questions

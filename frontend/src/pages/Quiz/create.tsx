@@ -45,8 +45,8 @@ export default function QuizCreate() {
   // Show loading state while Clerk is initializing
   if (!isLoaded) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg text-gray-600">Loading...</div>
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <div className="text-lg text-white/90">Loading...</div>
       </div>
     );
   }
@@ -54,32 +54,50 @@ export default function QuizCreate() {
   // Show login prompt for unauthenticated users
   if (!isSignedIn) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8 text-center">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+      <div
+        className="w-full text-center relative pt-30 min-h-screen bg-black bg-no-repeat bg-cover bg-center m-0 p-0"
+        style={{ backgroundImage: "url('/landing-bg.png')" }}
+      >
+        <section className="mx-auto w-full max-w-4xl px-6 py-12">
+          <div className="text-center mb-12">
+            <h1 className="text-5xl font-bold text-white mb-4 tracking-wide">
               Login Required
             </h1>
-            <p className="text-gray-600">
+            <p className="text-xl text-white/90 max-w-2xl mx-auto">
               You need to be logged in to create quizzes. Please sign in to continue.
             </p>
           </div>
-          
-          <div className="space-y-4">
-            <SignInButton>
-              <button className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors font-medium">
-                Sign In to Create Quiz
-              </button>
-            </SignInButton>
-            
-            <button
-              onClick={() => navigate({ to: "/quiz" })}
-              className="w-full px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md transition-colors font-medium"
-            >
-              Back to Quiz List
-            </button>
+
+          <div className="max-w-md mx-auto">
+            <div className="rounded-xl p-[2px] bg-gradient-to-r from-[#F930C7] to-[#3076F9]">
+              <div className="rounded-[10px] bg-black p-8 text-center">
+                <div className="mb-6">
+                  <h2 className="mb-4 text-3xl font-semibold tracking-wide text-white">
+                    Sign In to Create
+                  </h2>
+                  <p className="text-sm leading-6 text-white/90">
+                    Access the quiz creation tools and start building your custom quizzes.
+                  </p>
+                </div>
+                
+                <div className="space-y-4">
+                  <SignInButton>
+                    <button className="w-full px-8 py-3 bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white font-semibold rounded-lg shadow-md hover:from-[#F930C7]/80 hover:to-[#3076F9]/80 focus:outline-none focus:ring-2 focus:ring-[#F930C7] focus:ring-offset-2 focus:ring-offset-black transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95">
+                      Sign In to Create Quiz
+                    </button>
+                  </SignInButton>
+                  
+                  <button
+                    onClick={() => navigate({ to: "/quiz" })}
+                    className="w-full px-8 py-3 bg-transparent border-2 border-white/20 text-white font-semibold rounded-lg hover:border-white/40 hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-black transition-all duration-200 ease-in-out"
+                  >
+                    Back to Quiz List
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
     );
   }

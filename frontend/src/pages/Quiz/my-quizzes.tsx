@@ -79,6 +79,32 @@ export default function MyQuizzes() {
     });
   };
 
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty.toLowerCase()) {
+      case "easy":
+        return "bg-green-500/20 text-green-400 border-green-500/30";
+      case "medium":
+        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+      case "hard":
+        return "bg-red-500/20 text-red-400 border-red-500/30";
+      default:
+        return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+    }
+  };
+
+  const getAgeGroupColor = (ageGroup: string) => {
+    switch (ageGroup.toLowerCase()) {
+      case "child":
+        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+      case "teen":
+        return "bg-purple-500/20 text-purple-400 border-purple-500/30";
+      case "adult":
+        return "bg-orange-500/20 text-orange-400 border-orange-500/30";
+      default:
+        return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+    }
+  };
+
   // Show loading state while Clerk is initializing
   if (!isLoaded) {
     return (
@@ -189,45 +215,77 @@ export default function MyQuizzes() {
             {quizzes.map((quiz) => (
               <div
                 key={quiz.id}
-                className="rounded-xl p-[2px] bg-gradient-to-r from-[#F930C7] to-[#3076F9] cursor-pointer hover:from-[#F930C7]/80 hover:to-[#3076F9]/80 transition-all duration-200 ease-in-out transform hover:scale-105"
+                className="rounded-xl p-[2px] bg-gradient-to-r from-[#F930C7] to-[#3076F9] hover:from-[#F930C7]/80 hover:to-[#3076F9]/80 transition-all duration-200 cursor-pointer transform hover:scale-105"
                 onClick={() => handleQuizClick(quiz.id)}
               >
-                <div className="rounded-[10px] bg-black p-6 text-left">
-                  <h3 className="text-xl font-semibold text-white mb-2 line-clamp-2">
+                <div className="rounded-[10px] bg-black p-6 text-left h-full">
+                  <h3 className="text-xl font-semibold text-white mb-3 line-clamp-2">
                     {quiz.title}
                   </h3>
-                  <p className="text-sm text-white/70 mb-3 line-clamp-2">
+
+                  <p className="text-sm text-white/80 mb-4 line-clamp-3">
                     {quiz.description}
                   </p>
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {quiz.topics.slice(0, 3).map((topic, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-white/10 text-white/80 text-xs rounded-full"
-                      >
-                        {topic}
-                      </span>
-                    ))}
-                    {quiz.topics.length > 3 && (
-                      <span className="px-2 py-1 bg-white/10 text-white/80 text-xs rounded-full">
-                        +{quiz.topics.length - 3} more
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex justify-between items-center text-sm text-white/60">
-                    <span className="capitalize">{quiz.difficulty}</span>
-                    <span>{quiz.questionCount} questions</span>
-                  </div>
-                  <div className="mt-3 flex justify-between items-center">
-                    <span className="text-xs text-white/50 capitalize">
+
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium border ${getDifficultyColor(
+                        quiz.difficulty
+                      )}`}
+                    >
+                      {quiz.difficulty}
+                    </span>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium border ${getAgeGroupColor(
+                        quiz.ageGroup
+                      )}`}
+                    >
                       {quiz.ageGroup}
                     </span>
-                    <button
-                      onClick={(e) => handleShareQuiz(e, quiz.id, quiz.title)}
-                      className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-xs rounded transition-colors"
-                    >
-                      Share
-                    </button>
+                  </div>
+
+                  <div className="mb-4">
+                    <div className="text-xs text-white/60 mb-1">Topics:</div>
+                    <div className="flex flex-wrap gap-1">
+                      {quiz.topics.slice(0, 3).map((topic, index) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 bg-white/10 text-white/80 text-xs rounded"
+                        >
+                          {topic}
+                        </span>
+                      ))}
+                      {quiz.topics.length > 3 && (
+                        <span className="px-2 py-1 bg-white/10 text-white/60 text-xs rounded">
+                          +{quiz.topics.length - 3} more
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between items-center text-sm text-white/70">
+                    <span>{quiz.questionCount} questions</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={(e) => handleShareQuiz(e, quiz.id, quiz.title)}
+                        className="p-1 text-white/60 hover:text-white transition-colors"
+                        title="Share quiz"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -92,7 +92,42 @@ export default function StoryGeneratorResult() {
 
       {data?.story && (
         <div className="w-full max-w-2xl">
-          <h3 className="text-xl font-medium mb-2">Result</h3>
+          <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <svg
+                  className="h-5 w-5 text-green-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-green-800">
+                  Story Generated and Saved!
+                </h3>
+                <p className="text-sm text-green-700 mt-1">
+                  Your story has been automatically saved to your account. You
+                  can find it in your saved stories.
+                </p>
+                <div className="mt-2">
+                  <Link
+                    to="/story-generator/saved"
+                    className="text-sm font-medium text-green-800 hover:text-green-900 underline"
+                  >
+                    View Your Saved Stories →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 className="text-xl font-medium mb-2">Your Generated Story</h3>
 
           {/* Action Buttons */}
           <div className="mb-4 flex flex-col sm:flex-row gap-3 justify-center items-center">

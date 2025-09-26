@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useUser, SignInButton } from "@clerk/clerk-react";
+import { useUser, useAuth, SignInButton } from "@clerk/clerk-react";
 import QuizConfigurationForm from "../../components/quiz/QuizConfigurationForm";
 import QuizLoadingModal from "../../components/quiz/QuizLoadingModal";
 import type { QuizConfiguration } from "../../services/quizService";
@@ -8,6 +8,7 @@ import type { QuizConfiguration } from "../../services/quizService";
 export default function QuizCreate() {
   const navigate = useNavigate();
   const { isSignedIn, isLoaded } = useUser();
+  const { getToken } = useAuth();
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleFormSubmit = async (config: QuizConfiguration) => {
@@ -18,8 +19,11 @@ export default function QuizCreate() {
       // Import QuizService dynamically to avoid circular dependencies
       const { QuizService } = await import("../../services/quizService");
 
-      // Create the quiz with the configuration
-      const response = await QuizService.createQuiz(config);
+      // Get the JWT token for authentication
+      const token = await getToken();
+
+      // Create the quiz with the configuration and token
+      const response = await QuizService.createQuiz(config, token || undefined);
 
       if (response.success && response.quiz && response.quizId) {
         // Navigate to the quiz page using the quiz ID

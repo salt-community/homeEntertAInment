@@ -1,7 +1,9 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useUser, useAuth, SignInButton } from "@clerk/clerk-react";
-import QuizConfigurationForm, { type QuizFormConfiguration } from "../../components/quiz/QuizConfigurationForm";
+import QuizConfigurationForm, {
+  type QuizFormConfiguration,
+} from "../../components/quiz/QuizConfigurationForm";
 import QuizLoadingModal from "../../components/quiz/QuizLoadingModal";
 
 export default function QuizCreate() {

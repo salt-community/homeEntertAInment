@@ -45,8 +45,15 @@ export default function QuizCreate() {
   // Show loading state while Clerk is initializing
   if (!isLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-white text-lg">Loading...</div>
+      <div
+        className="w-full text-center relative pt-30 min-h-screen bg-black bg-no-repeat bg-cover bg-center m-0 p-0"
+        style={{ backgroundImage: "url('/landing-bg.png')" }}
+      >
+        <section className="mx-auto w-full max-w-7xl px-6 py-12">
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-white text-lg">Loading...</div>
+          </div>
+        </section>
       </div>
     );
   }
@@ -54,28 +61,40 @@ export default function QuizCreate() {
   // Show sign-in prompt if user is not authenticated
   if (!isSignedIn) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="max-w-md mx-auto text-center p-8 bg-gray-900 rounded-lg border border-gray-700">
-          <h2 className="text-2xl font-bold text-white mb-4">
-            Sign In Required
-          </h2>
-          <p className="text-gray-300 mb-6">
-            You need to be signed in to create a quiz. Please sign in to continue.
-          </p>
-          <SignInButton>
-            <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors font-medium">
-              Sign In
-            </button>
-          </SignInButton>
-          <div className="mt-4">
-            <button
-              onClick={() => navigate({ to: "/quiz" })}
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              ← Back to Quiz
-            </button>
+      <div
+        className="w-full text-center relative pt-30 min-h-screen bg-black bg-no-repeat bg-cover bg-center m-0 p-0"
+        style={{ backgroundImage: "url('/landing-bg.png')" }}
+      >
+        <section className="mx-auto w-full max-w-7xl px-6 py-12">
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="max-w-md mx-auto">
+              <div className="rounded-xl p-[2px] bg-gradient-to-r from-[#F930C7] to-[#3076F9]">
+                <div className="rounded-[10px] bg-black p-8 text-center">
+                  <h2 className="mb-4 text-3xl font-semibold tracking-wide text-white">
+                    Sign In Required
+                  </h2>
+                  <p className="text-sm leading-6 text-white/90 mb-6">
+                    You need to be signed in to create a quiz. Please sign in to
+                    continue.
+                  </p>
+                  <SignInButton>
+                    <button className="px-8 py-3 bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white font-semibold rounded-lg shadow-md hover:from-[#F930C7]/80 hover:to-[#3076F9]/80 focus:outline-none focus:ring-2 focus:ring-[#F930C7] focus:ring-offset-2 focus:ring-offset-black transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95">
+                      Sign In
+                    </button>
+                  </SignInButton>
+                  <div className="mt-6">
+                    <button
+                      onClick={() => navigate({ to: "/quiz" })}
+                      className="text-white/70 hover:text-white transition-colors text-sm"
+                    >
+                      ← Back to Quiz
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
     );
   }

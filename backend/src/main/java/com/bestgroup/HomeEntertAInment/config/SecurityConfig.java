@@ -19,6 +19,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/sessions/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/quiz/create").authenticated()
+                        .requestMatchers("/api/quiz/user/**").authenticated()
                         .requestMatchers("/api/quiz/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/**").authenticated()

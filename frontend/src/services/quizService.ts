@@ -160,7 +160,10 @@ export class QuizService {
    * @param token Clerk authentication token
    * @returns Promise with list of quizzes created by the user
    */
-  static async getUserQuizzes(userId: string, token: string): Promise<QuizListItem[]> {
+  static async getUserQuizzes(
+    userId: string,
+    token: string
+  ): Promise<QuizListItem[]> {
     try {
       const response = await fetch(`${this.BASE_URL}/user/${userId}`, {
         headers: {

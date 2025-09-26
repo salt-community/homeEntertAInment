@@ -1,11 +1,11 @@
 package com.bestgroup.HomeEntertAInment.quiz.dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-
-import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Data Transfer Object for Quiz Response
@@ -52,4 +52,9 @@ public class QuizResponseDto {
      * Description of the quiz
      */
     private String description;
+    
+    /**
+     * Whether the quiz is private (not shown in public quiz list)
+     */
+    private Boolean isPrivate;
 }

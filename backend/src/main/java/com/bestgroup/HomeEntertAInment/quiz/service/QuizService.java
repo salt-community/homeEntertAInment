@@ -357,6 +357,7 @@ public class QuizService {
                 .topics(quiz.getTopics())
                 .difficulty(quiz.getDifficulty())
                 .description(quiz.getDescription())
+                .isPrivate(quiz.getIsPrivate())
                 .build();
     }
 

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useUser, useAuth } from "@clerk/clerk-react";
 import { QuizService, type QuizListItem } from "../../services/quizService";
-import { ShareQuizModal } from "../../components";
+import { ShareQuizModal, QuizSettingsModal } from "../../components";
 
 export default function MyQuizzes() {
   const navigate = useNavigate();
@@ -19,6 +19,18 @@ export default function MyQuizzes() {
     isOpen: false,
     quizId: "",
     quizTitle: "",
+  });
+
+  const [settingsModal, setSettingsModal] = useState<{
+    isOpen: boolean;
+    quizId: string;
+    quizTitle: string;
+    isPrivate: boolean;
+  }>({
+    isOpen: false,
+    quizId: "",
+    quizTitle: "",
+    isPrivate: false,
   });
 
   useEffect(() => {
@@ -79,6 +91,30 @@ export default function MyQuizzes() {
     });
   };
 
+  const handleSettingsClick = (
+    e: React.MouseEvent,
+    quizId: string,
+    quizTitle: string,
+    isPrivate: boolean
+  ) => {
+    e.stopPropagation();
+    setSettingsModal({
+      isOpen: true,
+      quizId,
+      quizTitle,
+      isPrivate,
+    });
+  };
+
+  const closeSettingsModal = () => {
+    setSettingsModal({
+      isOpen: false,
+      quizId: "",
+      quizTitle: "",
+      isPrivate: false,
+    });
+  };
+
   const handlePrivacyToggle = async (quizId: string, isPrivate: boolean) => {
     if (!user?.id) {
       console.error("User ID not available");
@@ -99,6 +135,11 @@ export default function MyQuizzes() {
           quiz.id === quizId ? { ...quiz, isPrivate } : quiz
         )
       );
+
+      // Update the settings modal state if it's open for this quiz
+      if (settingsModal.isOpen && settingsModal.quizId === quizId) {
+        setSettingsModal(prev => ({ ...prev, isPrivate }));
+      }
     } catch (error) {
       console.error("Error updating quiz privacy:", error);
       // You could add a toast notification here to show the error to the user
@@ -289,7 +330,7 @@ export default function MyQuizzes() {
                     </div>
                   </div>
 
-                  {/* Privacy Toggle */}
+                  {/* Privacy Status */}
                   <div className="mb-4">
                     <div className="flex items-center justify-between">
                       <div>
@@ -300,15 +341,31 @@ export default function MyQuizzes() {
                           {quiz.isPrivate ? 'Private' : 'Public'}
                         </span>
                       </div>
-                      <label className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={quiz.isPrivate}
-                          onChange={(e) => handlePrivacyToggle(quiz.id, e.target.checked)}
-                          className="w-4 h-4 text-[#F930C7] bg-white/20 border-white/30 rounded focus:ring-[#F930C7] focus:ring-2"
-                        />
-                        <span className="text-xs text-white/70">Private</span>
-                      </label>
+                      <button
+                        onClick={(e) => handleSettingsClick(e, quiz.id, quiz.title, quiz.isPrivate)}
+                        className="p-1 text-white/60 hover:text-white transition-colors"
+                        title="Quiz settings"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                        </svg>
+                      </button>
                     </div>
                   </div>
 
@@ -350,6 +407,15 @@ export default function MyQuizzes() {
           onClose={closeShareModal}
           quizId={shareModal.quizId}
           quizTitle={shareModal.quizTitle}
+        />
+
+        <QuizSettingsModal
+          isOpen={settingsModal.isOpen}
+          onClose={closeSettingsModal}
+          quizId={settingsModal.quizId}
+          quizTitle={settingsModal.quizTitle}
+          isPrivate={settingsModal.isPrivate}
+          onPrivacyToggle={handlePrivacyToggle}
         />
       </section>
     </div>

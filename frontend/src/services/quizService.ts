@@ -69,6 +69,7 @@ export interface QuizListItem {
   difficulty: string;
   questionCount: number;
   description: string;
+  isPrivate: boolean;
 }
 
 // Quiz service for API calls
@@ -210,6 +211,43 @@ export class QuizService {
       return await response.json();
     } catch (error) {
       console.error("Error submitting quiz:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update the privacy setting of a quiz
+   * @param quizId The ID of the quiz to update
+   * @param userId The ID of the user making the request
+   * @param isPrivate The new privacy setting
+   * @param token The authentication token
+   * @returns Promise that resolves when the update is complete
+   */
+  static async updateQuizPrivacy(
+    quizId: string,
+    userId: string,
+    isPrivate: boolean,
+    token: string
+  ): Promise<void> {
+    try {
+      const response = await fetch(`${this.BASE_URL}/${quizId}/privacy`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId,
+          isPrivate,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to update quiz privacy: ${errorText}`);
+      }
+    } catch (error) {
+      console.error("Error updating quiz privacy:", error);
       throw error;
     }
   }

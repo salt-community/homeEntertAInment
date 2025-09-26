@@ -98,6 +98,37 @@ public class QuizService {
     }
     
     /**
+     * Update the privacy setting of a quiz
+     * @param quizId The ID of the quiz to update
+     * @param userId The ID of the user making the request
+     * @param isPrivate The new privacy setting
+     * @return true if the quiz was updated, false if not found or not owned by user
+     */
+    @Transactional
+    public boolean updateQuizPrivacy(UUID quizId, String userId, Boolean isPrivate) {
+        Optional<Quiz> quizOpt = quizRepository.findById(quizId);
+        
+        if (quizOpt.isEmpty()) {
+            log.warn("Quiz not found with ID: {}", quizId);
+            return false;
+        }
+        
+        Quiz quiz = quizOpt.get();
+        
+        // Verify that the user owns this quiz
+        if (!userId.equals(quiz.getUserId())) {
+            log.warn("User {} attempted to update quiz {} owned by {}", userId, quizId, quiz.getUserId());
+            return false;
+        }
+        
+        quiz.setIsPrivate(Boolean.TRUE.equals(isPrivate));
+        quizRepository.save(quiz);
+        
+        log.info("Updated privacy setting for quiz {} to {} by user {}", quizId, isPrivate, userId);
+        return true;
+    }
+    
+    /**
      * Delete a quiz by ID
      * @param id The quiz ID to delete
      * @return true if the quiz was deleted, false if not found

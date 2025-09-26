@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bestgroup.HomeEntertAInment.quiz.dto.QuizConfigurationDto;
+import com.bestgroup.HomeEntertAInment.quiz.dto.QuizPrivacyUpdateDto;
 import com.bestgroup.HomeEntertAInment.quiz.dto.QuizResponseDto;
 import com.bestgroup.HomeEntertAInment.quiz.service.QuizService;
 
@@ -115,6 +117,26 @@ public class QuizController {
         }
     }
 
+    /**
+     * Update the privacy setting of a quiz
+     * @param quizId The ID of the quiz to update
+     * @param request The privacy update request containing userId and isPrivate
+     * @return ResponseEntity indicating success or failure
+     */
+    @PutMapping("/{quizId}/privacy")
+    public ResponseEntity<String> updateQuizPrivacy(
+            @PathVariable UUID quizId,
+            @RequestBody QuizPrivacyUpdateDto request) {
+        
+        boolean updated = quizService.updateQuizPrivacy(quizId, request.getUserId(), request.getIsPrivate());
+        
+        if (updated) {
+            return ResponseEntity.ok("Quiz privacy updated successfully");
+        } else {
+            return ResponseEntity.badRequest().body("Failed to update quiz privacy. Quiz not found or not owned by user.");
+        }
+    }
+    
     /**
      * Get quiz statistics
      * @return ResponseEntity containing quiz statistics

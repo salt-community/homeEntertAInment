@@ -79,6 +79,32 @@ export default function MyQuizzes() {
     });
   };
 
+  const handlePrivacyToggle = async (quizId: string, isPrivate: boolean) => {
+    if (!user?.id) {
+      console.error("User ID not available");
+      return;
+    }
+
+    try {
+      const token = await getToken();
+      if (!token) {
+        throw new Error("Authentication token not available");
+      }
+
+      await QuizService.updateQuizPrivacy(quizId, user.id, isPrivate, token);
+      
+      // Update the local state to reflect the change
+      setQuizzes(prevQuizzes =>
+        prevQuizzes.map(quiz =>
+          quiz.id === quizId ? { ...quiz, isPrivate } : quiz
+        )
+      );
+    } catch (error) {
+      console.error("Error updating quiz privacy:", error);
+      // You could add a toast notification here to show the error to the user
+    }
+  };
+
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
       case "easy":
@@ -260,6 +286,29 @@ export default function MyQuizzes() {
                           +{quiz.topics.length - 3} more
                         </span>
                       )}
+                    </div>
+                  </div>
+
+                  {/* Privacy Toggle */}
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs text-white/60 mb-1">Privacy:</div>
+                        <span className={`text-sm font-medium ${
+                          quiz.isPrivate ? 'text-red-400' : 'text-green-400'
+                        }`}>
+                          {quiz.isPrivate ? 'Private' : 'Public'}
+                        </span>
+                      </div>
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={quiz.isPrivate}
+                          onChange={(e) => handlePrivacyToggle(quiz.id, e.target.checked)}
+                          className="w-4 h-4 text-[#F930C7] bg-white/20 border-white/30 rounded focus:ring-[#F930C7] focus:ring-2"
+                        />
+                        <span className="text-xs text-white/70">Private</span>
+                      </label>
                     </div>
                   </div>
 

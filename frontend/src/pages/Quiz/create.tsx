@@ -1,16 +1,16 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { useUser, SignInButton } from "@clerk/clerk-react";
-import QuizConfigurationForm from "../../components/quiz/QuizConfigurationForm";
+import { useUser, useAuth, SignInButton } from "@clerk/clerk-react";
+import QuizConfigurationForm, { type QuizFormConfiguration } from "../../components/quiz/QuizConfigurationForm";
 import QuizLoadingModal from "../../components/quiz/QuizLoadingModal";
-import type { QuizConfiguration } from "../../services/quizService";
 
 export default function QuizCreate() {
   const navigate = useNavigate();
-  const { isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, isLoaded, user } = useUser();
+  const { getToken } = useAuth();
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const handleFormSubmit = async (config: QuizConfiguration) => {
+  const handleFormSubmit = async (config: QuizFormConfiguration) => {
     console.log("Quiz configuration submitted:", config);
     setIsGenerating(true);
 
@@ -18,8 +18,20 @@ export default function QuizCreate() {
       // Import QuizService dynamically to avoid circular dependencies
       const { QuizService } = await import("../../services/quizService");
 
+      // Get the authentication token
+      const token = await getToken();
+      if (!token) {
+        throw new Error("No authentication token available");
+      }
+
+      // Add user ID to the configuration
+      const configWithUserId = {
+        ...config,
+        userId: user?.id || "",
+      };
+
       // Create the quiz with the configuration
-      const response = await QuizService.createQuiz(config);
+      const response = await QuizService.createQuiz(configWithUserId, token);
 
       if (response.success && response.quiz && response.quizId) {
         // Navigate to the quiz page using the quiz ID

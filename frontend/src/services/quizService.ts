@@ -4,6 +4,7 @@ export interface QuizConfiguration {
   topics: string[];
   difficulty: string;
   questionCount: number;
+  userId: string;
 }
 
 // Question response type (matches QuestionResponseDto from backend)
@@ -72,16 +73,19 @@ export class QuizService {
   /**
    * Create a new quiz with the given configuration
    * @param config Quiz configuration data
+   * @param token Clerk authentication token
    * @returns Promise with quiz creation response
    */
   static async createQuiz(
-    config: QuizConfiguration
+    config: QuizConfiguration,
+    token: string
   ): Promise<QuizCreationResponse> {
     try {
       const response = await fetch(`${this.BASE_URL}/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(config),
       });

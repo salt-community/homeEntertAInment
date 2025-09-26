@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import type { QuizConfiguration as QuizConfigType } from "../../services/quizService";
 import QuizLoadingModal from "./QuizLoadingModal";
+
+// Form configuration type without userId (added by the parent component)
+export interface QuizFormConfiguration {
+  ageGroup: string;
+  topics: string[];
+  difficulty: string;
+  questionCount: number;
+}
 
 // Custom slider styles
 const sliderStyles = `
@@ -27,7 +34,7 @@ const sliderStyles = `
 `;
 
 interface QuizConfigurationFormProps {
-  onSubmit: (config: QuizConfigType) => void;
+  onSubmit: (config: QuizFormConfiguration) => void;
   onCancel: () => void;
 }
 
@@ -62,7 +69,7 @@ export default function QuizConfigurationForm({
   onSubmit,
   onCancel,
 }: QuizConfigurationFormProps) {
-  const [config, setConfig] = useState<QuizConfigType>({
+  const [config, setConfig] = useState<QuizFormConfiguration>({
     ageGroup: "",
     topics: [],
     difficulty: "",

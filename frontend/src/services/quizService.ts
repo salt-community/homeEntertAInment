@@ -1,3 +1,7 @@
+// Import API configuration
+// Uses VITE_API_BASE_URL environment variable with fallback to http://localhost:8080
+import API_BASE_URL from "./api";
+
 // Types for quiz configuration
 export interface QuizConfiguration {
   ageGroup: string;
@@ -68,7 +72,7 @@ export interface QuizListItem {
 
 // Quiz service for API calls
 export class QuizService {
-  private static readonly BASE_URL = "http://localhost:8080/api/quiz";
+  private static readonly BASE_URL = `${API_BASE_URL}/api/quiz`;
 
   /**
    * Create a new quiz with the given configuration

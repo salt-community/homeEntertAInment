@@ -76,4 +76,19 @@ public interface QuizRepository extends JpaRepository<Quiz, UUID> {
      * @return Number of quizzes with the specified difficulty
      */
     long countByDifficulty(String difficulty);
+    
+    /**
+     * Find all quizzes created by a specific user
+     * @param userId The ID of the user who created the quizzes
+     * @return List of quizzes created by the specified user
+     */
+    List<Quiz> findByUserId(String userId);
+    
+    /**
+     * Find all quizzes created by a specific user with their questions loaded
+     * @param userId The ID of the user who created the quizzes
+     * @return List of quizzes created by the specified user with questions
+     */
+    @Query("SELECT q FROM Quiz q LEFT JOIN FETCH q.questions WHERE q.userId = :userId")
+    List<Quiz> findByUserIdWithQuestions(@Param("userId") String userId);
 }

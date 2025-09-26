@@ -155,6 +155,32 @@ export class QuizService {
   }
 
   /**
+   * Get all quizzes created by a specific user
+   * @param userId The ID of the user who created the quizzes
+   * @param token Clerk authentication token
+   * @returns Promise with list of quizzes created by the user
+   */
+  static async getUserQuizzes(userId: string, token: string): Promise<QuizListItem[]> {
+    try {
+      const response = await fetch(`${this.BASE_URL}/user/${userId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching user quizzes:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Submit quiz answers
    * @param quizId The ID of the quiz
    * @param answers The answers to submit (array of answer indices)

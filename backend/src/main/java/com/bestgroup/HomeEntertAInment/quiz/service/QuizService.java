@@ -86,6 +86,17 @@ public class QuizService {
     }
     
     /**
+     * Get all quizzes created by a specific user
+     * @param userId The ID of the user who created the quizzes
+     * @return List of quizzes created by the specified user as response DTOs
+     */
+    public List<QuizResponseDto> getQuizzesByUserId(String userId) {
+        return quizRepository.findByUserIdWithQuestions(userId).stream()
+                .map(this::convertToResponseDto)
+                .collect(Collectors.toList());
+    }
+    
+    /**
      * Delete a quiz by ID
      * @param id The quiz ID to delete
      * @return true if the quiz was deleted, false if not found

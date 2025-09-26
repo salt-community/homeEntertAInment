@@ -13,6 +13,7 @@ import QuizIndex from "./pages/Quiz/index.tsx";
 import QuizCreate from "./pages/Quiz/create.tsx";
 import Quiz from "./pages/Quiz/quiz.tsx";
 import QuizList from "./pages/Quiz/list.tsx";
+import MyQuizzes from "./pages/Quiz/my-quizzes.tsx";
 import Home from "./pages/Home.tsx";
 
 const rootRoute = createRootRoute({
@@ -84,6 +85,12 @@ const quizListRoute = createRoute({
   component: QuizList,
 });
 
+const myQuizzesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/quiz/my-quizzes",
+  component: MyQuizzes,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   storyGeneratorRoute,
@@ -95,6 +102,7 @@ const routeTree = rootRoute.addChildren([
   quizCreateRoute,
   quizRoute,
   quizListRoute,
+  myQuizzesRoute,
 ]);
 
 export const router = createRouter({

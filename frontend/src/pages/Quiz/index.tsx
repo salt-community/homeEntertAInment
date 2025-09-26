@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { useUser } from "@clerk/clerk-react";
 import NewQuizButton from "../../components/quiz/NewQuizButton";
 import type { QuizResponse } from "../../services/quizService";
 
@@ -46,6 +47,7 @@ const mockQuiz: QuizResponse = {
 
 export default function QuizIndex() {
   const navigate = useNavigate();
+  const { isSignedIn } = useUser();
 
   const handleNewQuiz = () => {
     navigate({ to: "/quiz/create" });
@@ -60,6 +62,10 @@ export default function QuizIndex() {
 
   const handleViewAllQuizzes = () => {
     navigate({ to: "/quiz/list" });
+  };
+
+  const handleMyQuizzes = () => {
+    navigate({ to: "/quiz/my-quizzes" });
   };
 
   return (
@@ -127,6 +133,26 @@ export default function QuizIndex() {
               </button>
             </div>
           </div>
+
+          {isSignedIn && (
+            <div className="rounded-xl p-[2px] bg-gradient-to-r from-[#3076F9] to-[#F930C7]">
+              <div className="rounded-[10px] bg-black p-8 text-center">
+                <h2 className="mb-4 text-3xl font-semibold tracking-wide text-white">
+                  My Quizzes
+                </h2>
+                <p className="text-sm leading-6 text-white/90 mb-6">
+                  View and manage all the quizzes you've created. Access your
+                  personal quiz collection.
+                </p>
+                <button
+                  onClick={handleMyQuizzes}
+                  className="px-8 py-3 bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white font-semibold rounded-lg shadow-md hover:from-[#F930C7]/80 hover:to-[#3076F9]/80 focus:outline-none focus:ring-2 focus:ring-[#F930C7] focus:ring-offset-2 focus:ring-offset-black transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+                >
+                  View My Quizzes
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </div>

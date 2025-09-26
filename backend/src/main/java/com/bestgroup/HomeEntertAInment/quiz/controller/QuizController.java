@@ -79,6 +79,17 @@ public class QuizController {
     }
 
     /**
+     * Get all quizzes created by a specific user
+     * @param userId The ID of the user who created the quizzes
+     * @return ResponseEntity containing list of quizzes created by the user
+     */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<QuizResponseDto>> getQuizzesByUserId(@PathVariable String userId) {
+        List<QuizResponseDto> quizzes = quizService.getQuizzesByUserId(userId);
+        return ResponseEntity.ok(quizzes);
+    }
+
+    /**
      * Submit quiz answers for scoring
      * @param quizId The ID of the quiz
      * @return ResponseEntity containing quiz results

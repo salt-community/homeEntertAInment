@@ -285,6 +285,9 @@ export default function MyQuizzes() {
                           />
                         </svg>
                       </button>
+                      <span className="text-[#F930C7] font-medium">
+                        Play Quiz →
+                      </span>
                     </div>
                   </div>
                 </div>

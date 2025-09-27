@@ -47,7 +47,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-6">
+    <div className="bg-black border border-gray-700 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-6">
       {/* Cover Image */}
       {story.coverImageUrl && (
         <div className="mb-4">
@@ -62,31 +62,31 @@ export const StoryCard: React.FC<StoryCardProps> = ({
       {/* Story Info */}
       <div className="space-y-3">
         <div>
-          <h3 className="text-xl font-semibold text-gray-900 line-clamp-2">
+          <h3 className="text-xl font-semibold text-white line-clamp-2">
             {story.hero}
           </h3>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-sm text-white/80 mt-1">
             Theme: {story.theme} • Tone: {story.tone}
           </p>
           {story.twist && (
-            <p className="text-sm text-gray-600">Twist: {story.twist}</p>
+            <p className="text-sm text-white/80">Twist: {story.twist}</p>
           )}
         </div>
 
         {/* Story Preview */}
-        <div className="text-gray-700 text-sm line-clamp-3">
+        <div className="text-white/70 text-sm line-clamp-3">
           {story.content.substring(0, 150)}...
         </div>
 
         {/* Metadata */}
-        <div className="flex justify-between items-center text-xs text-gray-500">
+        <div className="flex justify-between items-center text-xs text-white/60">
           <span>Created: {formatDate(story.createdAt)}</span>
           {story.userName && <span>By: {story.userName}</span>}
         </div>
 
         {/* Actions */}
         {showActions && (
-          <div className="flex gap-2 pt-3 border-t border-gray-200">
+          <div className="flex gap-2 pt-3 border-t border-gray-600">
             <button
               onClick={handleViewStory}
               className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200 text-sm font-medium"

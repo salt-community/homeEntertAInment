@@ -95,10 +95,17 @@ public class StoryService {
      */
     public List<StoryDto> getStoriesForUser(Authentication authentication) {
         String userId = clerkUserExtractor.extractClerkUserIdRequired(authentication);
+        System.out.println("Getting stories for user ID: " + userId);
+        
         List<Story> stories = storyRepository.findByUserIdOrderByCreatedAtDesc(userId);
-        return stories.stream()
+        System.out.println("Found " + stories.size() + " stories in database");
+        
+        List<StoryDto> storyDtos = stories.stream()
             .map(this::convertToDto)
             .collect(Collectors.toList());
+            
+        System.out.println("Converted to " + storyDtos.size() + " DTOs");
+        return storyDtos;
     }
 
     /**

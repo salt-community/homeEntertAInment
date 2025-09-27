@@ -49,7 +49,7 @@ export default function StoryGeneratorResult() {
   };
 
   return (
-    <div className="p-4 flex flex-col items-center space-y-6">
+    <div className="p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
       <div className="w-full max-w-2xl flex justify-end">
         <Link
           to="/story-generator"
@@ -59,16 +59,16 @@ export default function StoryGeneratorResult() {
         </Link>
       </div>
       <div className="w-full max-w-2xl text-center">
-        <h2 className="text-2xl font-semibold">Story Result</h2>
-        <p className="text-sm text-gray-600">
+        <h2 className="text-2xl font-semibold text-white">Story Result</h2>
+        <p className="text-sm text-white/80">
           Your generated story will appear below.
         </p>
       </div>
 
       {!request && (
         <div className="w-full max-w-2xl text-center">
-          <p className="text-gray-700">No request found.</p>
-          <Link to="/story-generator" className="text-indigo-600 underline">
+          <p className="text-white/80">No request found.</p>
+          <Link to="/story-generator" className="text-indigo-400 underline">
             Go back to Story Generator
           </Link>
         </div>
@@ -77,14 +77,14 @@ export default function StoryGeneratorResult() {
       {loading && (
         <div className="w-full max-w-2xl flex flex-col items-center space-y-3 py-8">
           <GradientSpinner />
-          <p className="text-sm text-gray-600">Generating your story...</p>
+          <p className="text-sm text-white/80">Generating your story...</p>
         </div>
       )}
 
       {error && (
         <div className="w-full max-w-2xl">
-          <p className="text-red-600">{error}</p>
-          <Link to="/story-generator" className="text-indigo-600 underline">
+          <p className="text-red-400">{error}</p>
+          <Link to="/story-generator" className="text-indigo-400 underline">
             Try again
           </Link>
         </div>
@@ -92,7 +92,7 @@ export default function StoryGeneratorResult() {
 
       {data?.story && (
         <div className="w-full max-w-2xl">
-          <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="mb-4 p-4 bg-green-900/20 border border-green-500/30 rounded-lg">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <svg
@@ -108,17 +108,17 @@ export default function StoryGeneratorResult() {
                 </svg>
               </div>
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-green-800">
+                <h3 className="text-sm font-medium text-green-300">
                   Story Generated and Saved!
                 </h3>
-                <p className="text-sm text-green-700 mt-1">
+                <p className="text-sm text-green-200 mt-1">
                   Your story has been automatically saved to your account. You
                   can find it in your saved stories.
                 </p>
                 <div className="mt-2">
                   <Link
                     to="/story-generator/saved"
-                    className="text-sm font-medium text-green-800 hover:text-green-900 underline"
+                    className="text-sm font-medium text-green-300 hover:text-green-200 underline"
                   >
                     View Your Saved Stories →
                   </Link>
@@ -127,7 +127,9 @@ export default function StoryGeneratorResult() {
             </div>
           </div>
 
-          <h3 className="text-xl font-medium mb-2">Your Generated Story</h3>
+          <h3 className="text-xl font-medium mb-2 text-white">
+            Your Generated Story
+          </h3>
 
           {/* Action Buttons */}
           <div className="mb-4 flex flex-col sm:flex-row gap-3 justify-center items-center">
@@ -154,8 +156,8 @@ export default function StoryGeneratorResult() {
 
           {/* Image Error Display */}
           {imageError && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-600 text-sm">
+            <div className="mb-4 p-3 bg-red-900/20 border border-red-500/30 rounded-lg">
+              <p className="text-red-300 text-sm">
                 Failed to generate cover image: {imageError}
               </p>
             </div>

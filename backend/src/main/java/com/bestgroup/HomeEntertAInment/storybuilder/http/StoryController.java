@@ -78,7 +78,9 @@ public class StoryController {
     })
     public ResponseEntity<List<StoryDto>> getStories(Authentication authentication) {
         try {
+            log.info("GET /api/stories called with authentication: {}", authentication != null ? "present" : "null");
             List<StoryDto> stories = storyService.getStoriesForUser(authentication);
+            log.info("Returning {} stories", stories.size());
             return ResponseEntity.ok(stories);
         } catch (Exception e) {
             log.error("Error retrieving stories: {}", e.getMessage(), e);

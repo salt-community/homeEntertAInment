@@ -2,15 +2,39 @@ import React from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useStories, useDeleteStory } from "../story/hooks";
 import { StoryCard } from "../story/components";
+import { useUser } from "@clerk/clerk-react";
 
 export default function StoryGeneratorSaved() {
   const navigate = useNavigate();
   const { data: stories, isLoading, error } = useStories();
   const deleteStoryMutation = useDeleteStory();
+  const { isSignedIn, user } = useUser();
+
+  // Debug logging
+  console.log("StoryGeneratorSaved - isSignedIn:", isSignedIn);
+  console.log("StoryGeneratorSaved - user:", user);
+  console.log("StoryGeneratorSaved - stories:", stories);
+  console.log("StoryGeneratorSaved - isLoading:", isLoading);
+  console.log("StoryGeneratorSaved - error:", error);
 
   const handleDeleteStory = (id: string) => {
     deleteStoryMutation.mutate(id);
   };
+
+  if (!isSignedIn) {
+    return (
+      <div className="p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
+        <div className="w-full max-w-4xl text-center">
+          <h2 className="text-2xl font-semibold text-white">
+            Your Saved Stories
+          </h2>
+          <p className="text-lg text-white/80 mt-4">
+            Please sign in to view your saved stories.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

@@ -45,6 +45,12 @@ const storyGeneratorSavedRoute = createRoute({
   component: StoryGeneratorSaved,
 });
 
+const savedRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/saved",
+  component: StoryGeneratorSaved,
+});
+
 const storyGeneratorViewRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/story-generator/view/$storyId",
@@ -98,6 +104,7 @@ const routeTree = rootRoute.addChildren([
   storyGeneratorRoute,
   storyGeneratorNewRoute,
   storyGeneratorSavedRoute,
+  savedRoute,
   storyGeneratorViewRoute,
   storyGeneratorResultRoute,
   boardGameRuleInspectorRoute,

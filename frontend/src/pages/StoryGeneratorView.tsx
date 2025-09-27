@@ -58,8 +58,10 @@ export default function StoryGeneratorView() {
           </button>
         </div>
 
-        <div className="bg-white rounded-lg p-6">
-          <StoryViewer markdown={story.content} />
+        <div className="bg-black border border-gray-700 rounded-lg p-6">
+          <div className="prose prose-invert max-w-none">
+            <StoryViewer markdown={story.content} />
+          </div>
         </div>
       </div>
     </div>

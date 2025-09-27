@@ -176,8 +176,10 @@ export default function StoryGeneratorResult() {
           )}
 
           {/* Story Content */}
-          <div className="border rounded p-4 shadow-sm">
-            <StoryViewer markdown={data.story} />
+          <div className="border border-gray-700 rounded p-4 shadow-sm bg-black">
+            <div className="prose prose-invert max-w-none">
+              <StoryViewer markdown={data.story} />
+            </div>
           </div>
         </div>
       )}

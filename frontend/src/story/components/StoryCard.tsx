@@ -75,7 +75,14 @@ export const StoryCard: React.FC<StoryCardProps> = ({
 
         {/* Story Preview */}
         <div className="text-white/70 text-sm line-clamp-3">
-          {story.content.substring(0, 150)}...
+          {story.content
+            .replace(/#{1,6}\s+/g, "") // Remove markdown headers
+            .replace(/\*\*(.*?)\*\*/g, "$1") // Remove bold markdown
+            .replace(/\*(.*?)\*/g, "$1") // Remove italic markdown
+            .replace(/`(.*?)`/g, "$1") // Remove inline code markdown
+            .replace(/\[(.*?)\]\(.*?\)/g, "$1") // Remove link markdown, keep text
+            .substring(0, 150)}
+          ...
         </div>
 
         {/* Metadata */}

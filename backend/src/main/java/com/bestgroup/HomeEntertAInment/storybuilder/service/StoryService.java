@@ -7,6 +7,7 @@ import com.bestgroup.HomeEntertAInment.storybuilder.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -194,6 +195,7 @@ public class StoryService {
     /**
      * Delete a story for the current user
      */
+    @Transactional
     public boolean deleteStory(UUID id, Authentication authentication) {
         String userId = clerkUserExtractor.extractClerkUserIdRequired(authentication);
 

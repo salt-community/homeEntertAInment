@@ -41,8 +41,6 @@ app:
 # External API configurations
 GEMINI_API_KEY: ${GEMINI_API_KEY:}
 CONVERT_API_TOKEN: ${CONVERT_API_TOKEN:}
-FAL_API_KEY: ${FAL_API_KEY}
-RUNWARE_API_KEY: ${RUNWARE_API_KEY:}
 
 # Logging configuration
 logging:

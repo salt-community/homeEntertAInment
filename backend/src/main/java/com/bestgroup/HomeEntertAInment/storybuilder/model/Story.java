@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,33 +32,10 @@ public class Story {
     private AgeGroup ageGroup;
 
     @Enumerated(EnumType.STRING)
-    private StoryLength storyLength;
-
-    @Enumerated(EnumType.STRING)
     private Twist twist;
 
     private String custom;
 
-    @Column(columnDefinition = "TEXT")
+    @Lob
     private String generatedStory;
-
-    // User persistence fields
-    @Column(name = "user_id", nullable = false)
-    private String userId;
-
-    @Column(name = "user_name")
-    private String userName;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "cover_image_url")
-    private String coverImageUrl;
-
-    @PrePersist
-    protected void onCreate() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
-    }
 }

@@ -91,7 +91,7 @@ export class MovieService {
       id: list.id,
       listName: list.listName,
       description: list.description,
-      movieCount: list.movies?.length || 0,
+      movieCount: list.movieCount || 0,
       createdAt: list.createdAt,
     }));
   }

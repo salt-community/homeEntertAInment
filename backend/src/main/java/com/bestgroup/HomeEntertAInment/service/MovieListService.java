@@ -75,8 +75,7 @@ public class MovieListService {
     }
 
     public Optional<MovieList> getMovieListByIdAndUserId(Long listId, String clerkUserId) {
-        return movieListRepository.findById(listId)
-                .filter(list -> list.getClerkUserId().equals(clerkUserId));
+        return movieListRepository.findByIdAndClerkUserIdWithMovies(listId, clerkUserId);
     }
 
     @Transactional

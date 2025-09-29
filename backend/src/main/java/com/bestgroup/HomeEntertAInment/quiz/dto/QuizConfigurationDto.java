@@ -1,10 +1,10 @@
-package com.bestgroup.HomeEntertAInment.dto;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+package com.bestgroup.HomeEntertAInment.quiz.dto;
 
 import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Data Transfer Object for Quiz Configuration
@@ -38,4 +38,15 @@ public class QuizConfigurationDto {
      * Range: 5-15
      */
     private Integer questionCount;
+    
+    /**
+     * ID of the user creating this quiz
+     */
+    private String userId;
+    
+    /**
+     * Whether the quiz is private (not shown in public quiz list)
+     * If true, quiz will not appear in getAllQuizzes() but can still be accessed via direct link
+     */
+    private Boolean isPrivate;
 }

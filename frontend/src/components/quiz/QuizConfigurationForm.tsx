@@ -1,6 +1,14 @@
 import React, { useState } from "react";
-import type { QuizConfiguration as QuizConfigType } from "../../services/quizService";
 import QuizLoadingModal from "./QuizLoadingModal";
+
+// Form configuration type without userId (added by the parent component)
+export interface QuizFormConfiguration {
+  ageGroup: string;
+  topics: string[];
+  difficulty: string;
+  questionCount: number;
+  isPrivate: boolean;
+}
 
 // Custom slider styles
 const sliderStyles = `
@@ -27,7 +35,7 @@ const sliderStyles = `
 `;
 
 interface QuizConfigurationFormProps {
-  onSubmit: (config: QuizConfigType) => void;
+  onSubmit: (config: QuizFormConfiguration) => void;
   onCancel: () => void;
 }
 
@@ -62,14 +70,17 @@ export default function QuizConfigurationForm({
   onSubmit,
   onCancel,
 }: QuizConfigurationFormProps) {
-  const [config, setConfig] = useState<QuizConfigType>({
+  const [config, setConfig] = useState<QuizFormConfiguration>({
     ageGroup: "",
     topics: [],
     difficulty: "",
     questionCount: 10,
+    isPrivate: false,
   });
 
   const [isGenerating, setIsGenerating] = useState(false);
+  const [customTopic, setCustomTopic] = useState("");
+  const [showCustomInput, setShowCustomInput] = useState(false);
 
   const handleTopicToggle = (topic: string) => {
     setConfig((prev) => ({
@@ -78,6 +89,32 @@ export default function QuizConfigurationForm({
         ? prev.topics.filter((t) => t !== topic)
         : [...prev.topics, topic],
     }));
+  };
+
+  const handleAddCustomTopic = () => {
+    const trimmedTopic = customTopic.trim();
+    if (trimmedTopic && !config.topics.includes(trimmedTopic)) {
+      setConfig((prev) => ({
+        ...prev,
+        topics: [...prev.topics, trimmedTopic],
+      }));
+      setCustomTopic("");
+      setShowCustomInput(false);
+    }
+  };
+
+  const handleRemoveTopic = (topic: string) => {
+    setConfig((prev) => ({
+      ...prev,
+      topics: prev.topics.filter((t) => t !== topic),
+    }));
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddCustomTopic();
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -141,7 +178,49 @@ export default function QuizConfigurationForm({
                 <label className="block text-sm font-semibold text-white mb-3">
                   Topics (Select one or more)
                 </label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-48 overflow-y-auto border-2 border-white/30 rounded-lg p-4 bg-black">
+
+                {/* Selected Topics Display */}
+                {config.topics.length > 0 && (
+                  <div className="mb-4">
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {config.topics.map((topic) => (
+                        <span
+                          key={topic}
+                          className="inline-flex items-center gap-1 px-3 py-1 bg-[#F930C7]/20 text-[#F930C7] rounded-full text-sm border border-[#F930C7]/30"
+                        >
+                          {topic}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveTopic(topic)}
+                            className="ml-1 text-[#F930C7] hover:text-white transition-colors"
+                            title="Remove topic"
+                          >
+                            <svg
+                              className="w-3 h-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                    <p className="text-xs text-[#F930C7]">
+                      {config.topics.length} topic
+                      {config.topics.length !== 1 ? "s" : ""} selected
+                    </p>
+                  </div>
+                )}
+
+                {/* Predefined Topics */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-48 overflow-y-auto border-2 border-white/30 rounded-lg p-4 bg-black mb-4">
                   {TOPIC_OPTIONS.map((topic) => (
                     <label
                       key={topic}
@@ -159,12 +238,49 @@ export default function QuizConfigurationForm({
                     </label>
                   ))}
                 </div>
-                {config.topics.length > 0 && (
-                  <p className="text-xs text-[#F930C7] mt-2">
-                    {config.topics.length} topic
-                    {config.topics.length !== 1 ? "s" : ""} selected
-                  </p>
-                )}
+
+                {/* Custom Topic Input */}
+                <div className="space-y-2">
+                  {!showCustomInput ? (
+                    <button
+                      type="button"
+                      onClick={() => setShowCustomInput(true)}
+                      className="w-full px-4 py-2 border-2 border-dashed border-white/30 rounded-lg text-white/70 hover:text-white hover:border-white/50 transition-colors text-sm"
+                    >
+                      + Add Custom Topic
+                    </button>
+                  ) : (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={customTopic}
+                        onChange={(e) => setCustomTopic(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        placeholder="Enter custom topic..."
+                        className="flex-1 px-3 py-2 border-2 border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F930C7] focus:border-[#F930C7] bg-black text-white text-sm placeholder-white/50"
+                        autoFocus
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddCustomTopic}
+                        disabled={!customTopic.trim()}
+                        className="px-4 py-2 bg-[#F930C7] text-white rounded-lg hover:bg-[#F930C7]/80 disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors text-sm"
+                      >
+                        Add
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowCustomInput(false);
+                          setCustomTopic("");
+                        }}
+                        className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Difficulty */}
@@ -238,6 +354,32 @@ export default function QuizConfigurationForm({
                     }}
                   />
                 </div>
+              </div>
+
+              {/* Privacy Setting */}
+              <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={config.isPrivate}
+                    onChange={(e) =>
+                      setConfig((prev) => ({
+                        ...prev,
+                        isPrivate: e.target.checked,
+                      }))
+                    }
+                    className="w-5 h-5 text-[#F930C7] bg-white/20 border-white/30 rounded focus:ring-[#F930C7] focus:ring-2"
+                  />
+                  <div>
+                    <span className="text-sm font-semibold text-white">
+                      Make this quiz private
+                    </span>
+                    <p className="text-xs text-white/70 mt-1">
+                      Private quizzes won't appear in the public quiz list but
+                      can still be shared via direct link
+                    </p>
+                  </div>
+                </label>
               </div>
 
               {/* Buttons */}

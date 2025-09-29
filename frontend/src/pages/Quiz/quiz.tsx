@@ -1,25 +1,54 @@
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import QuizCard from "../../components/quiz/QuizCard";
-import type { QuizResponse } from "../../services/quizService";
+import { QuizService, type QuizResponse } from "../../services/quizService";
 
 export default function Quiz() {
   const navigate = useNavigate();
+  const search = useSearch({ from: "/quiz/play" });
   const [quiz, setQuiz] = useState<QuizResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Get quiz data from sessionStorage
+  // Fetch quiz data based on quizId from URL or fallback to sessionStorage
   useEffect(() => {
-    const storedQuiz = sessionStorage.getItem("currentQuiz");
-    if (storedQuiz) {
+    const fetchQuiz = async () => {
       try {
-        const parsedQuiz = JSON.parse(storedQuiz) as QuizResponse;
-        setQuiz(parsedQuiz);
+        setLoading(true);
+        setError(null);
+
+        if (search.quizId) {
+          // Fetch quiz by ID from backend
+          console.log("Fetching quiz with ID:", search.quizId);
+          const fetchedQuiz = await QuizService.getQuiz(search.quizId);
+          setQuiz(fetchedQuiz);
+        } else {
+          // Fallback to sessionStorage for backward compatibility
+          const storedQuiz = sessionStorage.getItem("currentQuiz");
+          if (storedQuiz) {
+            try {
+              const parsedQuiz = JSON.parse(storedQuiz) as QuizResponse;
+              setQuiz(parsedQuiz);
+            } catch (error) {
+              console.error("Error parsing quiz data:", error);
+              setError("Failed to load quiz data");
+            }
+          } else {
+            setError("No quiz ID provided and no quiz data found");
+          }
+        }
       } catch (error) {
-        console.error("Error parsing quiz data:", error);
-        setQuiz(null);
+        console.error("Error fetching quiz:", error);
+        setError(
+          error instanceof Error ? error.message : "Failed to load quiz"
+        );
+      } finally {
+        setLoading(false);
       }
-    }
-  }, []);
+    };
+
+    fetchQuiz();
+  }, [search.quizId]);
 
   const handleRestart = () => {
     // Component will handle its own restart logic
@@ -32,7 +61,7 @@ export default function Quiz() {
   };
 
   // Show loading state while quiz data is being retrieved
-  if (quiz === null) {
+  if (loading) {
     return (
       <div
         className="w-full text-center relative pt-30 min-h-screen bg-black bg-no-repeat bg-cover bg-center m-0 p-0"
@@ -50,8 +79,8 @@ export default function Quiz() {
     );
   }
 
-  // If no quiz data is provided, show error or redirect
-  if (!quiz) {
+  // Show error state if there was an error loading the quiz
+  if (error || !quiz) {
     return (
       <div
         className="w-full text-center relative pt-30 min-h-screen bg-black bg-no-repeat bg-cover bg-center m-0 p-0"
@@ -61,10 +90,10 @@ export default function Quiz() {
           <div className="rounded-xl p-[2px] bg-gradient-to-r from-[#F930C7] to-[#3076F9]">
             <div className="rounded-[10px] bg-black p-8 text-center">
               <h1 className="text-2xl font-bold text-white mb-4">
-                No Quiz Data Available
+                {error ? "Error Loading Quiz" : "No Quiz Data Available"}
               </h1>
               <p className="text-white/90 mb-6">
-                Please select a quiz from the quiz menu.
+                {error || "Please select a quiz from the quiz menu."}
               </p>
               <button
                 onClick={handleBackToQuiz}

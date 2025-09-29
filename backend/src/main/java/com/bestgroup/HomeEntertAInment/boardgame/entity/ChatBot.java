@@ -63,4 +63,10 @@ public class ChatBot {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    /**
+     * Clerk user ID who owns this chatbot
+     */
+    @Column(name = "clerk_user_id", nullable = false)
+    private String clerkUserId;
 }

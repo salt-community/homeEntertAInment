@@ -74,4 +74,10 @@ public class Session {
     @OneToOne(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private ChatBot chatBot;
+
+    /**
+     * Clerk user ID who owns this session
+     */
+    @Column(name = "clerk_user_id", nullable = false)
+    private String clerkUserId;
 }

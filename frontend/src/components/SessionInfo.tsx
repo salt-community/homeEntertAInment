@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import type { Session } from "../types/gameSession";
 import { API_ENDPOINTS } from "../services/api";
+import { useAuthenticatedFetch } from "../services/apiClient";
 
 interface SessionInfoProps {
   sessionId: number;
@@ -11,12 +12,15 @@ export const SessionInfo: React.FC<SessionInfoProps> = ({ sessionId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isRulesExpanded, setIsRulesExpanded] = useState(false);
+  const authenticatedFetch = useAuthenticatedFetch();
 
   const loadSession = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await fetch(API_ENDPOINTS.SESSION_BY_ID(sessionId));
+      const response = await authenticatedFetch(
+        API_ENDPOINTS.SESSION_BY_ID(sessionId)
+      );
       if (!response.ok) {
         throw new Error(`Failed to fetch session: ${response.statusText}`);
       }
@@ -27,7 +31,7 @@ export const SessionInfo: React.FC<SessionInfoProps> = ({ sessionId }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [sessionId]);
+  }, [sessionId, authenticatedFetch]);
 
   useEffect(() => {
     loadSession();

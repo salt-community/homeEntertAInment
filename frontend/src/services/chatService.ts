@@ -13,8 +13,16 @@ export class ChatService {
   /**
    * Get all chat entries for a session
    */
-  static async getChatEntries(sessionId: number): Promise<ChatEntry[]> {
-    const response = await fetch(API_ENDPOINTS.CHAT_ENTRIES(sessionId));
+  static async getChatEntries(
+    sessionId: number,
+    authenticatedFetch: (
+      url: string,
+      options?: RequestInit
+    ) => Promise<Response>
+  ): Promise<ChatEntry[]> {
+    const response = await authenticatedFetch(
+      API_ENDPOINTS.CHAT_ENTRIES(sessionId)
+    );
     if (!response.ok) {
       throw new Error(`Failed to fetch chat entries: ${response.statusText}`);
     }
@@ -26,15 +34,22 @@ export class ChatService {
    */
   static async createChatEntry(
     sessionId: number,
-    request: CreateChatEntryRequest
+    request: CreateChatEntryRequest,
+    authenticatedFetch: (
+      url: string,
+      options?: RequestInit
+    ) => Promise<Response>
   ): Promise<ChatEntry> {
-    const response = await fetch(API_ENDPOINTS.CREATE_CHAT_ENTRY(sessionId), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(request),
-    });
+    const response = await authenticatedFetch(
+      API_ENDPOINTS.CREATE_CHAT_ENTRY(sessionId),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`Failed to create chat entry: ${response.statusText}`);
@@ -45,13 +60,22 @@ export class ChatService {
   /**
    * Create or get chatbot for a session
    */
-  static async createChatBot(sessionId: number): Promise<ChatBot> {
-    const response = await fetch(API_ENDPOINTS.CREATE_CHATBOT(sessionId), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  static async createChatBot(
+    sessionId: number,
+    authenticatedFetch: (
+      url: string,
+      options?: RequestInit
+    ) => Promise<Response>
+  ): Promise<ChatBot> {
+    const response = await authenticatedFetch(
+      API_ENDPOINTS.CREATE_CHATBOT(sessionId),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`Failed to create chatbot: ${response.statusText}`);

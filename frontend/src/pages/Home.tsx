@@ -37,7 +37,7 @@ export default function Home() {
       <section className="mx-auto w-full max-w-7xl px-6 py-12">
         <div className="grid gap-30 grid-cols-1 md:grid-cols-2">
           <Card
-            to="/story-generator"
+            to="/story"
             title="Story Generator"
             description="Bring your imagination to life. Provide characters, settings, or themes and get a unique tale for instant fun."
             gradientDirection="pinkToBlue"

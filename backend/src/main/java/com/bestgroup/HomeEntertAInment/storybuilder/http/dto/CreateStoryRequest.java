@@ -9,23 +9,22 @@ import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
-public record StoryRequest(
+public record CreateStoryRequest(
     @NotNull
     @Size(min = 1, max = 50)
-    String character,
+    String hero,
 
     @NotNull
-    List<Theme> theme,
+    String theme,
 
-    AgeGroup ageGroup,
+    @NotNull
+    String tone,
 
-    StoryLength storyLength,
+    @NotNull
+    String twist,
 
-    Twist twist,
+    String content,
 
-    @Size(max = 200)
-    String custom
-
+    String coverImageUrl
 ) {
 }
-

@@ -4,8 +4,13 @@ import {
   createRouter,
 } from "@tanstack/react-router";
 import RootLayout from "./layouts/RootLayout.tsx";
-import StoryGenerator from "./pages/StoryGenerator.tsx";
-import StoryGeneratorResult from "./pages/StoryGeneratorResult.tsx";
+import {
+  StoryGenerator,
+  StoryGeneratorNew,
+  StoryGeneratorSaved,
+  StoryGeneratorView,
+  StoryGeneratorResult,
+} from "./pages/story";
 import BoardGameRuleInspector from "./pages/BoardGameRuleInspector.tsx";
 import BoardGameSessionChat from "./pages/BoardGameSessionChat.tsx";
 import MovieMood from "./pages/MovieMood.tsx";
@@ -24,15 +29,39 @@ const indexRoute = createRoute({
   component: Home,
 });
 
-const storyGeneratorRoute = createRoute({
+const storyRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/story-generator",
+  path: "/story",
   component: StoryGenerator,
 });
 
-const storyGeneratorResultRoute = createRoute({
+const storyNewRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/story-generator/result",
+  path: "/story/new",
+  component: StoryGeneratorNew,
+});
+
+const storySavedRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/story/saved",
+  component: StoryGeneratorSaved,
+});
+
+const savedRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/saved",
+  component: StoryGeneratorSaved,
+});
+
+const storyViewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/story/view/$storyId",
+  component: StoryGeneratorView,
+});
+
+const storyResultRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/story/result",
   component: StoryGeneratorResult,
 });
 
@@ -74,8 +103,12 @@ const quizRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  storyGeneratorRoute,
-  storyGeneratorResultRoute,
+  storyRoute,
+  storyNewRoute,
+  storySavedRoute,
+  savedRoute,
+  storyViewRoute,
+  storyResultRoute,
   boardGameRuleInspectorRoute,
   boardGameSessionRoute,
   movieMoodRoute,

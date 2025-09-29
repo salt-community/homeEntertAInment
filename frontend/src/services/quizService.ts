@@ -1,9 +1,15 @@
+// Import API configuration
+// Uses VITE_API_BASE_URL environment variable with fallback to http://localhost:8080
+import API_BASE_URL from "./api";
+
 // Types for quiz configuration
 export interface QuizConfiguration {
   ageGroup: string;
   topics: string[];
   difficulty: string;
   questionCount: number;
+  userId: string;
+  isPrivate: boolean;
 }
 
 // Question response type (matches QuestionResponseDto from backend)
@@ -63,25 +69,29 @@ export interface QuizListItem {
   difficulty: string;
   questionCount: number;
   description: string;
+  isPrivate: boolean;
 }
 
 // Quiz service for API calls
 export class QuizService {
-  private static readonly BASE_URL = "http://localhost:8080/api/quiz";
+  private static readonly BASE_URL = `${API_BASE_URL}/api/quiz`;
 
   /**
    * Create a new quiz with the given configuration
    * @param config Quiz configuration data
+   * @param token Clerk authentication token
    * @returns Promise with quiz creation response
    */
   static async createQuiz(
-    config: QuizConfiguration
+    config: QuizConfiguration,
+    token: string
   ): Promise<QuizCreationResponse> {
     try {
       const response = await fetch(`${this.BASE_URL}/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(config),
       });
@@ -147,6 +157,35 @@ export class QuizService {
   }
 
   /**
+   * Get all quizzes created by a specific user
+   * @param userId The ID of the user who created the quizzes
+   * @param token Clerk authentication token
+   * @returns Promise with list of quizzes created by the user
+   */
+  static async getUserQuizzes(
+    userId: string,
+    token: string
+  ): Promise<QuizListItem[]> {
+    try {
+      const response = await fetch(`${this.BASE_URL}/user/${userId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching user quizzes:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Submit quiz answers
    * @param quizId The ID of the quiz
    * @param answers The answers to submit (array of answer indices)
@@ -172,6 +211,77 @@ export class QuizService {
       return await response.json();
     } catch (error) {
       console.error("Error submitting quiz:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update the privacy setting of a quiz
+   * @param quizId The ID of the quiz to update
+   * @param userId The ID of the user making the request
+   * @param isPrivate The new privacy setting
+   * @param token The authentication token
+   * @returns Promise that resolves when the update is complete
+   */
+  static async updateQuizPrivacy(
+    quizId: string,
+    userId: string,
+    isPrivate: boolean,
+    token: string
+  ): Promise<void> {
+    try {
+      const response = await fetch(`${this.BASE_URL}/${quizId}/privacy`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId,
+          isPrivate,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to update quiz privacy: ${errorText}`);
+      }
+    } catch (error) {
+      console.error("Error updating quiz privacy:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete a quiz
+   * @param quizId The ID of the quiz to delete
+   * @param userId The ID of the user making the request
+   * @param token The authentication token
+   * @returns Promise that resolves when the deletion is complete
+   */
+  static async deleteQuiz(
+    quizId: string,
+    userId: string,
+    token: string
+  ): Promise<void> {
+    try {
+      const response = await fetch(`${this.BASE_URL}/${quizId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          userId,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to delete quiz: ${errorText}`);
+      }
+    } catch (error) {
+      console.error("Error deleting quiz:", error);
       throw error;
     }
   }

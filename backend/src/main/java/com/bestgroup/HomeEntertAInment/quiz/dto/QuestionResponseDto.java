@@ -1,4 +1,4 @@
-package com.bestgroup.HomeEntertAInment.model;
+package com.bestgroup.HomeEntertAInment.quiz.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,14 +8,14 @@ import lombok.Builder;
 import java.util.List;
 
 /**
- * Model representing a quiz question
- * Contains the question text, answer options, correct answer, and explanation
+ * Data Transfer Object for Question Response
+ * Contains complete question data including correct answers and explanations
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Question {
+public class QuestionResponseDto {
     
     /**
      * Unique identifier for the question
@@ -41,11 +41,6 @@ public class Question {
      * Explanation for why the correct answer is right
      */
     private String explanation;
-    
-    /**
-     * Topic/category of the question
-     */
-    private String topic;
     
     /**
      * Difficulty level of the question

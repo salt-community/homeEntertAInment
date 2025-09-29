@@ -17,12 +17,19 @@ const Card = ({
       : "bg-gradient-to-r from-[#3076F9] to-[#F930C7]";
 
   return (
-    <div className={`rounded-xl p-[2px] ${frameClass}`}>
-      <Link to={to} className="group block rounded-[10px] bg-black p-8">
-        <h2 className="mb-3 text-3xl font-semibold tracking-wide text-white">
+    <div
+      className={`rounded-xl p-[2px] ${frameClass} hover:shadow-2xl transition-all duration-300 hover:scale-105`}
+    >
+      <Link
+        to={to}
+        className="group block rounded-[10px] bg-black p-4 sm:p-6 lg:p-8 h-full"
+      >
+        <h2 className="mb-3 text-xl sm:text-2xl lg:text-3xl font-semibold tracking-wide text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-[#3076F9] group-hover:to-[#F930C7] group-hover:bg-clip-text transition-all duration-300">
           {title}
         </h2>
-        <p className="text-sm leading-6 text-white/90">{description}</p>
+        <p className="text-xs sm:text-sm leading-5 sm:leading-6 text-white/90">
+          {description}
+        </p>
       </Link>
     </div>
   );
@@ -30,12 +37,12 @@ const Card = ({
 
 export default function Home() {
   return (
-    <div
-      className="w-full text-center relative pt-20 min-h-screen bg-black bg-no-repeat bg-cover bg-center m-0 p-0"
-      style={{ backgroundImage: "url('/landing-bg.png')" }}
-    >
-      <section className="mx-auto w-full max-w-7xl px-6 py-12">
-        <div className="grid gap-30 grid-cols-1 md:grid-cols-2">
+    <div className="w-full text-center relative pt-8 sm:pt-12 lg:pt-20 min-h-screen">
+      {/* Background overlay for better contrast */}
+      <div className="absolute inset-0 bg-black/40 -z-10" />
+
+      <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid gap-6 sm:gap-8 lg:gap-12 grid-cols-1 md:grid-cols-2">
           <Card
             to="/story"
             title="Story Generator"

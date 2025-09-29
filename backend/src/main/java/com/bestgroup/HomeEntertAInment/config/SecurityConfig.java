@@ -20,6 +20,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/proxy/image").permitAll()
                         // Require auth for movie APIs
                         .requestMatchers("/api/movies/**").authenticated()
+                        .requestMatchers("/api/movie-lists/**").authenticated()
                         .requestMatchers("/api/boardgame/**").authenticated()
                         .requestMatchers("/api/sessions/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/quiz/create").authenticated()

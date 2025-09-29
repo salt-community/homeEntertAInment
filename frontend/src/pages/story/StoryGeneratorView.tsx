@@ -9,7 +9,7 @@ export default function StoryGeneratorView() {
 
   if (isLoading) {
     return (
-      <div className="px-4 sm:px-6 pt-6 sm:pt-8 md:pt-12 pb-8 flex flex-col items-center space-y-6 bg-black min-h-screen">
+      <div className="p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
         <div className="w-full max-w-4xl text-center">
           <h2 className="text-2xl font-semibold text-white">
             Loading Story...
@@ -21,7 +21,7 @@ export default function StoryGeneratorView() {
 
   if (error || !story) {
     return (
-      <div className="px-4 sm:px-6 pt-6 sm:pt-8 md:pt-12 pb-8 flex flex-col items-center space-y-6 bg-black min-h-screen">
+      <div className="p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
         <div className="w-full max-w-4xl text-center">
           <h2 className="text-2xl font-semibold text-white">Story Not Found</h2>
           <p className="text-red-500 mt-4">
@@ -39,7 +39,7 @@ export default function StoryGeneratorView() {
   }
 
   return (
-    <div className="px-4 sm:px-6 pt-6 sm:pt-8 md:pt-12 pb-8 flex flex-col items-center space-y-6 bg-black min-h-screen">
+    <div className="p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
       <div className="w-full max-w-4xl">
         <div className="flex justify-between items-center mb-6">
           <div>

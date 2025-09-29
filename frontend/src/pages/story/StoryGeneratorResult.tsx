@@ -49,7 +49,7 @@ export default function StoryGeneratorResult() {
   };
 
   return (
-    <div className="px-4 sm:px-6 pt-6 sm:pt-8 md:pt-12 pb-8 flex flex-col items-center space-y-6 bg-black min-h-screen">
+    <div className="p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
       <div className="w-full max-w-2xl flex justify-end">
         <Link
           to="/story"

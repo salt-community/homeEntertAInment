@@ -5,10 +5,10 @@ export default function StoryGenerator() {
 
   return (
     <div
-      className="w-full text-center relative min-h-screen bg-black bg-no-repeat bg-cover bg-center m-0 p-0"
+      className="w-full text-center relative pt-30 min-h-screen bg-black bg-no-repeat bg-cover bg-center m-0 p-0"
       style={{ backgroundImage: "url('/landing-bg.png')" }}
     >
-      <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 pt-8 sm:pt-12 md:pt-16 lg:pt-20 pb-12">
+      <section className="mx-auto w-full max-w-7xl px-6 py-12">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-white mb-4 tracking-wide">
             Story Generator

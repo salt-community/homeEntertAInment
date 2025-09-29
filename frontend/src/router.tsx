@@ -14,6 +14,7 @@ import {
 import BoardGameRuleInspector from "./pages/BoardGameRuleInspector.tsx";
 import BoardGameSessionChat from "./pages/BoardGameSessionChat.tsx";
 import MovieMood from "./pages/MovieMood.tsx";
+import SavedMovieLists from "./pages/SavedMovieLists.tsx";
 import QuizIndex from "./pages/Quiz/index.tsx";
 import QuizCreate from "./pages/Quiz/create.tsx";
 import Quiz from "./pages/Quiz/quiz.tsx";
@@ -85,6 +86,12 @@ const movieMoodRoute = createRoute({
   component: MovieMood,
 });
 
+const savedMovieListsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/saved-movies",
+  component: SavedMovieLists,
+});
+
 const quizIndexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/quiz",
@@ -131,6 +138,7 @@ const routeTree = rootRoute.addChildren([
   boardGameRuleInspectorRoute,
   boardGameSessionRoute,
   movieMoodRoute,
+  savedMovieListsRoute,
   quizIndexRoute,
   quizCreateRoute,
   quizRoute,

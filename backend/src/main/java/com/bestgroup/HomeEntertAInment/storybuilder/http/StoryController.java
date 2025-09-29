@@ -2,6 +2,7 @@ package com.bestgroup.HomeEntertAInment.storybuilder.http;
 
 import com.bestgroup.HomeEntertAInment.storybuilder.http.dto.*;
 import com.bestgroup.HomeEntertAInment.storybuilder.service.StoryService;
+import com.bestgroup.HomeEntertAInment.storybuilder.service.PdfConversionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class StoryController {
 
     private final StoryService storyService;
+    private final PdfConversionService pdfConversionService;
 
     @PostMapping("/story/generate")
     @Operation(summary = "Generate a new story", description = "Generate a story based on the input provided.")
@@ -177,6 +179,38 @@ public class StoryController {
             return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
         } catch (Exception e) {
             log.error("Error deleting story: {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/story/convert-to-pdf")
+    @Operation(summary = "Convert story markdown to PDF", description = "Convert story markdown content to PDF format.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "PDF conversion successful"),
+        @ApiResponse(responseCode = "400", description = "Invalid input"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<ConvertApiResponse> convertStoryToPdf(@RequestBody MarkdownToPdfRequest request, Authentication authentication) {
+        try {
+            log.info("Received request to convert story markdown content to PDF");
+
+            if (request.getMarkdownContent() == null || request.getMarkdownContent().trim().isEmpty()) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            ConvertApiResponse result = pdfConversionService.convertMarkdownToPdf(
+                request.getMarkdownContent(), 
+                request.getCoverImageUrl()
+            );
+            
+            return ResponseEntity.ok(result);
+
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            log.error("Invalid request: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            log.error("Unexpected error during story markdown to PDF conversion: {}", e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }

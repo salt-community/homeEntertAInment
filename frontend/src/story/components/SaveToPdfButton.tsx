@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { API_ENDPOINTS } from "../../services/api";
+import { useAuthenticatedFetch } from "../../services/apiClient";
 
 interface SaveToPdfButtonProps {
   storyMarkdown: string;
@@ -11,6 +13,7 @@ export function SaveToPdfButton({
 }: SaveToPdfButtonProps) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const authenticatedFetch = useAuthenticatedFetch();
 
   const handleSaveToPdf = async () => {
     if (!storyMarkdown) {
@@ -22,48 +25,24 @@ export function SaveToPdfButton({
     setError(null);
 
     try {
-      // Prepare the markdown content with cover image if available
-      let fullMarkdown = storyMarkdown;
-      if (coverImageUrl) {
-        fullMarkdown = `![Cover Image](${coverImageUrl})\n\n# Story\n\n${storyMarkdown}`;
-      }
-
-      // Base64 encode the markdown content
-      const base64Markdown = btoa(unescape(encodeURIComponent(fullMarkdown)));
-
-      // Prepare the request body for ConvertAPI
-      const requestBody = {
-        Parameters: [
-          {
-            Name: "File",
-            FileValue: {
-              Name: "story.md",
-              Data: base64Markdown,
-            },
-          },
-          {
-            Name: "StoreFile",
-            Value: true,
-          },
-        ],
-      };
-
-      // Call ConvertAPI
-      const response = await fetch(
-        "https://v2.convertapi.com/convert/md/to/pdf",
+      // Call backend endpoint to convert markdown to PDF
+      const response = await authenticatedFetch(
+        API_ENDPOINTS.CONVERT_STORY_TO_PDF,
         {
           method: "POST",
           headers: {
-            Authorization: "Bearer 6mLcI1qSg0ckRpf1FQkmUqkm2oukSw8J",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(requestBody),
+          body: JSON.stringify({
+            markdownContent: storyMarkdown,
+            coverImageUrl: coverImageUrl,
+          }),
         }
       );
 
       if (!response.ok) {
         throw new Error(
-          `ConvertAPI request failed: ${response.status} ${response.statusText}`
+          `PDF conversion request failed: ${response.status} ${response.statusText}`
         );
       }
 
@@ -71,7 +50,7 @@ export function SaveToPdfButton({
 
       // Check if we got a file URL
       if (!result.Files || !result.Files[0] || !result.Files[0].Url) {
-        throw new Error("No file URL received from ConvertAPI");
+        throw new Error("No file URL received from backend");
       }
 
       const fileUrl = result.Files[0].Url;

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef } from "react";
-import { useGenerateStory, useGenerateImage } from "../story/hooks";
-import { StoryViewer, SaveToPdfButton } from "../story/components";
-import type { StoryRequest } from "../story/types";
+import { useGenerateStory, useGenerateImage } from "../../story/hooks";
+import { StoryViewer, SaveToPdfButton } from "../../story/components";
+import type { StoryRequest } from "../../story/types";
 import { Link } from "@tanstack/react-router";
-import { generateCoverImagePrompt } from "../story/utils/storyAnalyzer";
+import { generateCoverImagePrompt } from "../../story/utils/storyAnalyzer";
 
 export default function StoryGeneratorResult() {
   const hasStartedRef = useRef(false);
@@ -52,7 +52,7 @@ export default function StoryGeneratorResult() {
     <div className="p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
       <div className="w-full max-w-2xl flex justify-end">
         <Link
-          to="/story-generator"
+          to="/story"
           className="inline-flex items-center px-4 py-2 text-sm bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white !text-white rounded-lg hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
         >
           <span className="text-white">Generate new story</span>
@@ -68,7 +68,7 @@ export default function StoryGeneratorResult() {
       {!request && (
         <div className="w-full max-w-2xl text-center">
           <p className="text-white/80">No request found.</p>
-          <Link to="/story-generator" className="text-indigo-400 underline">
+          <Link to="/story" className="text-indigo-400 underline">
             Go back to Story Generator
           </Link>
         </div>
@@ -84,7 +84,7 @@ export default function StoryGeneratorResult() {
       {error && (
         <div className="w-full max-w-2xl">
           <p className="text-red-400">{error}</p>
-          <Link to="/story-generator" className="text-indigo-400 underline">
+          <Link to="/story" className="text-indigo-400 underline">
             Try again
           </Link>
         </div>
@@ -117,7 +117,7 @@ export default function StoryGeneratorResult() {
                 </p>
                 <div className="mt-2">
                   <Link
-                    to="/story-generator/saved"
+                    to="/story/saved"
                     className="text-sm font-medium text-green-300 hover:text-green-200 underline"
                   >
                     View Your Saved Stories →

@@ -1,7 +1,6 @@
-import React from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { useStories, useDeleteStory } from "../story/hooks";
-import { StoryCard } from "../story/components";
+import { useStories, useDeleteStory } from "../../story/hooks";
+import { StoryCard } from "../../story/components";
 import { useUser } from "@clerk/clerk-react";
 
 export default function StoryGeneratorSaved() {
@@ -92,7 +91,7 @@ export default function StoryGeneratorSaved() {
               No saved stories yet
             </div>
             <button
-              onClick={() => navigate({ to: "/story-generator/new" })}
+              onClick={() => navigate({ to: "/story/new" })}
               className="bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white px-6 py-3 rounded-lg hover:opacity-90 transition-opacity duration-200"
             >
               Create Your First Story

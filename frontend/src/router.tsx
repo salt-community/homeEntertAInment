@@ -4,11 +4,13 @@ import {
   createRouter,
 } from "@tanstack/react-router";
 import RootLayout from "./layouts/RootLayout.tsx";
-import StoryGenerator from "./pages/StoryGenerator.tsx";
-import StoryGeneratorNew from "./pages/StoryGeneratorNew.tsx";
-import StoryGeneratorSaved from "./pages/StoryGeneratorSaved.tsx";
-import StoryGeneratorView from "./pages/StoryGeneratorView.tsx";
-import StoryGeneratorResult from "./pages/StoryGeneratorResult.tsx";
+import {
+  StoryGenerator,
+  StoryGeneratorNew,
+  StoryGeneratorSaved,
+  StoryGeneratorView,
+  StoryGeneratorResult,
+} from "./pages/story";
 import BoardGameRuleInspector from "./pages/BoardGameRuleInspector.tsx";
 import BoardGameSessionChat from "./pages/BoardGameSessionChat.tsx";
 import MovieMood from "./pages/MovieMood.tsx";
@@ -27,21 +29,21 @@ const indexRoute = createRoute({
   component: Home,
 });
 
-const storyGeneratorRoute = createRoute({
+const storyRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/story-generator",
+  path: "/story",
   component: StoryGenerator,
 });
 
-const storyGeneratorNewRoute = createRoute({
+const storyNewRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/story-generator/new",
+  path: "/story/new",
   component: StoryGeneratorNew,
 });
 
-const storyGeneratorSavedRoute = createRoute({
+const storySavedRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/story-generator/saved",
+  path: "/story/saved",
   component: StoryGeneratorSaved,
 });
 
@@ -51,15 +53,15 @@ const savedRoute = createRoute({
   component: StoryGeneratorSaved,
 });
 
-const storyGeneratorViewRoute = createRoute({
+const storyViewRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/story-generator/view/$storyId",
+  path: "/story/view/$storyId",
   component: StoryGeneratorView,
 });
 
-const storyGeneratorResultRoute = createRoute({
+const storyResultRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/story-generator/result",
+  path: "/story/result",
   component: StoryGeneratorResult,
 });
 
@@ -101,12 +103,12 @@ const quizRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  storyGeneratorRoute,
-  storyGeneratorNewRoute,
-  storyGeneratorSavedRoute,
+  storyRoute,
+  storyNewRoute,
+  storySavedRoute,
   savedRoute,
-  storyGeneratorViewRoute,
-  storyGeneratorResultRoute,
+  storyViewRoute,
+  storyResultRoute,
   boardGameRuleInspectorRoute,
   boardGameSessionRoute,
   movieMoodRoute,

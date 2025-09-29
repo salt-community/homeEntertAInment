@@ -25,14 +25,15 @@ export const StoryCard: React.FC<StoryCardProps> = ({
 
   const handleViewStory = () => {
     navigate({
-      to: "/story-generator/view/$storyId",
+      to: "/story/view/$storyId",
       params: { storyId: story.id.toString() },
     });
   };
 
   const handleEditStory = () => {
+    // Edit functionality not implemented yet
     navigate({
-      to: "/story-generator/edit/$storyId",
+      to: "/story/view/$storyId",
       params: { storyId: story.id.toString() },
     });
   };

@@ -1,5 +1,5 @@
-import { StoryForm } from "../story/components";
-import { useGenerateStory } from "../story/hooks";
+import { StoryForm } from "../../story/components";
+import { useGenerateStory } from "../../story/hooks";
 import { useNavigate } from "@tanstack/react-router";
 
 export default function StoryGeneratorNew() {
@@ -21,7 +21,7 @@ export default function StoryGeneratorNew() {
             <StoryForm
               onSubmit={async (payload) => {
                 sessionStorage.setItem("storyRequest", JSON.stringify(payload));
-                navigate({ to: "/story-generator/result" });
+                navigate({ to: "/story/result" });
               }}
               disabled={loading}
             />

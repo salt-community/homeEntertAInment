@@ -1,10 +1,9 @@
-import React from "react";
 import { useParams, useNavigate } from "@tanstack/react-router";
-import { useStory } from "../story/hooks";
-import { StoryViewer } from "../story/components";
+import { useStory } from "../../story/hooks";
+import { StoryViewer } from "../../story/components";
 
 export default function StoryGeneratorView() {
-  const { storyId } = useParams({ from: "/story-generator/view/$storyId" });
+  const { storyId } = useParams({ from: "/story/view/$storyId" });
   const navigate = useNavigate();
   const { data: story, isLoading, error } = useStory(storyId);
 
@@ -29,7 +28,7 @@ export default function StoryGeneratorView() {
             {error ? error.message : "The requested story could not be found."}
           </p>
           <button
-            onClick={() => navigate({ to: "/story-generator/saved" })}
+            onClick={() => navigate({ to: "/story/saved" })}
             className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200"
           >
             Back to Saved Stories
@@ -51,7 +50,7 @@ export default function StoryGeneratorView() {
             </p>
           </div>
           <button
-            onClick={() => navigate({ to: "/story-generator/saved" })}
+            onClick={() => navigate({ to: "/story/saved" })}
             className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors duration-200"
           >
             Back to Saved Stories

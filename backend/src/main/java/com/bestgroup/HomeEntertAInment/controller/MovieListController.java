@@ -1,6 +1,8 @@
 package com.bestgroup.HomeEntertAInment.controller;
 
 import com.bestgroup.HomeEntertAInment.dto.MovieResponseDto;
+import com.bestgroup.HomeEntertAInment.dto.MovieListSummaryDto;
+import com.bestgroup.HomeEntertAInment.dto.MovieListDetailDto;
 import com.bestgroup.HomeEntertAInment.entity.MovieList;
 import com.bestgroup.HomeEntertAInment.service.MovieListService;
 import com.bestgroup.HomeEntertAInment.config.ClerkUserExtractor;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +24,7 @@ public class MovieListController {
 
     private final MovieListService movieListService;
     private final ClerkUserExtractor clerkUserExtractor;
+    private final ObjectMapper objectMapper;
 
     @PostMapping("/save")
     public ResponseEntity<Map<String, Object>> saveMovieList(
@@ -61,27 +65,32 @@ public class MovieListController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MovieList>> getUserMovieLists(
+    public ResponseEntity<List<MovieListSummaryDto>> getUserMovieLists(
             Authentication authentication
     ) {
         try {
             String clerkUserId = clerkUserExtractor.extractClerkUserIdRequired(authentication);
             List<MovieList> movieLists = movieListService.getMovieListsByUserId(clerkUserId);
-            return ResponseEntity.ok(movieLists);
+            List<MovieListSummaryDto> summaryDtos = movieLists.stream()
+                    .map(this::convertToSummaryDto)
+                    .collect(java.util.stream.Collectors.toList());
+            return ResponseEntity.ok(summaryDtos);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping("/{listId}")
-    public ResponseEntity<MovieList> getMovieList(
+    public ResponseEntity<MovieListDetailDto> getMovieList(
             @PathVariable Long listId,
             Authentication authentication
     ) {
         try {
             String clerkUserId = clerkUserExtractor.extractClerkUserIdRequired(authentication);
             Optional<MovieList> movieList = movieListService.getMovieListByIdAndUserId(listId, clerkUserId);
-            return movieList.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+            return movieList.map(this::convertToDetailDto)
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -147,5 +156,66 @@ public class MovieListController {
                 .rating(movieData.get("rating") != null ? ((Number) movieData.get("rating")).doubleValue() : null)
                 .recommendationReason((String) movieData.get("recommendationReason"))
                 .build();
+    }
+    
+    private MovieListSummaryDto convertToSummaryDto(MovieList movieList) {
+        return MovieListSummaryDto.builder()
+                .id(movieList.getId())
+                .listName(movieList.getListName())
+                .description(movieList.getDescription())
+                .movieCount(movieList.getMovies() != null ? movieList.getMovies().size() : 0)
+                .createdAt(movieList.getCreatedAt())
+                .build();
+    }
+    
+    private MovieListDetailDto convertToDetailDto(MovieList movieList) {
+        List<MovieResponseDto.MovieDto> movieDtos = movieList.getMovies() != null ?
+                movieList.getMovies().stream()
+                        .map(this::convertToMovieDto)
+                        .collect(java.util.stream.Collectors.toList()) :
+                new java.util.ArrayList<>();
+        
+        return MovieListDetailDto.builder()
+                .id(movieList.getId())
+                .listName(movieList.getListName())
+                .description(movieList.getDescription())
+                .searchCriteria(movieList.getSearchCriteria())
+                .createdAt(movieList.getCreatedAt())
+                .movies(movieDtos)
+                .build();
+    }
+    
+    private MovieResponseDto.MovieDto convertToMovieDto(com.bestgroup.HomeEntertAInment.entity.MovieListItem movieItem) {
+        try {
+            List<String> genres = movieItem.getGenres() != null ?
+                    objectMapper.readValue(movieItem.getGenres(), 
+                            objectMapper.getTypeFactory().constructCollectionType(List.class, String.class)) :
+                    new java.util.ArrayList<>();
+            
+            List<String> cast = movieItem.getCast() != null ?
+                    objectMapper.readValue(movieItem.getCast(), 
+                            objectMapper.getTypeFactory().constructCollectionType(List.class, String.class)) :
+                    new java.util.ArrayList<>();
+            
+            return MovieResponseDto.MovieDto.builder()
+                    .title(movieItem.getTitle())
+                    .year(movieItem.getYear())
+                    .imdbId(movieItem.getImdbId())
+                    .genres(genres)
+                    .description(movieItem.getDescription())
+                    .duration(movieItem.getDuration())
+                    .ageRating(movieItem.getAgeRating())
+                    .director(movieItem.getDirector())
+                    .cast(cast)
+                    .rating(movieItem.getRating())
+                    .recommendationReason(movieItem.getRecommendationReason())
+                    .build();
+        } catch (Exception e) {
+            // Fallback if JSON parsing fails
+            return MovieResponseDto.MovieDto.builder()
+                    .title(movieItem.getTitle())
+                    .description(movieItem.getDescription())
+                    .build();
+        }
     }
 }

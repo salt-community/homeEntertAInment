@@ -109,9 +109,43 @@ public class MovieListController {
     }
 
     private MovieResponseDto convertToMovieResponseDto(Map<String, Object> moviesData) {
-        // Simple conversion - in a real app you'd use proper DTO mapping
-        MovieResponseDto responseDto = new MovieResponseDto();
-        // This is a simplified conversion - you might want to use MapStruct or similar
-        return responseDto;
+        if (moviesData == null || !moviesData.containsKey("movies")) {
+            return new MovieResponseDto();
+        }
+        
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> moviesList = (List<Map<String, Object>>) moviesData.get("movies");
+        
+        List<MovieResponseDto.MovieDto> movieDtos = moviesList.stream()
+                .map(this::convertToMovieDto)
+                .collect(java.util.stream.Collectors.toList());
+        
+        return MovieResponseDto.builder()
+                .movies(movieDtos)
+                .build();
+    }
+    
+    private MovieResponseDto.MovieDto convertToMovieDto(Map<String, Object> movieData) {
+        @SuppressWarnings("unchecked")
+        List<String> genres = movieData.get("genres") != null ? 
+                (List<String>) movieData.get("genres") : new java.util.ArrayList<>();
+        
+        @SuppressWarnings("unchecked")
+        List<String> cast = movieData.get("cast") != null ? 
+                (List<String>) movieData.get("cast") : new java.util.ArrayList<>();
+        
+        return MovieResponseDto.MovieDto.builder()
+                .title((String) movieData.get("title"))
+                .year(movieData.get("year") != null ? ((Number) movieData.get("year")).intValue() : null)
+                .imdbId((String) movieData.get("imdbId"))
+                .genres(genres)
+                .description((String) movieData.get("description"))
+                .duration(movieData.get("duration") != null ? ((Number) movieData.get("duration")).intValue() : null)
+                .ageRating((String) movieData.get("ageRating"))
+                .director((String) movieData.get("director"))
+                .cast(cast)
+                .rating(movieData.get("rating") != null ? ((Number) movieData.get("rating")).doubleValue() : null)
+                .recommendationReason((String) movieData.get("recommendationReason"))
+                .build();
     }
 }

@@ -10,11 +10,13 @@ export default function MovieMood() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [results, setResults] = useState<MovieResponse | null>(null);
+  const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
   const handleFormSubmit = async (payload: MovieRequest) => {
     setLoading(true);
     setError(null);
     setResults(null);
+    setSaveSuccess(null);
 
     try {
       if (!isSignedIn) {
@@ -49,48 +51,96 @@ export default function MovieMood() {
     }
   };
 
+  const handleSaveList = async (
+    listName: string,
+    description: string,
+    searchCriteria: string
+  ) => {
+    if (!results || !isSignedIn) return;
+
+    try {
+      const token = await getToken();
+      const response = await MovieService.saveMovieList(
+        listName,
+        description,
+        searchCriteria,
+        results,
+        token || undefined
+      );
+
+      if (response.success) {
+        setSaveSuccess(`"${listName}" saved successfully!`);
+        setTimeout(() => setSaveSuccess(null), 3000);
+      } else {
+        throw new Error(response.message);
+      }
+    } catch (err) {
+      console.error("Save list error:", err);
+      setError(err instanceof Error ? err.message : "Failed to save movie list");
+    }
+  };
+
   return (
     <div className="p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
       <div className="w-full max-w-2xl text-center">
         <h2 className="text-2xl font-semibold text-white">Movie Picker</h2>
-        <p className="text-sm text-white/80">
+        <p className="text-sm text-white/80 mb-4">
           Tell us what kind of movie you're in the mood for, and we'll recommend
           the perfect films for you.
         </p>
-      </div>
 
-      <div className="w-full max-w-2xl">
-        <div className="rounded-xl p-[2px] bg-gradient-to-r from-[#F930C7] to-[#3076F9]">
-          <div className="rounded-[10px] bg-black p-8 text-white">
-            <MovieForm onSubmit={handleFormSubmit} disabled={loading} />
-          </div>
+        {/* Navigation Options */}
+        <div className="flex justify-center space-x-4 mb-6">
+          <button
+            onClick={() => (window.location.href = "/saved-movies")}
+            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium text-sm"
+          >
+            📚 View Saved Lists
+          </button>
+          {/* Only show New Search button if user has already searched */}
+          {results && results.movies && (
+            <button
+              onClick={() => {
+                setResults(null);
+                setError(null);
+                setSaveSuccess(null);
+              }}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium text-sm"
+            >
+              🔍 New Search
+            </button>
+          )}
         </div>
       </div>
 
+      {/* Show form only if no results, no loading, or user wants new search */}
+      {!loading && (!results || !results.movies) && (
+        <div className="w-full max-w-2xl">
+          <div className="rounded-xl p-[2px] bg-gradient-to-r from-[#F930C7] to-[#3076F9]">
+            <div className="rounded-[10px] bg-black p-8 text-white">
+              <MovieForm onSubmit={handleFormSubmit} disabled={loading} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Show loading in main content area */}
       {loading && (
-        <div className="w-full max-w-2xl text-center">
-          <div className="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-white bg-purple-500 hover:bg-purple-400 transition ease-in-out duration-150 cursor-not-allowed">
-            <svg
-              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            Finding your perfect movies...
+        <div className="w-full max-w-4xl text-center">
+          <div className="rounded-xl p-[2px] bg-gradient-to-r from-[#F930C7] to-[#3076F9]">
+            <div className="rounded-[10px] bg-black p-8 text-white">
+              <div className="flex flex-col items-center space-y-4">
+                <div className="relative">
+                  <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+                </div>
+                <div className="text-xl font-semibold">
+                  Finding Your Perfect Movies...
+                </div>
+                <div className="text-gray-400 text-sm">
+                  This may take a few moments
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -103,11 +153,20 @@ export default function MovieMood() {
         </div>
       )}
 
-      {results && results.movies && (
+      {saveSuccess && (
+        <div className="w-full max-w-2xl">
+          <div className="bg-green-900/30 border border-green-500/30 rounded-lg p-4">
+            <p className="text-green-400">{saveSuccess}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Show results at the top if they exist */}
+      {!loading && results && results.movies && (
         <div className="w-full max-w-4xl">
           <div className="rounded-xl p-[2px] bg-gradient-to-r from-[#F930C7] to-[#3076F9]">
             <div className="rounded-[10px] bg-black p-8 text-white">
-              <MovieResults movies={results.movies} />
+              <MovieResults movies={results.movies} onSaveList={handleSaveList} />
             </div>
           </div>
         </div>

@@ -41,6 +41,11 @@ public class MovieResponseDto {
         private Integer year;
         
         /**
+         * IMDb ID
+         */
+        private String imdbId;
+        
+        /**
          * Movie genres
          */
         private List<String> genres;
@@ -74,11 +79,6 @@ public class MovieResponseDto {
          * IMDb or similar rating (e.g., 8.5)
          */
         private Double rating;
-        
-        /**
-         * URL to movie poster image (if available)
-         */
-        private String posterUrl;
         
         /**
          * Why this movie was recommended based on user preferences

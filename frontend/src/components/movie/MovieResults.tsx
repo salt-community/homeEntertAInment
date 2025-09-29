@@ -1,10 +1,44 @@
+import { useState } from "react";
 import type { Movie } from "../../types/movie";
 
 interface MovieResultsProps {
   movies: Movie[];
+  onSaveList?: (
+    listName: string,
+    description: string,
+    searchCriteria: string
+  ) => Promise<void>;
 }
 
-export default function MovieResults({ movies }: MovieResultsProps) {
+export default function MovieResults({
+  movies,
+  onSaveList,
+}: MovieResultsProps) {
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [listName, setListName] = useState("");
+  const [description, setDescription] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSaveList = async () => {
+    if (!listName.trim() || !onSaveList) return;
+
+    setIsSaving(true);
+    try {
+      const searchCriteria = JSON.stringify({
+        movieCount: movies.length,
+        savedAt: new Date().toISOString(),
+      });
+
+      await onSaveList(listName.trim(), description.trim(), searchCriteria);
+      setShowSaveModal(false);
+      setListName("");
+      setDescription("");
+    } catch (error) {
+      console.error("Failed to save list:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
   // Handle null, undefined, or empty movies array
   if (!movies || movies.length === 0) {
     return (
@@ -18,9 +52,19 @@ export default function MovieResults({ movies }: MovieResultsProps) {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-semibold text-white mb-4">
-        Your Movie Recommendations
-      </h3>
+      <div className="flex justify-between items-center">
+        <h3 className="text-xl font-semibold text-white">
+          Your Movie Recommendations
+        </h3>
+        {onSaveList && (
+          <button
+            onClick={() => setShowSaveModal(true)}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium"
+          >
+            💾 Save List
+          </button>
+        )}
+      </div>
 
       <div className="grid gap-6">
         {movies.map((movie) => (
@@ -103,6 +147,58 @@ export default function MovieResults({ movies }: MovieResultsProps) {
           </div>
         ))}
       </div>
+
+      {/* Save Modal */}
+      {showSaveModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md mx-4">
+            <h4 className="text-xl font-semibold text-white mb-4">
+              Save Movie List
+            </h4>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">
+                  List Name *
+                </label>
+                <input
+                  type="text"
+                  value={listName}
+                  onChange={(e) => setListName(e.target.value)}
+                  placeholder="e.g., My Action Movies"
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">
+                  Description (Optional)
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="e.g., Great action movies for movie night"
+                  rows={3}
+                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end space-x-3 mt-6">
+              <button
+                onClick={() => setShowSaveModal(false)}
+                className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveList}
+                disabled={!listName.trim() || isSaving}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-medium"
+              >
+                {isSaving ? "Saving..." : "Save List"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

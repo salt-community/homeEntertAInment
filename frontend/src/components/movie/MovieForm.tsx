@@ -226,6 +226,12 @@ export default function MovieForm({ onSubmit, disabled }: MovieFormProps) {
         <textarea
           value={customDescription}
           onChange={(e) => setCustomDescription(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit(e as any);
+            }
+          }}
           disabled={disabled}
           placeholder="e.g., 'I want a movie that will make me laugh and feel good about life' or 'Looking for something with great cinematography and deep themes'"
           rows={3}
@@ -233,7 +239,7 @@ export default function MovieForm({ onSubmit, disabled }: MovieFormProps) {
           className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
         />
         <p className="text-xs text-gray-400 mt-1">
-          {customDescription.length}/500 characters
+          {customDescription.length}/500 characters • Press Enter to search
         </p>
         {errors.customDescription && (
           <p className="text-red-400 text-sm mt-1">

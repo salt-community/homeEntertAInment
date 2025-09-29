@@ -18,6 +18,9 @@ public class SecurityConfig {
         http
                 .csrf((csrf -> csrf.disable()))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET, "/api/proxy/image").permitAll()
+                        // Require auth for movie APIs
+                        .requestMatchers("/api/movies/**").authenticated()
                         .requestMatchers("/api/boardgame/**").authenticated()
                         .requestMatchers("/api/sessions/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/**").authenticated()

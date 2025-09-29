@@ -1,17 +1,17 @@
-import { StoryForm } from "../story/components";
-import { useGenerateStory } from "../story/hooks";
+import { StoryForm } from "../../story/components";
+import { useGenerateStory } from "../../story/hooks";
 import { useNavigate } from "@tanstack/react-router";
 
-export default function StoryGenerator() {
+export default function StoryGeneratorNew() {
   const { loading, error } = useGenerateStory();
   const navigate = useNavigate();
 
   return (
     <div className="p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
       <div className="w-full max-w-2xl text-center">
-        <h2 className="text-2xl font-semibold text-white">Story Generator</h2>
+        <h2 className="text-2xl font-semibold text-white">Create New Story</h2>
         <p className="text-sm text-white/80">
-          Enter prompts to generate a story.
+          Enter prompts to generate a new story.
         </p>
       </div>
 
@@ -21,7 +21,7 @@ export default function StoryGenerator() {
             <StoryForm
               onSubmit={async (payload) => {
                 sessionStorage.setItem("storyRequest", JSON.stringify(payload));
-                navigate({ to: "/story-generator/result" });
+                navigate({ to: "/story/result" });
               }}
               disabled={loading}
             />
@@ -32,8 +32,6 @@ export default function StoryGenerator() {
       <div className="w-full max-w-2xl">
         {error && <p className="text-red-600">{error}</p>}
       </div>
-
-      {/* Result moved to /story-generator/result */}
     </div>
   );
 }

@@ -8,13 +8,15 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
+import java.util.UUID;
 
-public record StoryRequest(
+public record UpdateStoryRequest(
     @NotNull
+    UUID id,
+
     @Size(min = 1, max = 50)
     String character,
 
-    @NotNull
     List<Theme> theme,
 
     AgeGroup ageGroup,
@@ -24,8 +26,8 @@ public record StoryRequest(
     Twist twist,
 
     @Size(max = 200)
-    String custom
+    String custom,
 
+    String coverImageUrl
 ) {
 }
-

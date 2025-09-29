@@ -4,10 +4,12 @@ import type {
   ThemeValue,
   AgeGroupValue,
   TwistValue,
+  StoryLengthValue,
 } from "../types";
 import { AgeGroup, Twist } from "../types";
 import CharacterField from "./CharacterField";
 import ThemeSelector from "./ThemeSelector";
+import StoryLengthSelector from "./StoryLengthSelector";
 import SelectField from "./fields/SelectField";
 import TextInput from "./fields/TextInput";
 
@@ -47,6 +49,7 @@ export default function StoryForm({ onSubmit, disabled }: StoryFormProps) {
   const [ageGroup, setAgeGroup] = useState<AgeGroupValue | "">("");
   const [twist, setTwist] = useState<TwistValue | "">("");
   const [custom, setCustom] = useState("");
+  const [storyLength, setStoryLength] = useState<StoryLengthValue | "">("");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateForm = (): boolean => {
@@ -66,6 +69,10 @@ export default function StoryForm({ onSubmit, disabled }: StoryFormProps) {
 
     if (!ageGroup) {
       newErrors.ageGroup = "Age group is required";
+    }
+
+    if (!storyLength) {
+      newErrors.storyLength = "Story length is required";
     }
 
     if (custom && custom.length > 200) {
@@ -89,6 +96,7 @@ export default function StoryForm({ onSubmit, disabled }: StoryFormProps) {
       character: character.trim(),
       theme: selectedThemes,
       ageGroup: ageGroup as AgeGroupValue,
+      storyLength: storyLength as StoryLengthValue,
       ...(twist && { twist: twist as TwistValue }),
       ...(custom.trim() && { custom: custom.trim() }),
     };
@@ -131,6 +139,14 @@ export default function StoryForm({ onSubmit, disabled }: StoryFormProps) {
         ]}
         disabled={disabled}
         error={errors.ageGroup}
+      />
+
+      {/* Story Length Selector */}
+      <StoryLengthSelector
+        selected={storyLength}
+        onChange={(value) => setStoryLength(value)}
+        disabled={disabled}
+        error={errors.storyLength}
       />
 
       {/* Twist Dropdown */}

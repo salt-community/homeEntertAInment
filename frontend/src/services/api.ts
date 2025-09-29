@@ -25,6 +25,8 @@ export const API_ENDPOINTS = {
     `${API_BASE_URL}/api/sessions/${sessionId}/chatEntry`,
   CREATE_CHATBOT: (sessionId: number) =>
     `${API_BASE_URL}/api/sessions/${sessionId}/chatbot`,
+  // Story PDF conversion endpoint
+  CONVERT_STORY_TO_PDF: `${API_BASE_URL}/api/story/convert-to-pdf`,
 } as const;
 
 export default API_BASE_URL;

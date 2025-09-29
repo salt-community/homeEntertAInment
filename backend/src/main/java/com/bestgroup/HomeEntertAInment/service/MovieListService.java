@@ -71,7 +71,7 @@ public class MovieListService {
     }
 
     public List<MovieList> getMovieListsByUserId(String clerkUserId) {
-        return movieListRepository.findByClerkUserIdOrderByCreatedAtDesc(clerkUserId);
+        return movieListRepository.findByClerkUserIdWithMoviesOrderByCreatedAtDesc(clerkUserId);
     }
 
     public Optional<MovieList> getMovieListByIdAndUserId(Long listId, String clerkUserId) {

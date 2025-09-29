@@ -1,5 +1,6 @@
 package com.bestgroup.HomeEntertAInment.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -68,6 +69,7 @@ public class MovieResponseDto {
         /**
          * Director name
          */
+        @JsonDeserialize(using = DirectorDeserializer.class)
         private String director;
         
         /**

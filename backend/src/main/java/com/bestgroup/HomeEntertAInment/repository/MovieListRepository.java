@@ -15,4 +15,7 @@ public interface MovieListRepository extends JpaRepository<MovieList, Long> {
     
     @Query("SELECT ml FROM MovieList ml LEFT JOIN FETCH ml.movies WHERE ml.id = :listId AND ml.clerkUserId = :clerkUserId")
     Optional<MovieList> findByIdAndClerkUserIdWithMovies(@Param("listId") Long listId, @Param("clerkUserId") String clerkUserId);
+    
+    @Query("SELECT ml FROM MovieList ml LEFT JOIN FETCH ml.movies WHERE ml.clerkUserId = :clerkUserId ORDER BY ml.createdAt DESC")
+    List<MovieList> findByClerkUserIdWithMoviesOrderByCreatedAtDesc(@Param("clerkUserId") String clerkUserId);
 }

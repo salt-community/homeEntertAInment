@@ -48,12 +48,13 @@ public class MovieService {
         StringBuilder prompt = new StringBuilder();
         
         prompt.append("You are a movie recommendation expert. Based on the following preferences, recommend exactly 5 movies with detailed information. ");
-        prompt.append("IMPORTANT: Respond ONLY with a valid JSON object. Do not include any markdown formatting, code blocks, or explanatory text. Just the raw JSON:\n");
+        prompt.append("IMPORTANT: Respond ONLY with a valid JSON object. Do not include any markdown formatting, code blocks, or explanatory text. Do NOT include posterUrl or any image URLs. Just the raw JSON:\n");
         prompt.append("{\n");
         prompt.append("  \"movies\": [\n");
         prompt.append("    {\n");
         prompt.append("      \"title\": \"Movie Title\",\n");
         prompt.append("      \"year\": 2023,\n");
+        prompt.append("      \"imdbId\": \"tt1234567\",\n");
         prompt.append("      \"genres\": [\"Genre1\", \"Genre2\"],\n");
         prompt.append("      \"description\": \"Brief plot description\",\n");
         prompt.append("      \"duration\": 120,\n");
@@ -61,7 +62,6 @@ public class MovieService {
         prompt.append("      \"director\": \"Director Name\",\n");
         prompt.append("      \"cast\": [\"Actor1\", \"Actor2\", \"Actor3\"],\n");
         prompt.append("      \"rating\": 8.5,\n");
-        prompt.append("      \"posterUrl\": \"https://example.com/poster.jpg\",\n");
         prompt.append("      \"recommendationReason\": \"Why this movie matches the preferences\"\n");
         prompt.append("    }\n");
         prompt.append("  ]\n");
@@ -97,7 +97,7 @@ public class MovieService {
         prompt.append("- Recommend exactly 5 movies\n");
         prompt.append("- Include a mix of well-known and lesser-known quality films\n");
         prompt.append("- Provide accurate information about each movie\n");
-        prompt.append("- Include poster URLs when possible (use actual movie poster URLs)\n");
+        prompt.append("- Do NOT include posterUrl or any image URLs\n");
         prompt.append("- Explain why each movie matches the user's preferences\n");
         prompt.append("- Focus on movies that are easily accessible (available on streaming platforms)\n");
 

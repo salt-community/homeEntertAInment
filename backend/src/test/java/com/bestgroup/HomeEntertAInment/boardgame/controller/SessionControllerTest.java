@@ -107,7 +107,7 @@ class SessionControllerTest {
 
         // When & Then
         mockMvc.perform(get("/api/boardgame/sessions/active"))
-                .andExpected(status().isOk())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].isActive").value(true));

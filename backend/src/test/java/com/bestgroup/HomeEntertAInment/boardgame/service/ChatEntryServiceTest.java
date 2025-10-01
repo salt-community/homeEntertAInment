@@ -61,7 +61,7 @@ class ChatEntryServiceTest {
     void setUp() {
         testRuleSet = RuleSet.builder()
                 .id(1L)
-                .gameName("Monopoly")
+                .fileName("monopoly-rules.pdf")
                 .decodedData("Monopoly rules: When you land on GO, collect $200...")
                 .clerkUserId(TEST_USER_ID)
                 .build();

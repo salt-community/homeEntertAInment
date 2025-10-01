@@ -1,5 +1,6 @@
 package com.bestgroup.HomeEntertAInment.boardgame.controller;
 
+import com.bestgroup.HomeEntertAInment.boardgame.entity.RuleSet;
 import com.bestgroup.HomeEntertAInment.boardgame.entity.Session;
 import com.bestgroup.HomeEntertAInment.boardgame.service.ConvertApiService;
 import com.bestgroup.HomeEntertAInment.boardgame.service.RuleSetService;
@@ -15,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -36,8 +38,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(SessionController.class)
 @TestPropertySource(properties = {
     "CONVERT_API_TOKEN=test-token",
-    "GEMINI_API_KEY=test-key"
+    "GEMINI_API_KEY=test-key",
+    "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://localhost:8080/auth/realms/test"
 })
+@ActiveProfiles("test")
 class SessionControllerTest {
 
     @Autowired
@@ -211,8 +215,14 @@ class SessionControllerTest {
         
         when(clerkUserExtractor.extractClerkUserIdRequired(any(Authentication.class)))
                 .thenReturn(TEST_USER_ID);
+        RuleSet mockRuleSet = RuleSet.builder()
+                .id(1L)
+                .fileName("test-rules.txt")
+                .decodedData(ruleText)
+                .clerkUserId(TEST_USER_ID)
+                .build();
         when(ruleSetService.createRuleSetFromTextForUser(eq(TEST_GAME_NAME), eq(ruleText), eq(TEST_USER_ID)))
-                .thenReturn(null); // Simplified for test
+                .thenReturn(mockRuleSet);
         when(sessionService.createSessionForUser(TEST_GAME_NAME, TEST_USER_ID))
                 .thenReturn(testSession);
         when(sessionService.saveSession(any(Session.class))).thenReturn(testSession);
@@ -244,8 +254,14 @@ class SessionControllerTest {
         
         when(clerkUserExtractor.extractClerkUserIdRequired(any(Authentication.class)))
                 .thenReturn(TEST_USER_ID);
+        RuleSet mockRuleSet = RuleSet.builder()
+                .id(1L)
+                .fileName("rules.pdf")
+                .decodedData("PDF rules content")
+                .clerkUserId(TEST_USER_ID)
+                .build();
         when(convertApiService.convertPdfToText(any())).thenReturn(null); // Simplified
-        when(ruleSetService.createRuleSetForUser(any(), eq(TEST_USER_ID))).thenReturn(null);
+        when(ruleSetService.createRuleSetForUser(any(), eq(TEST_USER_ID))).thenReturn(mockRuleSet);
         when(sessionService.createSessionForUser(TEST_GAME_NAME, TEST_USER_ID))
                 .thenReturn(testSession);
         when(sessionService.saveSession(any(Session.class))).thenReturn(testSession);

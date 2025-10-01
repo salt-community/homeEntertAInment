@@ -118,7 +118,7 @@ class ChatBotServiceTest {
                 chatBotService.createOrGetChatBotForSessionAndUser(TEST_SESSION_ID, TEST_USER_ID));
 
         assertNotNull(exception);
-        assertTrue(exception.getMessage().contains("Session not found"));
+        assertTrue(exception.getMessage().contains("Failed to create or get chatbot for session: " + TEST_SESSION_ID + " and user: " + TEST_USER_ID));
         verify(sessionRepository).findByIdAndClerkUserId(TEST_SESSION_ID, TEST_USER_ID);
         verify(chatBotRepository, never()).findBySession_IdAndClerkUserId(any(), any());
         verify(chatBotRepository, never()).save(any(ChatBot.class));

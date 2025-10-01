@@ -3,23 +3,22 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useSessions } from "../useSessions";
 import React from "react";
+import { ClerkProvider } from "@clerk/clerk-react";
 
 // Mock the API client
+const mockAuthenticatedFetch = vi.fn();
 vi.mock("../../services/apiClient", () => ({
-  useAuthenticatedFetch: () =>
-    vi.fn().mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve([]),
-    }),
+  useAuthenticatedFetch: () => mockAuthenticatedFetch,
 }));
 
 // Mock Clerk
-vi.mock("@clerk/nextjs", () => ({
+vi.mock("@clerk/clerk-react", () => ({
   useUser: () => ({
     isSignedIn: true,
     isLoaded: true,
     user: { id: "test-user" },
   }),
+  ClerkProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
 const createWrapper = () => {
@@ -32,7 +31,15 @@ const createWrapper = () => {
   });
 
   const wrapper = ({ children }: { children: React.ReactNode }) =>
-    React.createElement(QueryClientProvider, { client: queryClient }, children);
+    React.createElement(
+      ClerkProvider,
+      { publishableKey: "test-key" },
+      React.createElement(
+        QueryClientProvider,
+        { client: queryClient },
+        children
+      )
+    );
 
   return wrapper;
 };
@@ -40,6 +47,11 @@ const createWrapper = () => {
 describe("useSessions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Default mock setup
+    mockAuthenticatedFetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve([]),
+    });
   });
 
   it("should return initial loading state", () => {
@@ -48,7 +60,7 @@ describe("useSessions", () => {
     });
 
     expect(result.current.isLoading).toBe(true);
-    expect(result.current.sessions).toBeUndefined();
+    expect(result.current.sessions).toEqual([]);
     expect(result.current.error).toBeNull();
   });
 
@@ -66,14 +78,10 @@ describe("useSessions", () => {
     ];
 
     // Mock the authenticated fetch to return sessions
-    const mockFetch = vi.fn().mockResolvedValue({
+    mockAuthenticatedFetch.mockResolvedValue({
       ok: true,
       json: () => Promise.resolve(mockSessions),
     });
-
-    vi.doMock("../../services/apiClient", () => ({
-      useAuthenticatedFetch: () => mockFetch,
-    }));
 
     const { result } = renderHook(() => useSessions(), {
       wrapper: createWrapper(),
@@ -88,11 +96,7 @@ describe("useSessions", () => {
   });
 
   it("should handle fetch error", async () => {
-    const mockFetch = vi.fn().mockRejectedValue(new Error("Network error"));
-
-    vi.doMock("../../services/apiClient", () => ({
-      useAuthenticatedFetch: () => mockFetch,
-    }));
+    mockAuthenticatedFetch.mockRejectedValue(new Error("Network error"));
 
     const { result } = renderHook(() => useSessions(), {
       wrapper: createWrapper(),
@@ -102,7 +106,7 @@ describe("useSessions", () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    expect(result.current.sessions).toBeUndefined();
+    expect(result.current.sessions).toEqual([]);
     expect(result.current.error).toBeTruthy();
   });
 
@@ -115,14 +119,10 @@ describe("useSessions", () => {
   });
 
   it("should handle empty sessions array", async () => {
-    const mockFetch = vi.fn().mockResolvedValue({
+    mockAuthenticatedFetch.mockResolvedValue({
       ok: true,
       json: () => Promise.resolve([]),
     });
-
-    vi.doMock("../../services/apiClient", () => ({
-      useAuthenticatedFetch: () => mockFetch,
-    }));
 
     const { result } = renderHook(() => useSessions(), {
       wrapper: createWrapper(),

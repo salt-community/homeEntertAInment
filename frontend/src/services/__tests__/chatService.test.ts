@@ -91,7 +91,7 @@ describe("ChatService", () => {
       );
 
       expect(mockFetch).toHaveBeenCalledWith(
-        `/api/sessions/${mockSessionId}/chatEntry`,
+        `http://localhost:8080/api/sessions/${mockSessionId}/chatEntry`,
         {
           method: "POST",
           headers: {
@@ -121,7 +121,7 @@ describe("ChatService", () => {
           mockRequest,
           mockAuthenticatedFetch
         )
-      ).rejects.toThrow("Failed to create chat entry: 400 Bad Request");
+      ).rejects.toThrow("Failed to create chat entry: Bad Request");
     });
   });
 
@@ -146,9 +146,12 @@ describe("ChatService", () => {
       );
 
       expect(mockFetch).toHaveBeenCalledWith(
-        `/api/sessions/${mockSessionId}/chatbot`,
+        `http://localhost:8080/api/sessions/${mockSessionId}/chatbot`,
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
       expect(result).toEqual(mockResponse);
@@ -163,7 +166,7 @@ describe("ChatService", () => {
 
       await expect(
         ChatService.createChatBot(mockSessionId, mockAuthenticatedFetch)
-      ).rejects.toThrow("Failed to create chatbot: 500 Internal Server Error");
+      ).rejects.toThrow("Failed to create chatbot: Internal Server Error");
     });
   });
 

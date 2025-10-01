@@ -16,9 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import com.bestgroup.HomeEntertAInment.config.TestSecurityConfig;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -38,10 +40,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(SessionController.class)
 @TestPropertySource(properties = {
     "CONVERT_API_TOKEN=test-token",
-    "GEMINI_API_KEY=test-key",
-    "spring.security.oauth2.resourceserver.jwt.issuer-uri=http://localhost:8080/auth/realms/test"
+    "GEMINI_API_KEY=test-key"
 })
 @ActiveProfiles("test")
+@Import(TestSecurityConfig.class)
 class SessionControllerTest {
 
     @Autowired

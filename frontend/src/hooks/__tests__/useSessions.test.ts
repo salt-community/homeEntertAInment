@@ -13,6 +13,15 @@ vi.mock("../../services/apiClient", () => ({
     }),
 }));
 
+// Mock Clerk
+vi.mock("@clerk/nextjs", () => ({
+  useUser: () => ({
+    isSignedIn: true,
+    isLoaded: true,
+    user: { id: "test-user" },
+  }),
+}));
+
 const createWrapper = () => {
   const queryClient = new QueryClient({
     defaultOptions: {

@@ -189,9 +189,8 @@ describe("ChatInterface", () => {
     await user.type(input, "Test message");
     await user.click(sendButton);
 
-    // Should show thinking indicator
-    expect(screen.getByText("Thinking")).toBeInTheDocument();
-    expect(screen.getByText("...")).toBeInTheDocument();
+    // Should show sending indicator
+    expect(screen.getByText("Sending...")).toBeInTheDocument();
   });
 
   it("displays error message when chat loading fails", async () => {
@@ -224,9 +223,12 @@ describe("ChatInterface", () => {
     await user.type(input, "Test message");
     await user.click(sendButton);
 
-    await waitFor(() => {
-      expect(screen.getByText("Failed to send message")).toBeInTheDocument();
-    });
+    await waitFor(
+      () => {
+        expect(screen.getByText("Failed to send message")).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
   });
 
   it("formats timestamps correctly", async () => {

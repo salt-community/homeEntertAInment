@@ -75,12 +75,10 @@ describe("BoardGameRuleInspector", () => {
   it("has proper responsive layout", () => {
     render(<BoardGameRuleInspector />);
 
-    // Check for flex layout
-    const flexContainer = screen
-      .getByText("Board Game Rule Inspector")
-      .closest(".flex");
-    expect(flexContainer).toBeInTheDocument();
-    expect(flexContainer).toHaveClass("h-screen");
+    // Check for main flex layout with h-screen
+    const mainContainer = document.querySelector(".flex.h-screen");
+    expect(mainContainer).toBeInTheDocument();
+    expect(mainContainer).toHaveClass("h-screen");
   });
 
   it("displays gradient text styling", () => {

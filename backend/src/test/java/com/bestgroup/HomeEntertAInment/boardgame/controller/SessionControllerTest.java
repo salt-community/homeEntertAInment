@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import com.bestgroup.HomeEntertAInment.boardgame.dto.ConvertApiResponseDto;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -78,6 +79,10 @@ class SessionControllerTest {
                 .clerkUserId(TEST_USER_ID)
                 .createdAt(LocalDateTime.now())
                 .build();
+        
+        // Default mock setup for ClerkUserExtractor
+        when(clerkUserExtractor.extractClerkUserIdRequired(any(Authentication.class)))
+                .thenReturn(TEST_USER_ID);
     }
 
     @Test
@@ -243,7 +248,7 @@ class SessionControllerTest {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(username = "test-user", authorities = {"USER"})
     void createSessionWithRules_WithPdfFile_ShouldCreateSession() throws Exception {
         // Given
         String playerNames = "Alice,Bob";
@@ -262,7 +267,15 @@ class SessionControllerTest {
                 .decodedData("PDF rules content")
                 .clerkUserId(TEST_USER_ID)
                 .build();
-        when(convertApiService.convertPdfToText(any())).thenReturn(null); // Simplified
+        // Create a proper mock ConvertApiResponseDto
+        ConvertApiResponseDto mockConvertResponse = new ConvertApiResponseDto();
+        ConvertApiResponseDto.ConvertedFile mockFile = new ConvertApiResponseDto.ConvertedFile();
+        mockFile.setFileName("rules.pdf");
+        mockFile.setFileExt("pdf");
+        mockFile.setFileSize(1024);
+        mockFile.setFileData("UERGIGNvbnRlbnQ="); // Base64 encoded "PDF content"
+        mockConvertResponse.setFiles(Arrays.asList(mockFile));
+        when(convertApiService.convertPdfToText(any())).thenReturn(mockConvertResponse);
         when(ruleSetService.createRuleSetForUser(any(), eq(TEST_USER_ID))).thenReturn(mockRuleSet);
         when(sessionService.createSessionForUser(TEST_GAME_NAME, TEST_USER_ID))
                 .thenReturn(testSession);

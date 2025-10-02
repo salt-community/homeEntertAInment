@@ -110,26 +110,26 @@ export default function MovieForm({ onSubmit, disabled }: MovieFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
+    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 max-w-2xl">
       {/* Genre Selection */}
       <div>
         <label className="block text-sm font-medium text-white mb-3">
           Genres (Optional - Select up to 3)
         </label>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-3 gap-2 sm:gap-3">
           {GENRES.map((genre) => (
             <label
               key={genre}
-              className="flex items-center space-x-2 cursor-pointer"
+              className="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-gray-700/50 transition-colors"
             >
               <input
                 type="checkbox"
                 checked={selectedGenres.includes(genre)}
                 onChange={() => handleGenreChange(genre)}
                 disabled={disabled}
-                className="rounded border-gray-600 bg-gray-700 text-purple-600 focus:ring-purple-500 focus:ring-2"
+                className="rounded border-gray-600 bg-gray-700 text-purple-600 focus:ring-purple-500 focus:ring-2 flex-shrink-0"
               />
-              <span className="text-sm text-white">{genre}</span>
+              <span className="text-xs sm:text-sm text-white truncate">{genre}</span>
             </label>
           ))}
         </div>
@@ -250,7 +250,7 @@ export default function MovieForm({ onSubmit, disabled }: MovieFormProps) {
 
       <button
         type="submit"
-        className="w-full px-6 py-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-lg hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+        className="w-full px-4 sm:px-6 py-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-lg hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm sm:text-base"
         disabled={disabled}
       >
         Find My Movies

@@ -135,10 +135,10 @@ export default function SavedMovieLists() {
   return (
     <div className="p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
       <div className="w-full max-w-4xl text-center">
-        <h2 className="text-2xl font-semibold text-white">
+        <h2 className="text-xl sm:text-2xl font-semibold text-white">
           My Saved Movie Lists
         </h2>
-        <p className="text-sm text-white/80 mt-2">
+        <p className="text-sm text-white/80 mt-2 px-2">
           {lists.length === 0
             ? "No saved lists yet. Create some movie recommendations to get started!"
             : `You have ${lists.length} saved movie list${
@@ -150,28 +150,29 @@ export default function SavedMovieLists() {
         <div className="flex justify-center mt-4">
           <button
             onClick={() => (window.location.href = "/movie-mood")}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium text-sm"
+            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium text-sm flex items-center justify-center gap-2"
           >
-            🔍 New Movie Search
+            <span>🔍</span>
+            <span>New Movie Search</span>
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-4xl px-4">
           <div className="bg-red-900/30 border border-red-500/30 rounded-lg p-4">
-            <p className="text-red-400">{error}</p>
+            <p className="text-red-400 text-sm sm:text-base">{error}</p>
           </div>
         </div>
       )}
 
       {lists.length === 0 ? (
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-2xl px-4">
           <div className="rounded-xl p-[2px] bg-gradient-to-r from-[#F930C7] to-[#3076F9]">
-            <div className="rounded-[10px] bg-black p-8 text-white text-center">
-              <div className="text-6xl mb-4">🎬</div>
-              <h3 className="text-xl font-semibold mb-2">No Lists Yet</h3>
-              <p className="text-gray-400 mb-6">
+            <div className="rounded-[10px] bg-black p-6 sm:p-8 text-white text-center">
+              <div className="text-4xl sm:text-6xl mb-4">🎬</div>
+              <h3 className="text-lg sm:text-xl font-semibold mb-2">No Lists Yet</h3>
+              <p className="text-gray-400 mb-6 text-sm sm:text-base">
                 Start by creating movie recommendations and save your favorites!
               </p>
               <button
@@ -184,38 +185,40 @@ export default function SavedMovieLists() {
           </div>
         </div>
       ) : (
-        <div className="w-full max-w-4xl space-y-4">
+        <div className="w-full max-w-4xl space-y-4 px-4">
           {lists.map((list) => (
             <div
               key={list.id}
               className="rounded-xl p-[2px] bg-gradient-to-r from-[#F930C7] to-[#3076F9]"
             >
-              <div className="rounded-[10px] bg-black p-6 text-white">
-                <div className="flex justify-between items-start">
+              <div className="rounded-[10px] bg-black p-4 sm:p-6 text-white">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                   <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-white mb-2">
+                    <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">
                       {list.listName}
                     </h3>
                     {list.description && (
-                      <p className="text-gray-300 mb-3">{list.description}</p>
+                      <p className="text-gray-300 mb-3 text-sm sm:text-base">{list.description}</p>
                     )}
-                    <div className="flex items-center space-x-4 text-sm text-gray-400">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-400">
                       <span>📽️ {list.movieCount} movies</span>
                       <span>📅 {formatDate(list.createdAt)}</span>
                     </div>
                   </div>
-                  <div className="flex space-x-2 ml-4">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 sm:ml-4">
                     <button
                       onClick={() => handleViewList(list.id)}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium text-sm"
+                      className="px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium text-sm flex items-center justify-center gap-2"
                     >
-                      View
+                      <span>👁️</span>
+                      <span>View</span>
                     </button>
                     <button
                       onClick={() => handleDeleteList(list.id)}
-                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium text-sm border border-red-500"
+                      className="px-3 sm:px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium text-sm border border-red-500 flex items-center justify-center gap-2"
                     >
-                      Delete
+                      <span>🗑️</span>
+                      <span>Delete</span>
                     </button>
                   </div>
                 </div>
@@ -229,54 +232,54 @@ export default function SavedMovieLists() {
       {showListDetail && selectedList && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
-            <div className="p-6 border-b border-gray-700">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-2xl font-semibold text-white">
+            <div className="p-4 sm:p-6 border-b border-gray-700">
+              <div className="flex justify-between items-start gap-4">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xl sm:text-2xl font-semibold text-white break-words">
                     {selectedList.listName}
                   </h3>
                   {selectedList.description && (
-                    <p className="text-gray-300 mt-2">
+                    <p className="text-gray-300 mt-2 text-sm sm:text-base break-words">
                       {selectedList.description}
                     </p>
                   )}
-                  <p className="text-gray-400 text-sm mt-2">
+                  <p className="text-gray-400 text-xs sm:text-sm mt-2">
                     Created on {formatDate(selectedList.createdAt)}
                   </p>
                 </div>
                 <button
                   onClick={() => setShowListDetail(false)}
-                  className="text-red-400 hover:text-red-300 text-4xl font-bold transition-colors duration-200"
+                  className="text-red-400 hover:text-red-300 text-3xl sm:text-4xl font-bold transition-colors duration-200 flex-shrink-0"
                 >
                   ×
                 </button>
               </div>
             </div>
 
-            <div className="p-6 overflow-y-auto max-h-[60vh]">
-              <div className="space-y-6">
+            <div className="p-4 sm:p-6 overflow-y-auto max-h-[60vh]">
+              <div className="space-y-4 sm:space-y-6">
                 {selectedList.movies.map((movie) => (
                   <div
                     key={`${movie.title}-${movie.year}`}
-                    className="bg-gray-700 rounded-lg p-4"
+                    className="bg-gray-700 rounded-lg p-3 sm:p-4"
                   >
-                    <div className="flex flex-col lg:flex-row gap-4">
+                    <div className="flex flex-col gap-3 sm:gap-4">
                       <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
-                          <h4 className="text-lg font-semibold text-white">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
+                          <h4 className="text-base sm:text-lg font-semibold text-white">
                             {movie.title} ({movie.year})
                           </h4>
-                          <div className="flex items-center space-x-2">
-                            <span className="text-yellow-400 font-semibold">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                            <span className="text-yellow-400 font-semibold text-sm sm:text-base">
                               ⭐ {movie.rating}/10
                             </span>
-                            <span className="text-gray-400 text-sm">
+                            <span className="text-gray-400 text-xs sm:text-sm">
                               {movie.ageRating} • {movie.duration}min
                             </span>
                           </div>
                         </div>
 
-                        <div className="flex flex-wrap gap-2 mb-3">
+                        <div className="flex flex-wrap gap-1 sm:gap-2 mb-3">
                           {movie.genres &&
                             movie.genres.map((genre) => (
                               <span
@@ -288,11 +291,11 @@ export default function SavedMovieLists() {
                             ))}
                         </div>
 
-                        <p className="text-gray-300 mb-3 text-sm">
+                        <p className="text-gray-300 mb-3 text-xs sm:text-sm">
                           {movie.description}
                         </p>
 
-                        <div className="text-sm text-gray-400 mb-2">
+                        <div className="text-xs sm:text-sm text-gray-400 mb-2">
                           <p>
                             <span className="font-medium">Director:</span>{" "}
                             {movie.director}
@@ -304,8 +307,8 @@ export default function SavedMovieLists() {
                           </p>
                         </div>
 
-                        <div className="bg-purple-900/20 rounded-lg p-3">
-                          <p className="text-sm text-purple-200">
+                        <div className="bg-purple-900/20 rounded-lg p-2 sm:p-3">
+                          <p className="text-xs sm:text-sm text-purple-200">
                             <span className="font-medium">Why we recommend this:</span>{" "}
                             {movie.recommendationReason}
                           </p>

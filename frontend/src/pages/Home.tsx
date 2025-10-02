@@ -17,12 +17,19 @@ const Card = ({
       : "bg-gradient-to-r from-[#3076F9] to-[#F930C7]";
 
   return (
-    <div className={`rounded-xl p-[2px] ${frameClass}`}>
-      <Link to={to} className="group block rounded-[10px] bg-black p-8">
-        <h2 className="mb-3 text-3xl font-semibold tracking-wide text-white">
+    <div
+      className={`rounded-xl p-[2px] ${frameClass} hover:scale-105 transition-transform duration-300`}
+    >
+      <Link
+        to={to}
+        className="group block rounded-[10px] bg-black p-4 sm:p-6 lg:p-8 h-full"
+      >
+        <h2 className="mb-3 text-xl sm:text-2xl lg:text-3xl font-semibold tracking-wide text-white">
           {title}
         </h2>
-        <p className="text-sm leading-6 text-white/90">{description}</p>
+        <p className="text-xs sm:text-sm leading-5 sm:leading-6 text-white/90">
+          {description}
+        </p>
       </Link>
     </div>
   );
@@ -31,11 +38,23 @@ const Card = ({
 export default function Home() {
   return (
     <div
-      className="w-full text-center relative pt-20 min-h-screen bg-black bg-no-repeat bg-cover bg-center m-0 p-0"
+      className="w-full text-center relative pt-4 sm:pt-20 min-h-screen bg-black bg-no-repeat bg-cover bg-center m-0 p-0"
       style={{ backgroundImage: "url('/landing-bg.png')" }}
     >
-      <section className="mx-auto w-full max-w-7xl px-6 py-12">
-        <div className="grid gap-30 grid-cols-1 md:grid-cols-2">
+      <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 py-8 sm:py-12">
+        {/* Welcome Section */}
+        <div className="mb-8 sm:mb-12">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
+            Welcome to Home Entertainment System
+          </h1>
+          <p className="text-sm sm:text-base text-white/80 max-w-2xl mx-auto">
+            Your one-stop destination for entertainment tools. Generate stories,
+            pick movies, settle board game disputes, and create quizzes - all
+            powered by AI.
+          </p>
+        </div>
+
+        <div className="grid gap-4 sm:gap-6 lg:gap-8 grid-cols-1 md:grid-cols-2">
           <Card
             to="/story"
             title="Story Generator"

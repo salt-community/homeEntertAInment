@@ -40,28 +40,31 @@ export default function BoardGameSessionChat() {
           {/* Mobile Header with Menu Button */}
           <div className="lg:hidden bg-black border-b border-gray-800 p-4 flex-shrink-0">
             <div className="flex items-center justify-between">
-              <button
-                onClick={() => setIsSidebarOpen(true)}
-                className="p-2 rounded-lg bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white hover:opacity-80 transition-opacity"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              <div className="flex flex-col items-start">
+                <button
+                  onClick={() => setIsSidebarOpen(true)}
+                  className="flex items-center space-x-2 p-2 rounded-lg bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white hover:opacity-80 transition-opacity"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  </svg>
+                  <span className="text-sm font-medium">Sessions</span>
+                </button>
+              </div>
               <h1 className="text-lg font-bold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
                 Game Session
               </h1>
-              <div className="w-10" /> {/* Spacer for centering */}
+              <div className="w-20" /> {/* Spacer for centering */}
             </div>
           </div>
 

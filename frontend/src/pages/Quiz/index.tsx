@@ -93,8 +93,8 @@ export default function QuizIndex() {
                   Create New Quiz
                 </h2>
                 <p className="text-sm leading-6 text-white/90 mb-6">
-                  Build a personalized quiz with custom topics, difficulty levels,
-                  and question counts.
+                  Build a personalized quiz with custom topics, difficulty
+                  levels, and question counts.
                 </p>
               </div>
               <NewQuizButton onClick={handleNewQuiz} />
@@ -128,8 +128,8 @@ export default function QuizIndex() {
                   Browse All Quizzes
                 </h2>
                 <p className="text-sm leading-6 text-white/90 mb-6">
-                  Explore our collection of available quizzes and find the perfect
-                  one for your game night.
+                  Explore our collection of available quizzes and find the
+                  perfect one for your game night.
                 </p>
               </div>
               <button
@@ -155,8 +155,8 @@ export default function QuizIndex() {
                         My Quizzes
                       </h2>
                       <p className="text-sm leading-6 text-white/90 mb-6">
-                        View and manage all the quizzes you've created. Access your
-                        personal quiz collection.
+                        View and manage all the quizzes you've created. Access
+                        your personal quiz collection.
                       </p>
                     </div>
                     <button

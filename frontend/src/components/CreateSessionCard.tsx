@@ -21,11 +21,11 @@ export const CreateSessionCard = () => {
   // Show login prompt if user is not signed in
   if (!isLoaded) {
     return (
-      <div className="bg-black rounded-xl shadow-lg border border-gray-800 p-6 hover:shadow-xl hover:border-[#F930C7]/50 transition-all duration-300 bg-gradient-to-br from-black to-gray-900">
+      <div className="bg-black rounded-xl shadow-lg border border-gray-800 p-4 lg:p-6 hover:shadow-xl hover:border-[#F930C7]/50 transition-all duration-300 bg-gradient-to-br from-black to-gray-900">
         <div className="animate-pulse">
-          <div className="h-6 bg-gray-800 rounded w-1/3 mb-4"></div>
-          <div className="h-4 bg-gray-800 rounded w-1/2 mb-2"></div>
-          <div className="h-4 bg-gray-800 rounded w-1/4"></div>
+          <div className="h-5 lg:h-6 bg-gray-800 rounded w-1/3 mb-3 lg:mb-4"></div>
+          <div className="h-3 lg:h-4 bg-gray-800 rounded w-1/2 mb-2"></div>
+          <div className="h-3 lg:h-4 bg-gray-800 rounded w-1/4"></div>
         </div>
       </div>
     );
@@ -33,11 +33,11 @@ export const CreateSessionCard = () => {
 
   if (!isSignedIn) {
     return (
-      <div className="bg-black rounded-xl shadow-lg border border-gray-800 p-6 hover:shadow-xl hover:border-[#F930C7]/50 transition-all duration-300 bg-gradient-to-br from-black to-gray-900">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="w-10 h-10 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
+      <div className="bg-black rounded-xl shadow-lg border border-gray-800 p-4 lg:p-6 hover:shadow-xl hover:border-[#F930C7]/50 transition-all duration-300 bg-gradient-to-br from-black to-gray-900">
+        <div className="flex items-center space-x-3 mb-4 lg:mb-6">
+          <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
             <svg
-              className="w-5 h-5 text-white"
+              className="w-4 h-4 lg:w-5 lg:h-5 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -52,15 +52,15 @@ export const CreateSessionCard = () => {
               />
             </svg>
           </div>
-          <h2 className="text-xl font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
+          <h2 className="text-lg lg:text-xl font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
             Create New Game Session
           </h2>
         </div>
 
-        <div className="text-center py-8">
-          <div className="w-16 h-16 bg-gradient-to-r from-[#F930C7]/20 to-[#3076F9]/20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+        <div className="text-center py-6 lg:py-8">
+          <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-r from-[#F930C7]/20 to-[#3076F9]/20 rounded-full flex items-center justify-center mx-auto mb-3 lg:mb-4 shadow-md">
             <svg
-              className="w-8 h-8 text-[#3076F9]"
+              className="w-6 h-6 lg:w-8 lg:h-8 text-[#3076F9]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -73,7 +73,7 @@ export const CreateSessionCard = () => {
               />
             </svg>
           </div>
-          <p className="text-white/70 text-sm mb-1 font-medium">
+          <p className="text-white/70 text-xs lg:text-sm mb-1 font-medium">
             Please log in to create sessions
           </p>
           <p className="text-white/50 text-xs">
@@ -179,11 +179,11 @@ export const CreateSessionCard = () => {
   };
 
   return (
-    <div className="bg-black rounded-xl shadow-lg border border-gray-800 p-6 hover:shadow-xl hover:border-[#F930C7]/50 transition-all duration-300 bg-gradient-to-br from-black to-gray-900">
-      <div className="flex items-center space-x-3 mb-6">
-        <div className="w-10 h-10 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
+    <div className="bg-black rounded-xl shadow-lg border border-gray-800 p-4 lg:p-6 hover:shadow-xl hover:border-[#F930C7]/50 transition-all duration-300 bg-gradient-to-br from-black to-gray-900">
+      <div className="flex items-center space-x-3 mb-4 lg:mb-6">
+        <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
           <svg
-            className="w-5 h-5 text-white"
+            className="w-4 h-4 lg:w-5 lg:h-5 text-white"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -198,12 +198,12 @@ export const CreateSessionCard = () => {
             />
           </svg>
         </div>
-        <h2 className="text-xl font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
+        <h2 className="text-lg lg:text-xl font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
           Create New Game Session
         </h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-3 lg:space-y-4">
         {/* Game Name */}
         <div>
           <label
@@ -218,7 +218,7 @@ export const CreateSessionCard = () => {
             value={gameName}
             onChange={(e) => setGameName(e.target.value)}
             placeholder="e.g., Monopoly, Chess, Catan"
-            className="w-full px-4 py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white"
+            className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white text-sm lg:text-base"
             style={{ color: "#ffffff", backgroundColor: "#1f2937" }}
             required
           />
@@ -237,8 +237,8 @@ export const CreateSessionCard = () => {
             id="playerNames"
             value={playerNames}
             onChange={(e) => setPlayerNames(e.target.value)}
-            placeholder="e.g., Alice, Bob, Charlie (comma-separated)"
-            className="w-full px-4 py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white"
+            placeholder="e.g., Alice, Bob, Charlie"
+            className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white text-sm lg:text-base"
             style={{ color: "#ffffff", backgroundColor: "#1f2937" }}
           />
           <p className="text-xs text-white/60 mt-1">
@@ -253,7 +253,7 @@ export const CreateSessionCard = () => {
           </label>
 
           {/* PDF Upload Option */}
-          <div className="mb-4">
+          <div className="mb-3 lg:mb-4">
             <label
               htmlFor="ruleFile"
               className="block text-sm font-medium text-white/70 mb-1"
@@ -265,7 +265,7 @@ export const CreateSessionCard = () => {
               id="ruleFile"
               accept=".pdf"
               onChange={handleFileChange}
-              className="w-full px-4 py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white"
+              className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white text-sm lg:text-base"
             />
             <p className="text-xs text-white/60 mt-1">
               Upload a PDF file containing the game rules
@@ -273,7 +273,7 @@ export const CreateSessionCard = () => {
           </div>
 
           {/* Divider */}
-          <div className="flex items-center my-4">
+          <div className="flex items-center my-3 lg:my-4">
             <div className="flex-1 h-px bg-gray-700"></div>
             <span className="px-3 text-sm text-white/50">OR</span>
             <div className="flex-1 h-px bg-gray-700"></div>
@@ -300,8 +300,8 @@ export const CreateSessionCard = () => {
                 value={ruleText}
                 onChange={handleTextareaChange}
                 placeholder="Enter the game rules here..."
-                rows={8}
-                className="w-full px-4 py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white resize-vertical"
+                rows={6}
+                className="w-full px-3 py-2 lg:px-4 lg:py-3 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3076F9] focus:border-[#3076F9] transition-all duration-200 bg-gray-800 hover:border-gray-600 text-white resize-vertical text-sm lg:text-base"
                 style={{ color: "#ffffff", backgroundColor: "#1f2937" }}
               />
             )}
@@ -355,7 +355,7 @@ export const CreateSessionCard = () => {
         <button
           type="submit"
           disabled={isCreating}
-          className="w-full px-6 py-3 bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white rounded-lg hover:from-[#F930C7]/80 hover:to-[#3076F9]/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+          className="w-full px-4 py-2.5 lg:px-6 lg:py-3 bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white rounded-lg hover:from-[#F930C7]/80 hover:to-[#3076F9]/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm lg:text-base"
         >
           {isCreating ? "Creating Session..." : "Create Session"}
         </button>

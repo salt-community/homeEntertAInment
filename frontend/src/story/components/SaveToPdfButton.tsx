@@ -75,7 +75,6 @@ export function SaveToPdfButton({
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error("Error generating PDF:", err);
       setError(err instanceof Error ? err.message : "Failed to generate PDF");
     } finally {
       setIsGenerating(false);

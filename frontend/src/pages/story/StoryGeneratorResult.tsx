@@ -39,18 +39,36 @@ export default function StoryGeneratorResult() {
     // Generate dynamic prompt based on the actual story content
     const description = generateCoverImagePrompt(data.story, request.character);
 
-    console.log("Generated dynamic cover image prompt:", description);
-
     try {
       await generateImage({ description });
-    } catch (err) {
-      console.error("Failed to generate cover image:", err);
+    } catch {
+      // Handle error silently or show user-friendly message
     }
   };
 
   return (
-    <div className="p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
-      <div className="w-full max-w-2xl flex justify-end">
+    <div className="relative p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
+      <button
+        onClick={() => window.history.back()}
+        className="absolute top-4 left-4 sm:left-auto sm:top-auto sm:relative sm:mb-4 z-10 inline-flex items-center px-2 py-1 sm:px-3 sm:py-1.5 text-xs text-white/70 hover:text-white transition-colors duration-200"
+      >
+        <svg
+          className="w-3 h-3 mr-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        <span className="hidden sm:inline">Back</span>
+      </button>
+
+      <div className="w-full max-w-2xl flex justify-end mt-8">
         <Link
           to="/story"
           className="inline-flex items-center px-4 py-2 text-sm bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white !text-white rounded-lg hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"

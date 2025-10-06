@@ -172,7 +172,7 @@ export default function StoryForm({ onSubmit, disabled }: StoryFormProps) {
           label="Custom (Optional)"
           value={custom}
           onChange={setCustom}
-          placeholder="Any additional story requirements..."
+          placeholder="Add something extra you want in your story..."
           disabled={disabled}
           error={errors.custom}
           multiline

@@ -7,14 +7,7 @@ export default function StoryGeneratorSaved() {
   const navigate = useNavigate();
   const { data: stories, isLoading, error } = useStories();
   const deleteStoryMutation = useDeleteStory();
-  const { isSignedIn, user } = useUser();
-
-  // Debug logging
-  console.log("StoryGeneratorSaved - isSignedIn:", isSignedIn);
-  console.log("StoryGeneratorSaved - user:", user);
-  console.log("StoryGeneratorSaved - stories:", stories);
-  console.log("StoryGeneratorSaved - isLoading:", isLoading);
-  console.log("StoryGeneratorSaved - error:", error);
+  const { isSignedIn } = useUser();
 
   const handleDeleteStory = (id: string) => {
     deleteStoryMutation.mutate(id);
@@ -64,8 +57,28 @@ export default function StoryGeneratorSaved() {
   }
 
   return (
-    <div className="p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
-      <div className="w-full max-w-4xl text-center">
+    <div className="relative p-4 flex flex-col items-center space-y-6 bg-black min-h-screen">
+      <button
+        onClick={() => navigate({ to: "/story" })}
+        className="absolute top-4 left-4 sm:left-auto sm:top-auto sm:relative sm:mb-4 z-10 inline-flex items-center px-2 py-1 sm:px-3 sm:py-1.5 text-xs text-white/70 hover:text-white transition-colors duration-200"
+      >
+        <svg
+          className="w-3 h-3 mr-1"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        <span className="hidden sm:inline">Back</span>
+      </button>
+
+      <div className="w-full max-w-4xl text-center sm:text-center mt-8">
         <h2 className="text-2xl font-semibold text-white">
           Your Saved Stories
         </h2>

@@ -36,7 +36,7 @@ export default function BoardGameRuleInspector() {
           {/* Mobile Header with Menu Button */}
           <div className="lg:hidden bg-black border-b border-gray-800 p-4">
             <div className="flex items-center justify-between">
-              <div className="flex flex-col items-start">
+              <div className="flex flex-col text-center items-start">
                 <button
                   onClick={() => setIsSidebarOpen(true)}
                   className="flex items-center space-x-2 p-2 rounded-lg bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white hover:opacity-80 transition-opacity"
@@ -54,12 +54,11 @@ export default function BoardGameRuleInspector() {
                       d="M4 6h16M4 12h16M4 18h16"
                     />
                   </svg>
-                  <span className="text-sm font-medium">Sessions</span>
+                  <span className="text-sm font-medium">
+                    Sessions - Board Game Assistant
+                  </span>
                 </button>
               </div>
-              <h1 className="text-lg font-bold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
-                Board Game Assistant
-              </h1>
               <div className="w-20" /> {/* Spacer for centering */}
             </div>
           </div>

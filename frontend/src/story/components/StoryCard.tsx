@@ -30,8 +30,6 @@ export const StoryCard: React.FC<StoryCardProps> = ({
     });
   };
 
-  // Edit action removed for saved cards
-
   const handleDelete = () => {
     if (
       onDelete &&

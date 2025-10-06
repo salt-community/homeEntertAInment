@@ -68,7 +68,6 @@ export default function StoryGeneratorResult() {
         <span className="hidden sm:inline">Back</span>
       </button>
 
-      {/* Generate new story button removed as per requirements */}
       <div className="w-full max-w-2xl text-center">
         <h2 className="text-2xl font-semibold text-white">Story Result</h2>
         <p className="text-sm text-white/80">

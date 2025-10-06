@@ -22,7 +22,7 @@ export default function CharacterField({
         label="Character *"
         value={value}
         onChange={onChange}
-        placeholder="A brave rabbit named Barnaby"
+        placeholder="Enter a name for your character"
         disabled={disabled}
         error={error}
         maxLength={maxLength}

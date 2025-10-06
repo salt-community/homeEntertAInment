@@ -29,10 +29,8 @@ export default function StoryGeneratorNew() {
       </button>
 
       <div className="w-full max-w-2xl text-center mt-8">
-        <h2 className="text-2xl font-semibold text-white">Create New Story</h2>
-        <p className="text-sm text-white/80">
-          Enter prompts to generate a new story.
-        </p>
+        <h2 className="text-2xl font-semibold text-white">New Story</h2>
+        <p className="text-sm text-white/80">Create your own unique story.</p>
       </div>
 
       <div className="w-full max-w-2xl">

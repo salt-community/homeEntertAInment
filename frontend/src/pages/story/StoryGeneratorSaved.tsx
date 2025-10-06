@@ -7,7 +7,7 @@ export default function StoryGeneratorSaved() {
   const navigate = useNavigate();
   const { data: stories, isLoading, error } = useStories();
   const deleteStoryMutation = useDeleteStory();
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn } = useUser();
 
   const handleDeleteStory = (id: string) => {
     deleteStoryMutation.mutate(id);

@@ -11,7 +11,6 @@ export const createStoryApi = (
     const response = await authenticatedFetch(`${API_BASE_URL}/api/stories`);
 
     if (!response.ok) {
-      const errorText = await response.text();
       throw new Error(`Failed to fetch stories: ${response.statusText}`);
     }
 

@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createStoryApi } from "../api";
 import { useAuthenticatedFetch } from "../../services/apiClient";
-import type { Story, CreateStoryRequest, UpdateStoryRequest } from "../types";
+import type { CreateStoryRequest, UpdateStoryRequest } from "../types";
 
 export const useStories = () => {
   const authenticatedFetch = useAuthenticatedFetch();

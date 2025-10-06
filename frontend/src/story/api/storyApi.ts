@@ -8,19 +8,14 @@ export const createStoryApi = (
 ) => ({
   // Get all stories for the current user
   getStories: async (): Promise<Story[]> => {
-    console.log("Fetching stories from:", `${API_BASE_URL}/api/stories`);
     const response = await authenticatedFetch(`${API_BASE_URL}/api/stories`);
-    console.log("Stories response status:", response.status);
-    console.log("Stories response ok:", response.ok);
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Stories fetch error:", errorText);
       throw new Error(`Failed to fetch stories: ${response.statusText}`);
     }
 
     const stories = await response.json();
-    console.log("Fetched stories:", stories);
     return stories;
   },
 

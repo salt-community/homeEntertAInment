@@ -11,8 +11,6 @@ export async function generateStory(
   request: StoryRequest,
   authenticatedFetch: (url: string, options?: RequestInit) => Promise<Response>
 ): Promise<StoryResponse> {
-  console.log("Sending story generation request:", request);
-
   // Convert StoryRequest to CreateStoryRequest format
   const createRequest: CreateStoryRequest = {
     hero: request.character,
@@ -31,16 +29,12 @@ export async function generateStory(
     body: JSON.stringify(createRequest),
   });
 
-  console.log("Story generation response status:", response.status);
-
   if (!response.ok) {
     const message = await safeReadText(response);
-    console.error("Story generation failed:", response.status, message);
     throw new Error(message || `Request failed with status ${response.status}`);
   }
 
   const savedStory = (await response.json()) as Story;
-  console.log("Story generation and save successful:", savedStory);
 
   // Convert back to StoryResponse format for compatibility
   return {

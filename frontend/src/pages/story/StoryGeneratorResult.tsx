@@ -39,12 +39,10 @@ export default function StoryGeneratorResult() {
     // Generate dynamic prompt based on the actual story content
     const description = generateCoverImagePrompt(data.story, request.character);
 
-    console.log("Generated dynamic cover image prompt:", description);
-
     try {
       await generateImage({ description });
-    } catch (err) {
-      console.error("Failed to generate cover image:", err);
+    } catch {
+      // Handle error silently or show user-friendly message
     }
   };
 

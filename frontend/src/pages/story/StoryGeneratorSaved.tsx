@@ -9,13 +9,6 @@ export default function StoryGeneratorSaved() {
   const deleteStoryMutation = useDeleteStory();
   const { isSignedIn, user } = useUser();
 
-  // Debug logging
-  console.log("StoryGeneratorSaved - isSignedIn:", isSignedIn);
-  console.log("StoryGeneratorSaved - user:", user);
-  console.log("StoryGeneratorSaved - stories:", stories);
-  console.log("StoryGeneratorSaved - isLoading:", isLoading);
-  console.log("StoryGeneratorSaved - error:", error);
-
   const handleDeleteStory = (id: string) => {
     deleteStoryMutation.mutate(id);
   };

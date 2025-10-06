@@ -58,7 +58,9 @@ export default function BoardGameSessionChat() {
                       d="M4 6h16M4 12h16M4 18h16"
                     />
                   </svg>
-                  <span className="text-sm font-medium">Sessions</span>
+                  <span className="text-sm font-medium">
+                    Sessions - Board Game Assistant
+                  </span>
                 </button>
               </div>
               <div className="w-20" /> {/* Spacer for centering */}

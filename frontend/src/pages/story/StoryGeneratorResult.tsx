@@ -68,14 +68,7 @@ export default function StoryGeneratorResult() {
         <span className="hidden sm:inline">Back</span>
       </button>
 
-      <div className="w-full max-w-2xl flex justify-end mt-8">
-        <Link
-          to="/story"
-          className="inline-flex items-center px-4 py-2 text-sm bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white !text-white rounded-lg hover:from-indigo-700 hover:via-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-        >
-          <span className="text-white">Generate new story</span>
-        </Link>
-      </div>
+      {/* Generate new story button removed as per requirements */}
       <div className="w-full max-w-2xl text-center">
         <h2 className="text-2xl font-semibold text-white">Story Result</h2>
         <p className="text-sm text-white/80">

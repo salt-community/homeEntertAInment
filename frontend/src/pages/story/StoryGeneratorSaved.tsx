@@ -100,15 +100,7 @@ export default function StoryGeneratorSaved() {
           </div>
         ) : (
           <div className="text-center py-12">
-            <div className="text-white/60 text-lg mb-4">
-              No saved stories yet
-            </div>
-            <button
-              onClick={() => navigate({ to: "/story/new" })}
-              className="bg-gradient-to-r from-[#F930C7] to-[#3076F9] text-white px-6 py-3 rounded-lg hover:opacity-90 transition-opacity duration-200"
-            >
-              Create Your First Story
-            </button>
+            <div className="text-white/60 text-lg">No saved stories yet</div>
           </div>
         )}
       </div>

@@ -20,11 +20,11 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
       <div
         className={`bg-black border-r border-gray-800 flex flex-col h-full shadow-lg ${className}`}
       >
-        <div className="p-6 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
+        <div className="p-4 lg:p-6 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
+            <div className="w-6 h-6 lg:w-8 lg:h-8 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
               <svg
-                className="w-4 h-4 text-white"
+                className="w-3 h-3 lg:w-4 lg:h-4 text-white"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 width={32}
@@ -33,15 +33,18 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 <circle cx="12" cy="12" r="8" />
               </svg>
             </div>
-            <h2 className="text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
+            <h2 className="text-base lg:text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
               Game Sessions
             </h2>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-3 lg:p-4">
           <div className="animate-pulse space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-20 bg-gray-800 rounded-xl"></div>
+              <div
+                key={i}
+                className="h-16 lg:h-20 bg-gray-800 rounded-xl"
+              ></div>
             ))}
           </div>
         </div>
@@ -55,11 +58,11 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
       <div
         className={`bg-black border-r border-gray-800 flex flex-col h-full shadow-lg ${className}`}
       >
-        <div className="p-6 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
+        <div className="p-4 lg:p-6 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
+            <div className="w-6 h-6 lg:w-8 lg:h-8 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
               <svg
-                className="w-4 h-4 text-white"
+                className="w-3 h-3 lg:w-4 lg:h-4 text-white"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 width={32}
@@ -68,16 +71,16 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 <circle cx="12" cy="12" r="8" />
               </svg>
             </div>
-            <h2 className="text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
+            <h2 className="text-base lg:text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
               Game Sessions
             </h2>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto p-4">
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-gradient-to-r from-[#F930C7]/20 to-[#3076F9]/20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+        <div className="flex-1 overflow-y-auto p-3 lg:p-4">
+          <div className="text-center py-6 lg:py-8">
+            <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-r from-[#F930C7]/20 to-[#3076F9]/20 rounded-full flex items-center justify-center mx-auto mb-3 lg:mb-4 shadow-md">
               <svg
-                className="w-8 h-8 text-[#3076F9]"
+                className="w-6 h-6 lg:w-8 lg:h-8 text-[#3076F9]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -90,7 +93,7 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 />
               </svg>
             </div>
-            <p className="text-white/70 text-sm mb-1 font-medium">
+            <p className="text-white/70 text-xs lg:text-sm mb-1 font-medium">
               Please log in to access your sessions
             </p>
             <p className="text-white/50 text-xs">
@@ -107,11 +110,11 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
       <div
         className={`bg-black border-r border-gray-800 flex flex-col h-full shadow-lg ${className}`}
       >
-        <div className="p-6 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
+        <div className="p-4 lg:p-6 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
+            <div className="w-6 h-6 lg:w-8 lg:h-8 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
               <svg
-                className="w-4 h-4 text-white"
+                className="w-3 h-3 lg:w-4 lg:h-4 text-white"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 width={32}
@@ -120,15 +123,18 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 <circle cx="12" cy="12" r="8" />
               </svg>
             </div>
-            <h2 className="text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
+            <h2 className="text-base lg:text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
               Game Sessions
             </h2>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-3 lg:p-4">
           <div className="animate-pulse space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-20 bg-gray-800 rounded-xl"></div>
+              <div
+                key={i}
+                className="h-16 lg:h-20 bg-gray-800 rounded-xl"
+              ></div>
             ))}
           </div>
         </div>
@@ -141,11 +147,11 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
       <div
         className={`bg-black border-r border-gray-800 flex flex-col h-full shadow-lg ${className}`}
       >
-        <div className="p-6 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
+        <div className="p-4 lg:p-6 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
+            <div className="w-6 h-6 lg:w-8 lg:h-8 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">
               <svg
-                className="w-4 h-4 text-white"
+                className="w-3 h-3 lg:w-4 lg:h-4 text-white"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 width={32}
@@ -154,16 +160,16 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 <circle cx="12" cy="12" r="8" />
               </svg>
             </div>
-            <h2 className="text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
+            <h2 className="text-base lg:text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
               Game Sessions
             </h2>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto p-4">
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="flex-1 overflow-y-auto p-3 lg:p-4">
+          <div className="text-center py-6 lg:py-8">
+            <div className="w-12 h-12 lg:w-16 lg:h-16 bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-3 lg:mb-4">
               <svg
-                className="w-8 h-8 text-red-400"
+                className="w-6 h-6 lg:w-8 lg:h-8 text-red-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -176,7 +182,9 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 />
               </svg>
             </div>
-            <p className="text-red-400 text-sm mb-1">Error loading sessions</p>
+            <p className="text-red-400 text-xs lg:text-sm mb-1">
+              Error loading sessions
+            </p>
             <p className="text-gray-400 text-xs">Please try again later</p>
           </div>
         </div>
@@ -188,11 +196,11 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
     <div
       className={`bg-black border-r border-gray-800 flex flex-col h-full ${className}`}
     >
-      <div className="p-6 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
+      <div className="p-4 lg:p-6 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center">
+          <div className="w-6 h-6 lg:w-8 lg:h-8 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center">
             <svg
-              className="w-4 h-4 text-white"
+              className="w-3 h-3 lg:w-4 lg:h-4 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -207,21 +215,21 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
               />
             </svg>
           </div>
-          <h2 className="text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
+          <h2 className="text-base lg:text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
             Game Sessions
           </h2>
         </div>
-        <p className="text-sm text-white/70 mt-1 font-medium">
+        <p className="text-xs lg:text-sm text-white/70 mt-1 font-medium">
           Manage your active games
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-3 lg:p-4">
         {sessions.length === 0 ? (
-          <div className="text-center py-8">
-            <div className="w-16 h-16 bg-gradient-to-r from-[#F930C7]/20 to-[#3076F9]/20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+          <div className="text-center py-6 lg:py-8">
+            <div className="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-r from-[#F930C7]/20 to-[#3076F9]/20 rounded-full flex items-center justify-center mx-auto mb-3 lg:mb-4 shadow-md">
               <svg
-                className="w-8 h-8 text-[#3076F9]"
+                className="w-6 h-6 lg:w-8 lg:h-8 text-[#3076F9]"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 width={32}
@@ -230,7 +238,7 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                 <circle cx="12" cy="12" r="10" />
               </svg>
             </div>
-            <p className="text-white/70 text-sm mb-1 font-medium">
+            <p className="text-white/70 text-xs lg:text-sm mb-1 font-medium">
               No sessions found
             </p>
             <p className="text-white/50 text-xs">
@@ -238,7 +246,7 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2 lg:space-y-3">
             {sessions.map((session) => (
               <div
                 key={session.id}
@@ -247,10 +255,10 @@ export const SessionSidebar: React.FC<SessionSidebarProps> = ({
                     to: `/board-game-rule-inspector/session/${session.id}`,
                   })
                 }
-                className="p-4 rounded-xl transition-all duration-300 bg-black border border-gray-800 hover:bg-gradient-to-r hover:from-[#F930C7]/10 hover:to-[#3076F9]/10 hover:shadow-lg hover:border-[#F930C7]/50 cursor-pointer"
+                className="p-3 lg:p-4 rounded-xl transition-all duration-300 bg-black border border-gray-800 hover:bg-gradient-to-r hover:from-[#F930C7]/10 hover:to-[#3076F9]/10 hover:shadow-lg hover:border-[#F930C7]/50 cursor-pointer"
               >
                 <div className="flex items-start justify-between mb-2">
-                  <h4 className="font-semibold text-white text-sm">
+                  <h4 className="font-semibold text-white text-xs lg:text-sm">
                     {session.gameName}
                   </h4>
                   <div

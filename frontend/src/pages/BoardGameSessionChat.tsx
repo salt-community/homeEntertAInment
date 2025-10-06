@@ -61,9 +61,6 @@ export default function BoardGameSessionChat() {
                   <span className="text-sm font-medium">Sessions</span>
                 </button>
               </div>
-              <h1 className="text-lg font-bold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">
-                Game Session
-              </h1>
               <div className="w-20" /> {/* Spacer for centering */}
             </div>
           </div>

@@ -74,7 +74,7 @@ export const SessionInfo: React.FC<SessionInfoProps> = ({ sessionId }) => {
   }
 
   return (
-    <div className="bg-black rounded-lg shadow-md border border-gray-800 p-4 lg:p-6 mb-3 lg:mb-4">
+    <div className="bg-black rounded-lg shadow-md border border-gray-800 p-4 lg:p-6 mb-2 lg:mb-4">
       {/* Game Name */}
       <div className="flex items-center space-x-3 mb-3 lg:mb-4">
         <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-r from-[#F930C7] to-[#3076F9] rounded-lg flex items-center justify-center shadow-md">

@@ -154,7 +154,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-black border border-gray-800 rounded-lg min-h-0">
+    <div
+      className="flex flex-col h-full bg-black border border-gray-800 rounded-lg min-h-0"
+      style={{ minHeight: "350px" }}
+    >
       {/* Chat Header */}
       <div className="p-3 lg:p-4 border-b border-gray-800 bg-gradient-to-r from-[#F930C7]/10 via-transparent to-[#3076F9]/10 flex-shrink-0">
         <h3 className="text-base lg:text-lg font-semibold bg-gradient-to-r from-[#3076F9] to-[#F930C7] bg-clip-text text-transparent">

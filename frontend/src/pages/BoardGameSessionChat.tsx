@@ -10,7 +10,7 @@ export default function BoardGameSessionChat() {
 
   return (
     <div className="min-h-screen bg-black">
-      <div className="flex h-screen">
+      <div className="flex h-screen max-h-screen">
         {/* Mobile Sidebar Overlay */}
         {isSidebarOpen && (
           <div
@@ -65,13 +65,16 @@ export default function BoardGameSessionChat() {
             </div>
           </div>
 
-          {/* Session Info */}
-          <div className="p-4 lg:p-6 pb-0 flex-shrink-0">
+          {/* Session Info - Compact on mobile */}
+          <div className="p-4 lg:p-6 pb-2 lg:pb-0 flex-shrink-0">
             <SessionInfo sessionId={parseInt(sessionId)} />
           </div>
 
-          {/* Chat Interface */}
-          <div className="flex-1 p-4 lg:p-6 pt-2 lg:pt-4 min-h-0">
+          {/* Chat Interface - Takes most of the available space */}
+          <div
+            className="flex-1 p-4 lg:p-6 pt-0 lg:pt-4 min-h-0"
+            style={{ minHeight: "400px" }}
+          >
             <ChatInterface sessionId={parseInt(sessionId)} />
           </div>
         </div>

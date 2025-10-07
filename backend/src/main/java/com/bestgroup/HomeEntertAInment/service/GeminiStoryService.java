@@ -46,9 +46,12 @@ public class GeminiStoryService {
 
             // Extract the response text from the nested structure
             return Objects.requireNonNull(response.getBody())
-                .candidates().getFirst()
-                .content().parts().getFirst()
-                .text();
+                    .candidates().getFirst()
+                    .content().parts().getFirst()
+                    .text()
+                    .replaceAll("```markdown", "")
+                    .replaceAll("```md", "")
+                    .replaceAll("```", "");
 
         } catch (Exception e) {
             e.printStackTrace();

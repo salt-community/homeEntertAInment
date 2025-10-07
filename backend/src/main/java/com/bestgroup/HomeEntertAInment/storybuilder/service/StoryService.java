@@ -33,16 +33,15 @@ public class StoryService {
         String wordCountTarget = getWordCountTarget(request.storyLength());
 
         StringBuilder promptBuilder = new StringBuilder("""
-            You are an assistant that generates children's stories in Markdown format.
+            You are an assistant that generates original children's stories in pure Markdown text.
             
-            Requirements:
-            - Do NOT include user instructions or free text in the story itself.
-            - Only output valid Markdown (.md).
-            - Start with a main title (#).
-            - Divide the story into 2–4 short sections with creative and fitting subtitles (##).
+            Output rules:
+            - Output only the Markdown content — do NOT use code blocks, triple backticks, or any extra commentary.
+            - Begin with a main title line starting with "# ".
+            - Divide the story into 2–4 sections, each starting with "## " and a creative subtitle.
             - Under each subtitle, write 1–3 short paragraphs suitable for the target age group.
-            - Target length: %s
-            - Do not add meta explanations or extra text outside the story.
+            - The story should be approximately %s in length.
+            - Do not include user instructions, meta explanations, or any non-story text.
             
             Story specification:
             - Character: %s
@@ -50,7 +49,7 @@ public class StoryService {
             - Target age group: %s
             - Story length: %s
             
-            Now, output the story in Markdown:
+            Now, generate the story following these rules and output only the raw Markdown text, starting directly with the title.
             """.formatted(
             wordCountTarget,
             request.character(),
@@ -58,6 +57,7 @@ public class StoryService {
             request.ageGroup(),
             request.storyLength()
         ));
+
 
         if (request.twist() != null) {
             promptBuilder.append("Twist: ").append(request.twist()).append("\n");
@@ -95,13 +95,13 @@ public class StoryService {
      */
     public List<StoryDto> getStoriesForUser(Authentication authentication) {
         String userId = clerkUserExtractor.extractClerkUserIdRequired(authentication);
-        
+
         List<Story> stories = storyRepository.findByUserIdOrderByCreatedAtDesc(userId);
-        
+
         List<StoryDto> storyDtos = stories.stream()
             .map(this::convertToDto)
             .collect(Collectors.toList());
-            
+
         return storyDtos;
     }
 

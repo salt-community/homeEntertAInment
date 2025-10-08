@@ -25,9 +25,9 @@ public class GeminiStoryService {
     public String sendStoryPrompt(String prompt) {
         // Prepare the request body according to Gemini API specification
         Map<String, Object> body = Map.of(
-                "contents", List.of(
-                        Map.of("parts", List.of(Map.of("text", prompt)))
-                )
+            "contents", List.of(
+                Map.of("parts", List.of(Map.of("text", prompt)))
+            )
         );
 
         // Set up HTTP headers
@@ -41,7 +41,7 @@ public class GeminiStoryService {
 
             // Make the API call
             ResponseEntity<GeminiResponseDto> response = restTemplate.exchange(
-                    fullUrl, HttpMethod.POST, entity, GeminiResponseDto.class
+                fullUrl, HttpMethod.POST, entity, GeminiResponseDto.class
             );
 
             // Extract the response text from the nested structure

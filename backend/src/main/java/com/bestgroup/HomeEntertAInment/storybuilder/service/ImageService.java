@@ -51,7 +51,7 @@ public class ImageService {
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setBearerAuth(apiKey);
 
-            HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(, headers);
+            HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(requestBody, headers);
 
             ResponseEntity<Map> response = restTemplate.exchange(
                 URL, HttpMethod.POST, entity, Map.class
